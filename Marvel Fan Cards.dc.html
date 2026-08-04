@@ -64,9 +64,34 @@ a:hover { color: #9c1620; }
         <div style="width: 72px; height: 72px; flex: 0 0 auto; border-radius: 50%; overflow: hidden; background: {{ paper }}; border: 3px solid {{ ink }}; box-shadow: 0 0 0 4px var(--acc, #e0212f), 5px 5px 0 {{ ink }}; pointer-events: none;">
           <image-slot id="mfc-avatar" shape="circle" placeholder="фото" style="width:100%;height:100%"></image-slot>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 auto;">
+        <div style="position: relative; display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 auto;">
           <div style="font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--acc, #e0212f);">Профиль игрока</div>
-          <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(22px, 5.6vw, 40px); line-height: 0.95; text-transform: uppercase; letter-spacing: 0.01em; color: {{ ink }};">{{ playerName }}</div>
+
+          <sc-if value="{{ editingName }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <input type="text" value="{{ nameDraft }}" onChange="{{ onNameDraftChange }}" onKeyDown="{{ onNameKeyDown }}" onBlur="{{ saveName }}" autoFocus="{{ true }}" maxLength="18" placeholder="Ваше имя" style="min-width: 0; flex: 1 1 auto; border: 3px solid {{ ink }}; background: {{ paper }}; color: {{ ink }}; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(18px, 5vw, 28px); text-transform: uppercase; letter-spacing: 0.01em; padding: 4px 10px; border-radius: 10px; box-shadow: 3px 3px 0 {{ ink }}30;">
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ showNameDisplay }}" hint-placeholder-val="{{ true }}">
+            <div onClick="{{ startEditName }}" style="position: relative; display: inline-flex; align-items: baseline; gap: 8px; cursor: pointer; width: fit-content; max-width: 100%;" style-hover="opacity: 0.85;">
+              <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(22px, 5.6vw, 40px); line-height: 0.95; text-transform: uppercase; letter-spacing: 0.01em; color: {{ ink }}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ playerName }}</div>
+              <div style="flex: 0 0 auto; font-size: 13px; opacity: 0.55;" title="Изменить имя">✎</div>
+
+              <sc-if value="{{ showNameOnboarding }}" hint-placeholder-val="{{ false }}">
+                <div onClick="{{ stop }}" style="position: absolute; top: calc(100% + 12px); left: 0; z-index: 30; width: max(220px, min(300px, 84vw)); animation: fadeUp .4s ease .1s both;">
+                  <div style="position: absolute; top: -7px; left: 22px; width: 14px; height: 14px; background: {{ ink }}; transform: rotate(45deg); border-radius: 3px;"></div>
+                  <div style="position: relative; background: {{ ink }}; color: {{ paper }}; border-radius: 14px; padding: 14px 16px; box-shadow: 4px 4px 0 var(--acc, #e0212f)55;">
+                    <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px;">👋 Это ваше имя</div>
+                    <div style="font-size: 12.5px; font-weight: 500; line-height: 1.5; color: {{ paper }}cc;">Нажмите на имя (или на ✎), чтобы вписать своё — оно запомнится на этом устройстве.</div>
+                    <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+                      <button type="button" onClick="{{ dismissOnboarding }}" style="border: none; background: var(--acc, #e0212f); color: #fff; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 10.5px; text-transform: uppercase; padding: 8px 14px; border-radius: 999px;" style-active="transform: scale(0.96);">Понятно</button>
+                    </div>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+          </sc-if>
         </div>
         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 50%; background: var(--acc, #e0212f); border: 3px solid {{ ink }}; box-shadow: 3px 3px 0 {{ ink }}; flex: 0 0 auto;">
           <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 15px; line-height: 1; color: #fff;">{{ collected }}</div>
@@ -217,7 +242,7 @@ a:hover { color: #9c1620; }
       </sc-if>
 
       <sc-if value="{{ isSetup }}" hint-placeholder-val="{{ true }}">
-        <div style="position: fixed; inset: 0; z-index: 15; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 30px; padding: 40px max(24px, env(safe-area-inset-right)) 40px max(24px, env(safe-area-inset-left)); background: {{ bg }}; background-image: radial-gradient({{ dotColor }} 1.6px, transparent 1.6px); background-size: 16px 16px; animation: fadeUp .5s ease both;">
+        <div style="position: fixed; inset: 0; z-index: 15; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 30px; padding: 40px max(24px, env(safe-area-inset-right)) 40px max(24px, env(safe-area-inset-left)); background: {{ bg }}; background-image: radial-gradient({{ dotColor }} 1.6px, transparent 1.6px); background-size: 16px 16px; animation: fadeUp .5s ease both; overflow-y: auto; -webkit-overflow-scrolling: touch;">
           <button type="button" onClick="{{ goCollection }}" style="position: absolute; top: max(16px, env(safe-area-inset-top)); left: max(16px, env(safe-area-inset-left)); border: 2px solid {{ ink }}40; background: transparent; color: {{ ink }}80; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 11px; text-transform: uppercase; padding: 9px 14px; border-radius: 999px;" style-hover="color: {{ ink }}; border-color: {{ ink }}80;">Выйти</button>
           <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(30px, 5.4vw, 56px); line-height: 1; text-transform: uppercase; color: {{ ink }};">Выберите аватара</div>
           <div style="font-size: clamp(13px, 1.7vw, 17px); font-weight: 500; color: {{ ink }}99; max-width: 660px; line-height: 1.55;">Цель матча — уничтожить аватара противника. Пока на его поле три героя или больше, аватар защищён — сначала придётся разобраться с героями. Аватар бота выбирается случайно.</div>
@@ -419,8 +444,8 @@ a:hover { color: #9c1620; }
             <button type="button" onClick="{{ endTurn }}" style="border: 3px solid {{ ink }}; background: {{ endTurnBg }}; color: {{ endTurnColor }}; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: {{ endTurnFont }}; text-transform: uppercase; padding: {{ endTurnPad }}; min-height: {{ endTurnMinH }}; border-radius: 999px; white-space: nowrap; flex: 0 0 auto; animation: {{ endTurnAnim }};" style-hover="filter: brightness(0.96);" style-active="transform: translate(1px,1px) scale(0.97);">Закончить ход</button>
           </div>
 
-          <div style="display: flex; justify-content: center; padding: {{ handPad }}; flex: 0 0 auto;">
-            <div style="display: flex; align-items: flex-end;">
+          <div style="display: flex; justify-content: center; padding: {{ handPad }}; flex: 0 0 auto; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch;">
+            <div style="display: flex; align-items: flex-end; margin: 0 auto; padding: 0 4px;">
               <sc-for list="{{ player.hand }}" as="c" hint-placeholder-count="5">
                 <div onClick="{{ c.onClick }}" onPointerEnter="{{ c.onEnter }}" onPointerLeave="{{ c.onLeave }}" style="position: relative; flex: 0 0 auto; width: {{ handCardW }}; aspect-ratio: 2 / 3; margin-left: {{ c.overlap }}; border-radius: 12px; overflow: hidden; cursor: {{ c.cursor }}; touch-action: manipulation; background: #17140f; border: 3px solid {{ c.border }}; box-shadow: {{ c.shadow }}; opacity: {{ c.dim }}; transform: {{ c.transform }}; transition: transform .25s cubic-bezier(.2,.8,.25,1), box-shadow .25s ease; z-index: {{ c.z }};" style-active="transform: scale(0.97);">
                   <div style="position: absolute; inset: 0; background: {{ c.art }};"></div>
@@ -1128,12 +1153,30 @@ function computeViewport() {
   return { isPortraitMobile: isMobileDevice && isPortrait, isCompact: h <= 700, vh: h };
 }
 
+function readStoredName() {
+  try {
+    const v = localStorage.getItem("mfc_playerName");
+    return v && v.trim() ? v : null;
+  } catch (e) { return null; }
+}
+function writeStoredName(name) {
+  try { localStorage.setItem("mfc_playerName", name); } catch (e) {}
+}
+function readNameOnboardingSeen() {
+  try { return localStorage.getItem("mfc_nameOnboardingSeen") === "1"; } catch (e) { return false; }
+}
+function writeNameOnboardingSeen() {
+  try { localStorage.setItem("mfc_nameOnboardingSeen", "1"); } catch (e) {}
+}
+
 class Component extends DCLogic {
   state = {
     sel: null, flipped: false, dark: false, screen: "collection",
     game: null, search: "", filter: "all",
     handHover: null, fieldSel: null, discardView: null, toast: null,
     pickedAvatar: null, peekCard: null,
+    editingName: false, nameDraft: "", customName: readStoredName(),
+    showNameOnboarding: !readNameOnboardingSeen(),
     ...computeViewport()
   };
 
@@ -1141,13 +1184,18 @@ class Component extends DCLogic {
     this.onKey = (e) => { if (e.key === "Escape") this.setState({ sel: null, fieldSel: null, discardView: null, peekCard: null }); };
     window.addEventListener("keydown", this.onKey);
     this.onViewport = () => this.setState(computeViewport());
+    this.onOrientation = () => {
+      clearTimeout(this._orientTimer);
+      this._orientTimer = setTimeout(() => this.setState(computeViewport()), 120);
+    };
     window.addEventListener("resize", this.onViewport);
-    window.addEventListener("orientationchange", this.onViewport);
+    window.addEventListener("orientationchange", this.onOrientation);
   }
   componentWillUnmount() {
     window.removeEventListener("keydown", this.onKey);
     window.removeEventListener("resize", this.onViewport);
-    window.removeEventListener("orientationchange", this.onViewport);
+    window.removeEventListener("orientationchange", this.onOrientation);
+    clearTimeout(this._orientTimer);
   }
 
   buzz(ms) {
@@ -1898,8 +1946,42 @@ class Component extends DCLogic {
       });
     };
 
+    const defaultName = this.props.playerName || "Никита";
+    const currentName = st.customName || defaultName;
+    const startEditName = () => {
+      this.blip(280, 0.08, "sine", 0.03);
+      this.setState({ editingName: true, nameDraft: currentName, showNameOnboarding: false });
+      writeNameOnboardingSeen();
+    };
+    const onNameDraftChange = (e) => this.setState({ nameDraft: e.target.value.slice(0, 18) });
+    const saveName = () => {
+      const trimmed = (st.nameDraft || "").trim();
+      const finalName = trimmed || defaultName;
+      writeStoredName(finalName);
+      this.setState({ customName: finalName, editingName: false });
+    };
+    const cancelEditName = () => this.setState({ editingName: false });
+    const onNameKeyDown = (e) => {
+      if (e.key === "Enter") saveName();
+      else if (e.key === "Escape") cancelEditName();
+    };
+    const dismissOnboarding = () => {
+      writeNameOnboardingSeen();
+      this.setState({ showNameOnboarding: false });
+    };
+
     return {
-      playerName: this.props.playerName || "Никита",
+      playerName: currentName,
+      editingName: st.editingName,
+      showNameDisplay: !st.editingName,
+      nameDraft: st.nameDraft,
+      startEditName: startEditName,
+      onNameDraftChange: onNameDraftChange,
+      onNameKeyDown: onNameKeyDown,
+      saveName: saveName,
+      cancelEditName: cancelEditName,
+      showNameOnboarding: isCollection && !st.editingName && st.showNameOnboarding,
+      dismissOnboarding: dismissOnboarding,
       accent: acc,
       bg: dark ? "#17140f" : "#f4efe1",
       ink: ink,
