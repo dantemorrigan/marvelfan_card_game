@@ -330,7 +330,7 @@
                     <div style="position: absolute; top: {{ fieldKwTop }}; right: {{ fieldInset }}; font-size: {{ fieldKwFont }}; line-height: 1.2; text-align: right; letter-spacing: 0.04em; text-shadow: 0 1px 3px #000;">{{ h.kwIcons }}</div>
                   </sc-if>
                   <sc-if value="{{ h.hasState }}" hint-placeholder-val="{{ false }}">
-                    <div style="position: absolute; bottom: {{ fieldStateBottom }}; left: {{ fieldInset }}; right: {{ fieldInset }}; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: {{ fieldStateFont }}; letter-spacing: 0.02em; text-transform: uppercase; color: #ffd27a; white-space: nowrap; overflow: hidden;">{{ h.stateLabel }}</div>
+                    <div style="position: absolute; bottom: {{ fieldStateBottom }}; left: {{ fieldInset }}; right: {{ fieldInset }}; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: {{ fieldStateFont }}; letter-spacing: 0.02em; text-transform: uppercase; color: #ffd27a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ h.stateLabel }}</div>
                   </sc-if>
                   <sc-if value="{{ h.hasFx }}" hint-placeholder-val="{{ false }}">
                     <div style="position: absolute; inset: 0; background: #ff2d2d55; animation: hitFlash .5s ease; pointer-events: none;"></div>
@@ -370,7 +370,7 @@
                     <div style="position: absolute; top: {{ fieldKwTop }}; right: {{ fieldInset }}; font-size: {{ fieldKwFont }}; line-height: 1.2; text-align: right; letter-spacing: 0.04em; text-shadow: 0 1px 3px #000;">{{ h.kwIcons }}</div>
                   </sc-if>
                   <sc-if value="{{ h.hasState }}" hint-placeholder-val="{{ false }}">
-                    <div style="position: absolute; bottom: {{ fieldStateBottom }}; left: {{ fieldInset }}; right: {{ fieldInset }}; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: {{ fieldStateFont }}; letter-spacing: 0.02em; text-transform: uppercase; color: #ffd27a; white-space: nowrap; overflow: hidden;">{{ h.stateLabel }}</div>
+                    <div style="position: absolute; bottom: {{ fieldStateBottom }}; left: {{ fieldInset }}; right: {{ fieldInset }}; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: {{ fieldStateFont }}; letter-spacing: 0.02em; text-transform: uppercase; color: #ffd27a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ h.stateLabel }}</div>
                   </sc-if>
                   <sc-if value="{{ h.hasFx }}" hint-placeholder-val="{{ false }}">
                     <div style="position: absolute; inset: 0; background: #ff2d2d55; animation: hitFlash .5s ease; pointer-events: none;"></div>
@@ -1216,9 +1216,14 @@ class Component extends DCLogic {
     const fieldInsetPx = Math.max(3, Math.round(fW * 0.07));
     const fieldInfoPx = Math.max(12, Math.round(fW * 0.16));
     const fieldStatFont = fieldStatFontPx + "px";
-    const fieldStateFont = Math.max(7, Math.round(fH * 0.055)) + "px";
+    const fieldStateFontPx = Math.max(7, Math.round(fH * 0.055));
+    const fieldStateFont = fieldStateFontPx + "px";
     const fieldInfoSize = fieldInfoPx + "px";
     const fieldInset = fieldInsetPx + "px";
+    // Метка состояния (⏳ Усталость / Атаковал) не должна вылезать за карту: если
+    // полный текст в текущем шрифте шире доступного места — используем короткую форму.
+    const fieldStateAvailW = fW - 2 * fieldInsetPx;
+    const stateLabelFits = (text) => fieldStateFontPx * 0.78 * text.length <= fieldStateAvailW;
     const fieldNameClamp = tinyCards ? 2 : 3;
     // Метка состояния ставится строго над строкой HP/атаки, а не по проценту высоты.
     const fieldStateBottom = Math.round(fieldInsetPx + fieldStatFontPx * 1.6 + 3) + "px";
@@ -1421,7 +1426,9 @@ class Component extends DCLogic {
           else if (h.usedAttack) onClick = () => this.showToast("Эта карта уже атаковала.");
         }
         const isSel = g.selectedUid === h.uid;
-        const stateLabel = h.sick ? (tinyCards ? "⏳" : "⏳ Усталость") : (h.usedAttack ? (tinyCards ? "✓" : "Атаковал") : "");
+        const stateLabel = h.sick
+          ? (stateLabelFits("⏳ Усталость") ? "⏳ Усталость" : "⏳")
+          : (h.usedAttack ? (stateLabelFits("Атаковал") ? "Атаковал" : "✓") : "");
         const fx = Array.isArray(g.fx) ? g.fx.find((f) => f.side === side && f.uid === h.uid) : null;
         const isAttacking = !!g.atkFx && g.atkFx.side === side && g.atkFx.uid === h.uid;
         const animParts = [];
