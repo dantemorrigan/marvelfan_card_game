@@ -330,15 +330,15 @@
                     <div style="position: absolute; top: {{ fieldKwTop }}; right: {{ fieldInset }}; font-size: {{ fieldKwFont }}; line-height: 1.2; text-align: right; letter-spacing: 0.04em; text-shadow: 0 1px 3px #000;">{{ h.kwIcons }}</div>
                   </sc-if>
                   <sc-if value="{{ h.hasState }}" hint-placeholder-val="{{ false }}">
-                    <div style="position: absolute; bottom: {{ fieldStateBottom }}; left: {{ fieldInset }}; right: {{ fieldInset }}; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: {{ fieldStateFont }}; letter-spacing: 0.02em; text-transform: uppercase; color: #ffd27a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ h.stateLabel }}</div>
+                    <div style="position: absolute; bottom: {{ fieldStateBottom }}; left: {{ fieldInset }}; right: {{ fieldInset }}; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: {{ fieldStateFont }}; line-height: 1.15; letter-spacing: 0.02em; text-transform: uppercase; color: #ffd27a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ h.stateLabel }}</div>
                   </sc-if>
                   <sc-if value="{{ h.hasFx }}" hint-placeholder-val="{{ false }}">
                     <div style="position: absolute; inset: 0; background: #ff2d2d55; animation: hitFlash .5s ease; pointer-events: none;"></div>
                     <div style="position: absolute; top: -8px; left: 0; right: 0; text-align: center; pointer-events: none; animation: floatFade .9s ease both; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 20px; color: #ff4d4d; text-shadow: 0 0 6px #000, 0 0 2px #000;">{{ h.fxText }}</div>
                   </sc-if>
                   <div style="position: absolute; bottom: {{ fieldInset }}; left: {{ fieldInset }}; right: {{ fieldInset }}; display: flex; justify-content: space-between; align-items: center; gap: 3px;">
-                    <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ fieldStatFont }}; color: #ff8a8a; white-space: nowrap;">❤️{{ h.hp }}</div>
-                    <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ fieldStatFont }}; color: var(--acc, #e0212f); white-space: nowrap;">{{ h.str }}⚔</div>
+                    <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ fieldStatFont }}; line-height: 1; color: #ff8a8a; white-space: nowrap;">❤️{{ h.hp }}</div>
+                    <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ fieldStatFont }}; line-height: 1; color: var(--acc, #e0212f); white-space: nowrap;">{{ h.str }}⚔</div>
                   </div>
                 </div>
               </sc-for>
@@ -370,15 +370,15 @@
                     <div style="position: absolute; top: {{ fieldKwTop }}; right: {{ fieldInset }}; font-size: {{ fieldKwFont }}; line-height: 1.2; text-align: right; letter-spacing: 0.04em; text-shadow: 0 1px 3px #000;">{{ h.kwIcons }}</div>
                   </sc-if>
                   <sc-if value="{{ h.hasState }}" hint-placeholder-val="{{ false }}">
-                    <div style="position: absolute; bottom: {{ fieldStateBottom }}; left: {{ fieldInset }}; right: {{ fieldInset }}; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: {{ fieldStateFont }}; letter-spacing: 0.02em; text-transform: uppercase; color: #ffd27a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ h.stateLabel }}</div>
+                    <div style="position: absolute; bottom: {{ fieldStateBottom }}; left: {{ fieldInset }}; right: {{ fieldInset }}; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: {{ fieldStateFont }}; line-height: 1.15; letter-spacing: 0.02em; text-transform: uppercase; color: #ffd27a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ h.stateLabel }}</div>
                   </sc-if>
                   <sc-if value="{{ h.hasFx }}" hint-placeholder-val="{{ false }}">
                     <div style="position: absolute; inset: 0; background: #ff2d2d55; animation: hitFlash .5s ease; pointer-events: none;"></div>
                     <div style="position: absolute; top: -8px; left: 0; right: 0; text-align: center; pointer-events: none; animation: floatFade .9s ease both; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 20px; color: #ff4d4d; text-shadow: 0 0 6px #000, 0 0 2px #000;">{{ h.fxText }}</div>
                   </sc-if>
                   <div style="position: absolute; bottom: {{ fieldInset }}; left: {{ fieldInset }}; right: {{ fieldInset }}; display: flex; justify-content: space-between; align-items: center; gap: 3px;">
-                    <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ fieldStatFont }}; color: #ff8a8a; white-space: nowrap;">❤️{{ h.hp }}</div>
-                    <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ fieldStatFont }}; color: var(--acc, #e0212f); white-space: nowrap;">{{ h.str }}⚔</div>
+                    <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ fieldStatFont }}; line-height: 1; color: #ff8a8a; white-space: nowrap;">❤️{{ h.hp }}</div>
+                    <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ fieldStatFont }}; line-height: 1; color: var(--acc, #e0212f); white-space: nowrap;">{{ h.str }}⚔</div>
                   </div>
                 </div>
               </sc-for>
@@ -1226,7 +1226,10 @@ class Component extends DCLogic {
     const stateLabelFits = (text) => fieldStateFontPx * 0.78 * text.length <= fieldStateAvailW;
     const fieldNameClamp = tinyCards ? 2 : 3;
     // Метка состояния ставится строго над строкой HP/атаки, а не по проценту высоты.
-    const fieldStateBottom = Math.round(fieldInsetPx + fieldStatFontPx * 1.6 + 3) + "px";
+    // Явный line-height на обеих строках убирает неопределённость реальной высоты
+    // текста в шрифте Unbounded — зазор здесь чуть больше видимой высоты цифр HP/ATK,
+    // чтобы метка состояния никогда не наезжала на них.
+    const fieldStateBottom = Math.round(fieldInsetPx + fieldStatFontPx * 1.35 + 6) + "px";
     const fieldKwTop = (fieldInsetPx + fieldInfoPx + 3) + "px";
     const fieldKwFont = Math.max(8, Math.round(fH * 0.062)) + "px";
     const avatarSize = avSize + "px";
