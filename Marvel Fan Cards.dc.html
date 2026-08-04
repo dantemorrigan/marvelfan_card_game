@@ -28,6 +28,8 @@ a:hover { color: #9c1620; }
 @keyframes shakeHit { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); } }
 @keyframes floatFade { 0% { opacity: 0; transform: translateY(4px) scale(0.8); } 25% { opacity: 1; transform: translateY(-6px) scale(1.1); } 100% { opacity: 0; transform: translateY(-30px) scale(1); } }
 @keyframes cardIn { 0% { opacity: 0; transform: scale(0.5) translateY(24px) rotate(-6deg); } 60% { opacity: 1; transform: scale(1.06) translateY(-3px) rotate(2deg); } 100% { opacity: 1; transform: none; } }
+@keyframes drawIn { 0% { opacity: 0; filter: brightness(2) saturate(1.4); box-shadow: 0 0 0 3px var(--acc, #e0212f), 0 0 24px 6px var(--acc, #e0212f)99; } 70% { opacity: 1; } 100% { opacity: 1; filter: none; box-shadow: none; } }
+@keyframes deckPulse { 0% { transform: scale(1); } 35% { transform: scale(0.8) translateY(10px); } 100% { transform: scale(1); } }
 @keyframes atkGlow { 0%, 100% { box-shadow: 0 0 0 2px #ffd27a, 0 0 14px 3px #ffd27a99; } 50% { box-shadow: 0 0 0 4px #ffd27a, 0 0 22px 6px #ffd27acc; } }
 @keyframes castFlash { 0% { opacity: 0; } 12% { opacity: 1; } 78% { opacity: 1; } 100% { opacity: 0; } }
 @keyframes dotBounce { 0%, 80%, 100% { transform: translateY(0); opacity: .4; } 40% { transform: translateY(-4px); opacity: 1; } }
@@ -49,23 +51,29 @@ a:hover { color: #9c1620; }
 @keyframes winPop { 0% { opacity: 0; transform: scale(0.6) translateY(20px); } 55% { opacity: 1; transform: scale(1.08); } 100% { opacity: 1; transform: none; } }
 @keyframes winRays { 0% { opacity: 0.25; transform: rotate(0deg) scale(1); } 100% { opacity: 0.45; transform: rotate(360deg) scale(1.1); } }
 @keyframes burnAway { 0% { opacity: 0; transform: translateX(-50%) translateY(12px) scale(0.9); } 18% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); } 72% { opacity: 1; transform: translateX(-50%) translateY(-4px) scale(1); } 100% { opacity: 0; transform: translateX(-50%) translateY(-26px) scale(0.95); } }
+#mfc-avatar::part(frame) { background: #17140f14; }
+#mfc-avatar::part(frame) { background: var(--acc, #c67139); }
+#mfc-avatar::part(empty) { visibility: hidden; background: var(--acc, #c67139); }
+#mfc-avatar::part(empty)::before { content: ""; visibility: visible; position: absolute; inset: 0; background-color: #ffffff; opacity: .85; -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2236%22 r=%2218%22/><path d=%22M14 92c0-24 16-38 36-38s36 14 36 38%22/></svg>'); mask-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2236%22 r=%2218%22/><path d=%22M14 92c0-24 16-38 36-38s36 14 36 38%22/></svg>'); -webkit-mask-size: 56% 56%; mask-size: 56% 56%; -webkit-mask-position: center 62%; mask-position: center 62%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+#mfc-avatar::part(empty) svg { display: none; }
 </style>
 </helmet>
 
 <div style="--acc: {{ accent }}; min-height: 100vh; padding: 0 max(0px, env(safe-area-inset-bottom)) 72px; background-image: radial-gradient({{ dotColor }} 1.6px, transparent 1.6px); background-size: 16px 16px; background-color: {{ bg }}; transition: background-color .3s ease;">
 
+  <audio ref="{{ bgmRef }}" src="./assets/bgm.mp3" loop="{{ true }}" preload="auto"></audio>
   <div style="max-width: 1280px; margin: 0 auto; padding: max(20px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left));">
 
-    <div style="display: flex; gap: 10px; padding-bottom: 22px;">
-      <button type="button" onClick="{{ goCollection }}" style="border: 3px solid {{ ink }}; background: {{ navCollectionBg }}; color: {{ navCollectionColor }}; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 12px; text-transform: uppercase; padding: 12px 20px; min-height: 44px; border-radius: 999px; box-shadow: 3px 3px 0 {{ ink }}40;" style-hover="filter: brightness(0.96);" style-active="transform: translate(1px,1px) scale(0.97);">Коллекция</button>
-      <button type="button" onClick="{{ goPlay }}" style="border: 3px solid {{ ink }}; background: {{ navPlayBg }}; color: {{ navPlayColor }}; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 12px; text-transform: uppercase; padding: 12px 20px; min-height: 44px; border-radius: 999px; box-shadow: 3px 3px 0 {{ ink }}40;" style-hover="filter: brightness(0.96);" style-active="transform: translate(1px,1px) scale(0.97);">Играть</button>
+    <div style="display: flex; gap: 8px; padding-bottom: 22px; border: 3px solid {{ ink }}; border-radius: 999px; background: {{ paper }}; box-shadow: 4px 4px 0 {{ ink }}30; overflow: hidden; padding: 5px;">
+      <button type="button" onClick="{{ goCollection }}" style="flex: 1 1 0; border: none; background: {{ navCollectionBg }}; color: {{ navCollectionColor }}; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(13px, 2.2vw, 17px); text-transform: uppercase; padding: 16px 12px; min-height: 52px; border-radius: 999px; transition: background-color .2s ease;" style-hover="filter: brightness(0.96);" style-active="transform: scale(0.98);">Коллекция</button>
+      <button type="button" onClick="{{ goPlay }}" style="flex: 1 1 0; border: none; background: {{ navPlayBg }}; color: {{ navPlayColor }}; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(13px, 2.2vw, 17px); text-transform: uppercase; padding: 16px 12px; min-height: 52px; border-radius: 999px; transition: background-color .2s ease;" style-hover="filter: brightness(0.96);" style-active="transform: scale(0.98);">Играть</button>
     </div>
 
     <sc-if value="{{ isCollection }}" hint-placeholder-val="{{ true }}">
-    <div style="display: flex; flex-direction: column; gap: 14px; padding: 4px 0 28px; animation: fadeUp .5s ease both;">
+    <div style="position: relative; z-index: 40; display: flex; flex-direction: column; gap: 14px; padding: 20px 0 28px; animation: fadeUp .5s ease both;">
       <div style="display: flex; align-items: center; gap: 14px;">
         <div style="width: 72px; height: 72px; flex: 0 0 auto; border-radius: 50%; overflow: hidden; background: {{ paper }}; border: 3px solid {{ ink }}; box-shadow: 0 0 0 4px var(--acc, #e0212f), 5px 5px 0 {{ ink }}; pointer-events: none;">
-          <image-slot id="mfc-avatar" shape="circle" placeholder="фото" style="width:100%;height:100%"></image-slot>
+          <image-slot id="mfc-avatar" shape="circle" placeholder="Фото" style="width:100%;height:100%"></image-slot>
         </div>
         <div style="position: relative; display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 auto;">
           <div style="font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--acc, #e0212f);">Профиль игрока</div>
@@ -77,12 +85,12 @@ a:hover { color: #9c1620; }
           </sc-if>
 
           <sc-if value="{{ showNameDisplay }}" hint-placeholder-val="{{ true }}">
-            <div onClick="{{ startEditName }}" style="position: relative; display: inline-flex; align-items: baseline; gap: 8px; cursor: pointer; width: fit-content; max-width: 100%;" style-hover="opacity: 0.85;">
+            <div onClick="{{ startEditName }}" style="position: relative; z-index: 31; display: inline-flex; align-items: baseline; gap: 8px; cursor: pointer; width: fit-content; max-width: 100%;" style-hover="opacity: 0.85;">
               <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(22px, 5.6vw, 40px); line-height: 0.95; text-transform: uppercase; letter-spacing: 0.01em; color: {{ ink }}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ playerName }}</div>
               <div style="flex: 0 0 auto; font-size: 13px; opacity: 0.55;" title="Изменить имя">✎</div>
 
               <sc-if value="{{ showNameOnboarding }}" hint-placeholder-val="{{ false }}">
-                <div onClick="{{ stop }}" style="position: absolute; top: calc(100% + 12px); left: 0; z-index: 30; width: max(220px, min(300px, 84vw)); animation: fadeUp .4s ease .1s both;">
+                <div onClick="{{ stop }}" style="position: absolute; top: calc(100% + 16px); left: 0; z-index: 30; width: max(220px, min(300px, 84vw)); animation: fadeUp .4s ease .1s both;">
                   <div style="position: absolute; top: -7px; left: 22px; width: 14px; height: 14px; background: {{ ink }}; transform: rotate(45deg); border-radius: 3px;"></div>
                   <div style="position: relative; background: {{ ink }}; color: {{ paper }}; border-radius: 14px; padding: 14px 16px; box-shadow: 4px 4px 0 var(--acc, #e0212f)55;">
                     <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px;">👋 Это ваше имя</div>
@@ -113,7 +121,7 @@ a:hover { color: #9c1620; }
     </div>
 
     <div style="display: flex; flex-direction: column; gap: 10px; padding-bottom: 22px;">
-      <input type="text" value="{{ search }}" onChange="{{ onSearch }}" placeholder="Поиск по названию…" style="border: 3px solid {{ ink }}; background: {{ paper }}; color: {{ ink }}; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px; padding: 12px 16px; min-height: 44px; border-radius: 999px; box-shadow: 3px 3px 0 {{ ink }}20; width: 100%;">
+      <input type="text" value="{{ search }}" onChange="{{ onSearch }}" placeholder="Поиск по названию…" style="border: 3px solid {{ ink }}; background: {{ paper }}; color: {{ ink }}; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px; padding: 12px 16px; min-height: 44px; border-radius: 999px; box-shadow: 3px 3px 0 {{ ink }}20; width: 100%; max-width: 320px;">
       <div style="display: flex; gap: 8px; flex-wrap: wrap;">
         <button type="button" onClick="{{ setFilterAll }}" style="border: 2.5px solid {{ ink }}; background: {{ filterAllBg }}; color: {{ filterAllColor }}; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 10px; text-transform: uppercase; padding: 9px 14px; min-height: 40px; border-radius: 999px;" style-hover="filter: brightness(0.97);">Все</button>
         <button type="button" onClick="{{ setFilterHero }}" style="border: 2.5px solid {{ ink }}; background: {{ filterHeroBg }}; color: {{ filterHeroColor }}; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 10px; text-transform: uppercase; padding: 9px 14px; min-height: 40px; border-radius: 999px;" style-hover="filter: brightness(0.97);">Герои</button>
@@ -149,7 +157,7 @@ a:hover { color: #9c1620; }
             </sc-if>
 
             <div style="position: absolute; top: 0; left: 0; right: 0; padding: 14px 14px 0; pointer-events: none;">
-              <div style="margin-top: {{ c.badgeOffset }}; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(13px, 2.1vw, 17px); line-height: 1.05; text-transform: uppercase; text-wrap: balance; overflow-wrap: break-word; word-break: break-word; hyphens: auto; color: #fff;">{{ c.name }}</div>
+              <div style="margin-top: {{ c.badgeOffset }}; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(11px, 2vw, 17px); line-height: 1.1; text-transform: uppercase; overflow-wrap: break-word; word-break: break-word; hyphens: auto; color: #fff; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ c.name }}</div>
               <div style="margin-top: 5px; font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffffb3;">{{ c.sub }}</div>
               <sc-if value="{{ c.hasKws }}" hint-placeholder-val="{{ false }}">
                 <div style="margin-top: 7px; font-size: 13px; letter-spacing: 0.08em;">{{ c.kwIcons }}</div>
@@ -206,7 +214,7 @@ a:hover { color: #9c1620; }
             </div>
 
             <div style="position: absolute; top: 0; left: 0; right: 0; padding: 14px 14px 0; pointer-events: none;">
-              <div style="margin-top: {{ c.badgeOffset }}; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(13px, 2.1vw, 17px); line-height: 1.05; text-transform: uppercase; text-wrap: balance; overflow-wrap: break-word; word-break: break-word; hyphens: auto; color: #fff;">{{ c.name }}</div>
+              <div style="margin-top: {{ c.badgeOffset }}; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(11px, 2vw, 17px); line-height: 1.1; text-transform: uppercase; overflow-wrap: break-word; word-break: break-word; hyphens: auto; color: #fff; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ c.name }}</div>
               <div style="margin-top: 5px; font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffffb3;">{{ c.sub }}</div>
               <sc-if value="{{ c.hasKws }}" hint-placeholder-val="{{ false }}">
                 <div style="margin-top: 7px; font-size: 13px; letter-spacing: 0.08em;">{{ c.kwIcons }}</div>
@@ -254,12 +262,12 @@ a:hover { color: #9c1620; }
               </div>
             </sc-for>
           </div>
-          <button type="button" onClick="{{ startMatch }}" style="border: 3px solid {{ ink }}; background: {{ startBg }}; color: {{ startColor }}; opacity: {{ startOpacity }}; cursor: {{ startCursor }}; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: clamp(15px, 1.8vw, 18px); text-transform: uppercase; padding: 18px 38px; min-height: 44px; border-radius: 999px; box-shadow: 5px 5px 0 {{ ink }}40; transition: background-color .25s ease, opacity .25s ease;" style-hover="filter: brightness(1.08);" style-active="transform: translate(2px,2px) scale(0.97); box-shadow: 3px 3px 0 {{ ink }}40;">{{ startLabel }}</button>
+          <button type="button" onClick="{{ startMatch }}" style="display: inline-flex; align-items: center; justify-content: center; line-height: 1; border: 3px solid {{ ink }}; background: {{ startBg }}; color: {{ startColor }}; opacity: {{ startOpacity }}; cursor: {{ startCursor }}; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: clamp(15px, 1.8vw, 18px); text-transform: uppercase; padding: 18px 38px; min-height: 44px; border-radius: 999px; box-shadow: 5px 5px 0 {{ ink }}40; transition: background-color .25s ease, opacity .25s ease;" style-hover="filter: brightness(1.08);" style-active="transform: translate(2px,2px) scale(0.97); box-shadow: 3px 3px 0 {{ ink }}40;">{{ startLabel }}</button>
         </div>
       </sc-if>
 
       <sc-if value="{{ isBattle }}" hint-placeholder-val="{{ false }}">
-        <div style="position: fixed; inset: 0; z-index: 20; display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; background: {{ bg }}; background-image: radial-gradient({{ dotColor }} 1.6px, transparent 1.6px); background-size: 16px 16px; padding: max(6px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(6px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left)); animation: fadeIn .35s ease both;">
+        <div style="position: fixed; inset: 0; z-index: 20; display: flex; flex-direction: column; overflow: hidden; background: {{ bg }}; background-image: radial-gradient({{ dotColor }} 1.6px, transparent 1.6px); background-size: 16px 16px; padding: max(6px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(6px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left)); animation: fadeIn .35s ease both;">
 
           <div style="position: relative; display: flex; align-items: center; justify-content: center; padding-bottom: 12px; min-height: 38px; flex: 0 0 auto;">
             <button type="button" onClick="{{ backToCollection }}" style="position: absolute; left: 0; border: 2px solid {{ ink }}40; background: transparent; color: {{ ink }}80; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 9px; text-transform: uppercase; padding: 7px 10px; border-radius: 999px;" style-hover="color: {{ ink }}; border-color: {{ ink }}80;">Выйти</button>
@@ -281,8 +289,9 @@ a:hover { color: #9c1620; }
             </sc-if>
           </div>
 
-          <div style="display: flex; align-items: center; gap: 10px; padding: 0 2px 8px; flex: 0 0 auto;">
-            <div onClick="{{ botAvatar.onClick }}" style="position: relative; display: flex; align-items: center; gap: 10px; padding: 6px 14px 6px 6px; border-radius: 999px; background: {{ paper }}; border: 3px solid {{ ink }}; box-shadow: {{ botAvatar.ring }}; cursor: {{ botAvatar.cursor }}; animation: {{ botAvatar.anim }}; transition: box-shadow .25s ease; flex: 0 1 auto; min-width: 0;">
+          <div style="position: relative; display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; padding-right: {{ boardPadRight }}; box-sizing: border-box;">
+          <div style="display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; padding: 0 2px 8px; flex: 0 0 auto;">
+            <div onClick="{{ botAvatar.onClick }}" style="order: 2; justify-self: center; position: relative; display: flex; align-items: center; gap: 10px; padding: 4px 10px 4px 4px; border-radius: 999px; background: {{ paper }}; border: 3px solid {{ ink }}; box-shadow: {{ botAvatar.ring }}; cursor: {{ botAvatar.cursor }}; animation: {{ botAvatar.anim }}; transition: box-shadow .25s ease; flex: 0 1 auto; min-width: 0;">
               <div style="width: {{ avatarSize }}; height: {{ avatarSize }}; flex: 0 0 auto; border-radius: 50%; background: {{ botAvatar.image }}; border: 2.5px solid {{ ink }}; display: flex; align-items: center; justify-content: center; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ avatarGlyphSize }}; color: #ffffffd9;">{{ botAvatar.glyph }}</div>
               <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0;">
                 <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ avatarNameFont }}; text-transform: uppercase; color: {{ ink }}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">{{ botAvatar.name }}</div>
@@ -304,15 +313,15 @@ a:hover { color: #9c1620; }
                 <div style="position: absolute; top: -16px; left: 50%; transform: translateX(-50%); pointer-events: none; animation: floatFade .9s ease both; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 22px; color: #ff4d4d; text-shadow: 0 0 6px #000, 0 0 2px #000;">{{ botAvatar.fxText }}</div>
               </sc-if>
             </div>
-            <div style="position: relative; width: {{ deckPileW }}; height: {{ deckPileH }}; flex: 0 0 auto;">
+            <div style="order: 1; position: relative; width: {{ deckPileW }}; height: {{ deckPileH }}; flex: 0 0 auto;">
               <div style="position: absolute; inset: 0; transform: rotate(-7deg); border-radius: 5px; background: #17140f center/cover no-repeat url('./assets/marvelcomics-card.jpg'); border: 1.5px solid #00000055;"></div>
               <div style="position: absolute; inset: 0; transform: rotate(3deg); border-radius: 5px; background: #17140f center/cover no-repeat url('./assets/marvelcomics-card.jpg'); border: 1.5px solid #00000055;"></div>
-              <div style="position: absolute; inset: 0; border-radius: 5px; background: #17140f center/cover no-repeat url('./assets/marvelcomics-card.jpg'); border: 1.5px solid {{ ink }};"></div>
+              <div style="position: absolute; inset: 0; border-radius: 5px; background: #17140f center/cover no-repeat url('./assets/marvelcomics-card.jpg'); border: 1.5px solid {{ ink }}; animation: {{ botDeckAnim }};"></div>
               <div style="position: absolute; bottom: -5px; right: -5px; min-width: 16px; height: 16px; padding: 0 3px; border-radius: 999px; background: {{ ink }}; color: {{ paper }}; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 8px; display: flex; align-items: center; justify-content: center;">{{ bot.deckCount }}</div>
             </div>
-            <div style="flex: 1; min-width: 0;">
+            <div style="order: 3; min-width: 0; text-align: right;">
               <div onClick="{{ openDiscardBot }}" style="font-size: 9.5px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: {{ ink }}80; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;">Бот · сброс {{ bot.discardCount }}</div>
-              <div style="display: flex; gap: 4px; align-items: center; margin-top: 3px;">
+              <div style="display: flex; gap: 4px; align-items: center; justify-content: flex-end; margin-top: 3px;">
                 <sc-for list="{{ bot.manaPips }}" as="m" hint-placeholder-count="10">
                   <div style="width: {{ manaPipSize }}; height: {{ manaPipSize }}; border-radius: 3px; transform: rotate(45deg); background: {{ m.bg }}; box-shadow: {{ m.glow }}; flex: 0 0 auto;"></div>
                 </sc-for>
@@ -321,7 +330,7 @@ a:hover { color: #9c1620; }
             </div>
           </div>
 
-          <div style="flex: 0 0 auto; height: {{ fieldArenaH }}; min-height: 0; overflow: hidden; box-sizing: border-box; border-radius: 16px; padding: {{ fieldArenaPad }}; background: linear-gradient(160deg, #24352b, #131d17); border: 2px solid #00000040; box-shadow: inset 0 3px 12px #00000066;">
+          <div style="flex: 1 1 auto; min-height: 0; overflow: hidden; box-sizing: border-box; border-radius: 16px; padding: {{ fieldArenaPad }}; background: linear-gradient(160deg, #24352b, #131d17); border: 2px solid #00000040; box-shadow: inset 0 3px 12px #00000066;">
             <div style="height: 100%; display: flex; align-items: center; justify-content: center; gap: {{ fieldGap }};">
               <sc-if value="{{ bot.fieldEmpty }}" hint-placeholder-val="{{ false }}">
                 <div style="font-size: 10px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: #ffffff40; animation: fadeIn .4s ease both;">Поле противника пусто</div>
@@ -330,7 +339,7 @@ a:hover { color: #9c1620; }
                 <div onClick="{{ h.onClick }}" style="position: relative; height: {{ botFieldCardH }}; aspect-ratio: 2 / 3; max-width: {{ botFieldCardW }}; flex: 0 1 auto; border-radius: 12px; overflow: hidden; cursor: {{ h.cursor }}; background: #17140f; border: {{ h.border }}; filter: {{ h.cardFilter }}; transform: {{ h.lift }}; z-index: {{ h.z }}; animation: {{ h.anim }}; transition: transform .28s cubic-bezier(.2,.8,.25,1), filter .3s ease, border-color .2s ease, box-shadow .25s ease; box-shadow: 0 6px 16px -6px #00000088;" style-hover="transform: translateY(-8px) scale(1.05); box-shadow: 0 14px 26px -8px #000000aa;">
                   <div style="position: absolute; inset: 0; background: {{ h.art }};"></div>
                   <div style="position: absolute; inset: 0; background: linear-gradient(180deg, #17140fbf 0%, transparent 38%, #17140fe6 100%);"></div>
-                  <div style="position: absolute; top: {{ fieldInset }}; left: {{ fieldInset }}; right: {{ fieldNameRight }}; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ fieldNameFont }}; line-height: 1.15; letter-spacing: -0.01em; color: #fff; text-transform: uppercase; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: {{ fieldNameClamp }}; -webkit-box-orient: vertical; overflow: hidden;">{{ h.name }}</div>
+                  <div style="position: absolute; top: {{ fieldInset }}; left: {{ fieldInset }}; right: {{ fieldNameRight }}; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ h.nameFont }}; line-height: 1.15; letter-spacing: -0.01em; color: #fff; text-transform: uppercase; overflow-wrap: normal; word-break: keep-all; hyphens: none; display: -webkit-box; -webkit-line-clamp: {{ fieldNameClamp }}; -webkit-box-orient: vertical; overflow: hidden;">{{ h.name }}</div>
                   <div onClick="{{ h.openInfo }}" style="position: absolute; top: {{ fieldInset }}; right: {{ fieldInset }}; width: {{ fieldInfoSize }}; height: {{ fieldInfoSize }}; border-radius: 50%; background: #00000099; border: 1px solid #ffffff66; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 3;">
                     <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ fieldStateFont }}; color: #fff;">i</div>
                   </div>
@@ -353,15 +362,15 @@ a:hover { color: #9c1620; }
             </div>
           </div>
 
-          <div style="display: flex; justify-content: center; padding: 4px 10px; flex: 0 0 auto; min-height: {{ logMaxH }};">
-            <div onClick="{{ toggleLog }}" style="{{ logBoxStyle }} display: flex; flex-direction: column; gap: 3px; background: {{ paper }}; border: 2px solid {{ ink }}30; border-radius: 12px; padding: 5px 14px; box-shadow: 2px 2px 0 {{ ink }}20; cursor: {{ logCursor }};">
-              <sc-for list="{{ game.history }}" as="entry" hint-placeholder-count="3">
+          <div style="display: flex; justify-content: center; padding: 2px 10px; flex: 0 0 auto; min-height: {{ logMaxH }};">
+            <div style="{{ logBoxStyle }} display: flex; flex-direction: column; gap: 3px; background: {{ paper }}; border: 2px solid {{ ink }}30; border-radius: 12px; padding: 5px 14px; box-shadow: 2px 2px 0 {{ ink }}20;">
+              <sc-for list="{{ game.history }}" as="entry" hint-placeholder-count="1">
                 <div style="font-size: {{ logFont }}; font-weight: {{ entry.weight }}; color: {{ entry.color }}; line-height: 1.3;">{{ entry.text }}</div>
               </sc-for>
             </div>
           </div>
 
-          <div style="flex: 0 0 auto; height: {{ fieldArenaH }}; min-height: 0; overflow: hidden; box-sizing: border-box; border-radius: 16px; padding: {{ fieldArenaPad }}; background: linear-gradient(200deg, var(--acc, #e0212f)18, #17140f08); border: 2px solid var(--acc, #e0212f)40; box-shadow: inset 0 3px 12px #00000022;">
+          <div style="flex: 1 1 auto; min-height: 0; overflow: hidden; box-sizing: border-box; border-radius: 16px; padding: {{ fieldArenaPad }}; background: linear-gradient(200deg, var(--acc, #e0212f)18, #17140f08); border: 2px solid var(--acc, #e0212f)40; box-shadow: inset 0 3px 12px #00000022;">
             <div style="height: 100%; display: flex; align-items: center; justify-content: center; gap: {{ fieldGap }};">
               <sc-if value="{{ player.fieldEmpty }}" hint-placeholder-val="{{ false }}">
                 <div style="font-size: 10px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: {{ ink }}40; animation: fadeIn .4s ease both;">Разыграйте героя из руки</div>
@@ -370,7 +379,7 @@ a:hover { color: #9c1620; }
                 <div onClick="{{ h.onClick }}" style="position: relative; height: {{ playerFieldCardH }}; aspect-ratio: 2 / 3; max-width: {{ playerFieldCardW }}; flex: 0 1 auto; border-radius: 12px; overflow: hidden; cursor: {{ h.cursor }}; background: #17140f; border: {{ h.border }}; filter: {{ h.cardFilter }}; transform: {{ h.lift }}; z-index: {{ h.z }}; animation: {{ h.anim }}; transition: transform .28s cubic-bezier(.2,.8,.25,1), filter .3s ease, border-color .2s ease, box-shadow .25s ease; box-shadow: 0 6px 16px -6px #00000088;" style-hover="transform: translateY(-8px) scale(1.05); box-shadow: 0 14px 26px -8px #000000aa;">
                   <div style="position: absolute; inset: 0; background: {{ h.art }};"></div>
                   <div style="position: absolute; inset: 0; background: linear-gradient(180deg, #17140fbf 0%, transparent 38%, #17140fe6 100%);"></div>
-                  <div style="position: absolute; top: {{ fieldInset }}; left: {{ fieldInset }}; right: {{ fieldNameRight }}; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ fieldNameFont }}; line-height: 1.15; letter-spacing: -0.01em; color: #fff; text-transform: uppercase; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: {{ fieldNameClamp }}; -webkit-box-orient: vertical; overflow: hidden;">{{ h.name }}</div>
+                  <div style="position: absolute; top: {{ fieldInset }}; left: {{ fieldInset }}; right: {{ fieldNameRight }}; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ h.nameFont }}; line-height: 1.15; letter-spacing: -0.01em; color: #fff; text-transform: uppercase; overflow-wrap: normal; word-break: keep-all; hyphens: none; display: -webkit-box; -webkit-line-clamp: {{ fieldNameClamp }}; -webkit-box-orient: vertical; overflow: hidden;">{{ h.name }}</div>
                   <div onClick="{{ h.openInfo }}" style="position: absolute; top: {{ fieldInset }}; right: {{ fieldInset }}; width: {{ fieldInfoSize }}; height: {{ fieldInfoSize }}; border-radius: 50%; background: #00000099; border: 1px solid #ffffff66; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 3;">
                     <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ fieldStateFont }}; color: #fff;">i</div>
                   </div>
@@ -393,8 +402,8 @@ a:hover { color: #9c1620; }
             </div>
           </div>
 
-          <div style="display: flex; align-items: center; gap: 10px; padding: {{ playerRowPad }}; flex: 0 0 auto;">
-            <div style="position: relative; display: flex; align-items: center; gap: 10px; padding: 6px 14px 6px 6px; border-radius: 999px; background: {{ paper }}; border: 3px solid {{ ink }}; box-shadow: {{ playerAvatar.ring }}; animation: {{ playerAvatar.anim }}; transition: box-shadow .25s ease; flex: 0 1 auto; min-width: 0;">
+          <div style="display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; padding: {{ playerRowPad }}; flex: 0 0 auto;">
+            <div style="order: 2; justify-self: center; position: relative; display: flex; align-items: center; gap: 10px; padding: 4px 10px 4px 4px; border-radius: 999px; background: {{ paper }}; border: 3px solid {{ ink }}; box-shadow: {{ playerAvatar.ring }}; animation: {{ playerAvatar.anim }}; transition: box-shadow .25s ease; flex: 0 1 auto; min-width: 0;">
               <div style="width: {{ avatarSize }}; height: {{ avatarSize }}; flex: 0 0 auto; border-radius: 50%; background: {{ playerAvatar.image }}; border: 2.5px solid {{ ink }}; display: flex; align-items: center; justify-content: center; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ avatarGlyphSize }}; color: #ffffffd9;">{{ playerAvatar.glyph }}</div>
               <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0;">
                 <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ avatarNameFont }}; text-transform: uppercase; color: {{ ink }}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">{{ playerAvatar.name }}</div>
@@ -412,7 +421,7 @@ a:hover { color: #9c1620; }
                     <div style="font-size: 8.5px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #c21f2b; white-space: nowrap; animation: shieldBreak .55s ease both;">⚔ Щит разбит — уязвим</div>
                   </sc-if>
                   <sc-if value="{{ playerAvatar.canPeek }}" hint-placeholder-val="{{ false }}">
-                    <button type="button" onClick="{{ peekTop }}" style="border: 2px solid var(--acc, #e0212f); background: transparent; color: var(--acc, #e0212f); cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 8.5px; text-transform: uppercase; padding: 5px 9px; border-radius: 999px; white-space: nowrap;" style-hover="background: var(--acc, #e0212f); color: #fff;">{{ peekLabel }}</button>
+                    <button type="button" onClick="{{ peekTop }}" style="flex: 0 0 auto; border: 2px solid {{ ink }}; background: transparent; color: {{ ink }}; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 8.5px; text-transform: uppercase; padding: 5px 9px; border-radius: 999px; white-space: nowrap;" style-hover="background: {{ ink }}; color: {{ paper }};">{{ peekLabel }}</button>
                   </sc-if>
                 </div>
               </div>
@@ -421,28 +430,29 @@ a:hover { color: #9c1620; }
                 <div style="position: absolute; top: -16px; left: 50%; transform: translateX(-50%); pointer-events: none; animation: floatFade .9s ease both; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 22px; color: #ff4d4d; text-shadow: 0 0 6px #000, 0 0 2px #000;">{{ playerAvatar.fxText }}</div>
               </sc-if>
             </div>
-            <div style="position: relative; width: {{ deckPileW }}; height: {{ deckPileH }}; flex: 0 0 auto;">
+            <div style="order: 1; position: relative; width: {{ deckPileW }}; height: {{ deckPileH }}; flex: 0 0 auto;">
               <div style="position: absolute; inset: 0; transform: rotate(-7deg); border-radius: 5px; background: #17140f center/cover no-repeat url('./assets/marvelcomics-card.jpg'); border: 1.5px solid #00000055;"></div>
               <div style="position: absolute; inset: 0; transform: rotate(3deg); border-radius: 5px; background: #17140f center/cover no-repeat url('./assets/marvelcomics-card.jpg'); border: 1.5px solid #00000055;"></div>
-              <div style="position: absolute; inset: 0; border-radius: 5px; background: #17140f center/cover no-repeat url('./assets/marvelcomics-card.jpg'); border: 1.5px solid var(--acc, #e0212f);"></div>
+              <div style="position: absolute; inset: 0; border-radius: 5px; background: #17140f center/cover no-repeat url('./assets/marvelcomics-card.jpg'); border: 1.5px solid var(--acc, #e0212f); animation: {{ playerDeckAnim }};"></div>
               <div style="position: absolute; bottom: -5px; right: -5px; min-width: 16px; height: 16px; padding: 0 3px; border-radius: 999px; background: var(--acc, #e0212f); color: #fff; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 8px; display: flex; align-items: center; justify-content: center;">{{ player.deckCount }}</div>
             </div>
-            <div style="flex: 1; min-width: 0;">
+            <div style="order: 3; min-width: 0; text-align: right;">
               <div onClick="{{ openDiscardPlayer }}" style="font-size: 9.5px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: {{ ink }}80; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;">Рука {{ player.handCount }}/7 · сброс {{ player.discardCount }}</div>
-              <div style="display: flex; gap: 4px; align-items: center; margin-top: 3px;">
+              <div style="display: flex; gap: 4px; align-items: center; justify-content: flex-end; margin-top: 3px;">
                 <sc-for list="{{ player.manaPips }}" as="m" hint-placeholder-count="10">
                   <div style="width: {{ manaPipSize }}; height: {{ manaPipSize }}; border-radius: 3px; transform: rotate(45deg); background: {{ m.bg }}; box-shadow: {{ m.glow }}; flex: 0 0 auto;"></div>
                 </sc-for>
                 <div style="font-size: 10px; font-weight: 800; color: var(--acc, #e0212f); margin-left: 4px; white-space: nowrap;">{{ player.mana }}/{{ player.manaCap }}⚡</div>
               </div>
             </div>
-            <button type="button" onClick="{{ endTurn }}" style="{{ endTurnPosition }} border: 3px solid {{ ink }}; background: {{ endTurnBg }}; color: {{ endTurnColor }}; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: {{ endTurnFont }}; text-transform: uppercase; padding: {{ endTurnPad }}; min-height: {{ endTurnMinH }}; border-radius: 999px; white-space: nowrap; flex: 0 0 auto; animation: {{ endTurnAnim }}; box-shadow: 3px 3px 0 {{ ink }}40;" style-hover="filter: brightness(0.96);" style-active="transform: translate(1px,1px) scale(0.97);">Закончить ход</button>
+          </div>
+          <button type="button" onClick="{{ endTurn }}" style="{{ endTurnPosition }} border: 3px solid {{ ink }}; background: {{ endTurnBg }}; color: {{ endTurnColor }}; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: {{ endTurnFont }}; text-transform: uppercase; padding: {{ endTurnPad }}; min-height: {{ endTurnMinH }}; border-radius: 999px; white-space: nowrap; animation: {{ endTurnAnim }}; box-shadow: 3px 3px 0 {{ ink }}40;" style-hover="filter: brightness(0.96);" style-active="transform: translateY(-50%) translate(1px,1px) scale(0.97);">Закончить ход</button>
           </div>
 
           <div style="display: flex; justify-content: center; padding: {{ handPad }}; flex: 0 0 auto; {{ handWrapOverflow }}">
             <div style="display: flex; align-items: flex-end; margin: 0 auto; padding: {{ handEndPad }};">
               <sc-for list="{{ player.hand }}" as="c" hint-placeholder-count="5">
-                <div onClick="{{ c.onClick }}" onPointerEnter="{{ c.onEnter }}" onPointerLeave="{{ c.onLeave }}" style="position: relative; flex: 0 0 auto; width: {{ handCardW }}; aspect-ratio: 2 / 3; margin-left: {{ c.overlap }}; border-radius: 12px; overflow: hidden; cursor: {{ c.cursor }}; touch-action: manipulation; background: #17140f; border: 3px solid {{ c.border }}; box-shadow: {{ c.shadow }}; opacity: {{ c.dim }}; transform: {{ c.transform }}; transition: transform .25s cubic-bezier(.2,.8,.25,1), box-shadow .25s ease; z-index: {{ c.z }};" style-active="transform: scale(0.97);">
+                <div onClick="{{ c.onClick }}" onPointerEnter="{{ c.onEnter }}" onPointerLeave="{{ c.onLeave }}" style="position: relative; flex: 0 0 auto; width: {{ handCardW }}; aspect-ratio: 2 / 3; margin-left: {{ c.overlap }}; border-radius: 12px; overflow: hidden; cursor: {{ c.cursor }}; touch-action: manipulation; background: #17140f; border: 3px solid {{ c.border }}; box-shadow: {{ c.shadow }}; opacity: {{ c.dim }}; transform: {{ c.transform }}; transition: transform .25s cubic-bezier(.2,.8,.25,1), box-shadow .25s ease; z-index: {{ c.z }}; animation: {{ c.anim }};" style-active="transform: scale(0.97);">
                   <div style="position: absolute; inset: 0; background: {{ c.art }};"></div>
                   <div style="position: absolute; inset: 0; background: linear-gradient(180deg, #17140fb3 0%, transparent 44%, #17140fe6 100%);"></div>
                   <div style="position: absolute; top: {{ handBadgeInset }}; left: {{ handBadgeInset }}; right: {{ handBadgeInset }}; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ handTypeFont }}; letter-spacing: 0.05em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; background: {{ c.typeColor }}; color: #17140f; display: inline-block; width: fit-content;">{{ c.typeLabel }}</div>
@@ -949,15 +959,15 @@ function makeInstance(d) {
 // остальные пока чисто описательные и уже готовы к будущим картам.
 // Добавить новое слово = добавить запись в KEYWORDS (+ при желании раздать в KEYWORD_TABLE).
 const KEYWORDS = {
-  defender:   { icon: "🛡", name: "Defender",   text: "Пока на поле есть Defender, ваш аватар полностью защищён." },
-  charge:     { icon: "⚡", name: "Charge",     text: "Атакует сразу после выхода на поле, без усталости призыва." },
-  flying:     { icon: "🪽", name: "Flying",     text: "Полёт. Механика появится в будущих обновлениях." },
-  ranged:     { icon: "🏹", name: "Ranged",     text: "Дальний бой. В будущем сможет бить через защитников." },
-  mutant:     { icon: "🧬", name: "Mutant",     text: "Мутант. Усиливается «Пришествием Феникса»." },
-  technology: { icon: "🤖", name: "Technology", text: "Технологический герой. Страдает от «Ярости Альтрона»." },
-  magic:      { icon: "🔮", name: "Magic",      text: "Магия. Тег для будущих карт и аватаров." },
-  cosmic:     { icon: "🌌", name: "Cosmic",     text: "Космос. Тег для будущих карт и аватаров." },
-  worthy:     { icon: "⚒", name: "Worthy",     text: "Достойный. Может поднять Мьёльнир." }
+  defender:   { icon: "🛡", name: "Defender",   text: "Пока на поле есть Defender, ваш аватар полностью защищён" },
+  charge:     { icon: "⚡", name: "Charge",     text: "Атакует сразу после выхода на поле, без усталости призыва" },
+  flying:     { icon: "🪽", name: "Flying",     text: "Полёт" },
+  ranged:     { icon: "🏹", name: "Ranged",     text: "Дальний бой" },
+  mutant:     { icon: "🧬", name: "Mutant",     text: "Мутант. Усиливается «Пришествием Феникса»" },
+  technology: { icon: "🤖", name: "Technology", text: "Технологический герой. Страдает от «Ярости Альтрона»" },
+  magic:      { icon: "🔮", name: "Magic",      text: "Магия" },
+  cosmic:     { icon: "🌌", name: "Cosmic",     text: "Космос" },
+  worthy:     { icon: "⚒", name: "Worthy",     text: "Достойный. Может поднять Мьёльнир" }
 };
 // Раздача ключевых слов по именам карт. Массив DATA не трогаем: карте можно задать
 // и своё поле keywords: [...] — оба источника складываются.
@@ -1224,7 +1234,7 @@ class Component extends DCLogic {
   clearFxLater(ms) {
     setTimeout(() => {
       const g = this.state.game;
-      if (g && (g.fx || g.castFx || g.burnFx)) this.setState({ game: Object.assign({}, g, { fx: null, castFx: null, burnFx: null }) });
+      if (g && (g.fx || g.castFx || g.burnFx || g.deckFx)) this.setState({ game: Object.assign({}, g, { fx: null, castFx: null, burnFx: null, deckFx: null }) });
     }, ms);
   }
   blip(freq, dur, type, gain) {
@@ -1317,6 +1327,8 @@ class Component extends DCLogic {
     }
     if (!p.deck.length) return;
     const card = p.deck.shift();
+    card.justDrawn = true;
+    game.deckFx = side;
     // Лимит руки 7: лишняя карта сгорает и уходит в сброс.
     if (p.hand.length >= 7) {
       card.discardReason = "Рука была переполнена (7 карт) — карта сгорела при доборе.";
@@ -1464,7 +1476,35 @@ class Component extends DCLogic {
       game.winner = pend.side === "bot" ? "player" : "bot";
       game.phase = "over";
       logEvent(game, av.name + " уничтожен. " + (game.winner === "player" ? "Вы победили!" : "Бот победил."));
+      this.stopBgm(2400);
     }
+  }
+  bgmRef = (el) => { this.bgm = el; };
+  fadeBgm(to, ms) {
+    if (!this.bgm) return;
+    clearInterval(this._bgmFade);
+    const from = this.bgm.volume, steps = Math.max(1, Math.round(ms / 40)), delta = (to - from) / steps;
+    let i = 0;
+    this._bgmFade = setInterval(() => {
+      i++;
+      const v = from + delta * i;
+      this.bgm.volume = Math.min(1, Math.max(0, v));
+      if (i >= steps) {
+        clearInterval(this._bgmFade);
+        this.bgm.volume = to;
+        if (to === 0) this.bgm.pause();
+      }
+    }, 40);
+  }
+  startBgm(ms) {
+    if (!this.bgm) return;
+    this.bgm.volume = 0;
+    const p = this.bgm.play();
+    if (p && p.catch) p.catch(() => {});
+    this.fadeBgm(0.55, ms || 1400);
+  }
+  stopBgm(ms) {
+    this.fadeBgm(0, ms || 1600);
   }
   botPlayCardStep(game) {
     const bot = game.bot;
@@ -1644,26 +1684,26 @@ class Component extends DCLogic {
     const logOpen = !!st.logOpen;
     let headerH, logMaxHPx, handPadPx, avSize, arenaChrome, handH, fieldH;
     if (mobilePortrait) {
-      headerH = 36;
-      logMaxHPx = 24;
+      headerH = 32;
+      logMaxHPx = 16;
       handPadPx = 8;
-      avSize = Math.round(Math.max(44, Math.min(62, vh * 0.07)));
+      avSize = Math.round(Math.max(36, Math.min(46, vh * 0.05)));
       arenaChrome = 14;
-      const chromeP = headerH + 2 * (avSize + 14) + (logMaxHPx + 10) + handPadPx + 46;
-      handH = Math.round(Math.max(108, Math.min(vh * 0.21, 212)));
-      fieldH = Math.floor(Math.max(86, (vh - chromeP - handH) / 2 - arenaChrome));
+      const chromeP = headerH + 2 * (avSize + 10) + (logMaxHPx + 6) + handPadPx + 30;
+      handH = Math.round(Math.max(96, Math.min(vh * 0.17, 180)));
+      fieldH = Math.floor(Math.max(110, (vh - chromeP - handH) / 2 - arenaChrome));
     } else {
-      headerH = compact ? 30 : 42;
-      logMaxHPx = compact ? 24 : 58; // целое число строк журнала: 1 в compact, 3 на десктопе
-      handPadPx = compact ? 8 : 16;
-      avSize = Math.round(Math.max(38, Math.min(64, vh * 0.082)));
-      const avatarRowH = avSize + 16;
-      arenaChrome = compact ? 18 : 30;
-      const chrome = headerH + (avatarRowH + 8) + (avatarRowH + 14) + (logMaxHPx + 14) + handPadPx + 10;
+      headerH = compact ? 26 : 34;
+      logMaxHPx = 16; // одна строка — только текущий статус хода
+      handPadPx = compact ? 8 : 14;
+      avSize = Math.round(Math.max(30, Math.min(46, vh * 0.058)));
+      const avatarRowH = avSize + 12;
+      arenaChrome = compact ? 14 : 22;
+      const chrome = headerH + (avatarRowH + 6) + (avatarRowH + 10) + (logMaxHPx + 8) + handPadPx + 8;
       // 34px запас: веер руки наклоняет крайние карты вниз, плюс погрешность строк.
-      const avail = Math.max(180, vh - chrome - arenaChrome * 2 - 34);
-      handH = Math.max(84, Math.min(avail / 2.76, 268));
-      fieldH = Math.round(handH * 0.88);
+      const avail = Math.max(200, vh - chrome - arenaChrome * 2 - 46);
+      handH = Math.max(84, Math.min(avail / 3.4, 220));
+      fieldH = Math.round(handH * 1.38);
     }
     const handWpx = Math.round(handH * 2 / 3);
 
@@ -1695,10 +1735,10 @@ class Component extends DCLogic {
     const fW = Math.round(fH * 2 / 3);
     const tinyCards = fW < 74;
     const fieldNameFont = Math.max(8, Math.round(fH * 0.066)) + "px";
-    const fieldNameRight = Math.round(fW * 0.3) + "px";
+    const fieldNameRight = Math.round(fW * 0.22) + "px";
     const fieldStatFontPx = Math.max(8.5, Math.round(fH * 0.072));
     const fieldInsetPx = Math.max(3, Math.round(fW * 0.07));
-    const fieldInfoPx = Math.max(13, Math.round(fW * 0.24));
+    const fieldInfoPx = Math.max(12, Math.round(fW * 0.16));
     const fieldStatFont = fieldStatFontPx + "px";
     const fieldStateFont = Math.max(7, Math.round(fH * 0.055)) + "px";
     const fieldInfoSize = fieldInfoPx + "px";
@@ -1717,12 +1757,8 @@ class Component extends DCLogic {
     const logFont = mobilePortrait ? "10.5px" : (compact ? "10px" : "11.5px");
     const logMaxH = logMaxHPx + "px";
     // Журнал: на мобильных свернут в одну строку, по тапу раскрывается поверх поля.
-    const logBoxStyle = mobileLayout
-      ? (logOpen
-        ? "position: fixed; left: max(10px, env(safe-area-inset-left)); right: max(10px, env(safe-area-inset-right)); top: 15%; z-index: 45; max-height: 44vh; overflow-y: auto; box-shadow: 0 18px 40px -12px #00000088;"
-        : "width: 100%; max-width: 640px; max-height: " + logMaxHPx + "px; overflow: hidden;")
-      : "width: 100%; max-width: 640px; max-height: " + logMaxHPx + "px; overflow-y: auto;";
-    const logCursor = mobileLayout ? "pointer" : "default";
+    const logBoxStyle = "width: 100%; max-width: 640px; overflow: hidden; text-align: center;";
+    const logCursor = "default";
     const handCardW = handWpx + "px";
     // Портрет: перекрытие карт руки подбирается так, чтобы веер целиком влезал в ширину
     // экрана при любом числе карт (последняя карта не выходит за край).
@@ -1754,7 +1790,8 @@ class Component extends DCLogic {
       ? "position: fixed; right: max(10px, env(safe-area-inset-right)); bottom: " + (handH + handPadPx + 16) + "px; z-index: 30; width: " + endTurnSize + "; height: " + endTurnSize + "; padding: 0; white-space: normal; line-height: 1.15;"
       : mobileLandscape
         ? "position: fixed; right: max(8px, env(safe-area-inset-right)); top: 50%; margin-top: -" + Math.round(endTurnSizePx / 2) + "px; z-index: 25; width: " + endTurnSize + "; height: " + endTurnSize + "; padding: 0; white-space: normal; line-height: 1.15;"
-        : "position: static;";
+        : "position: absolute; right: 16px; top: 50%; transform: translateY(-50%); z-index: 25; white-space: normal; line-height: 1.15; writing-mode: vertical-rl; text-orientation: mixed;";
+    const boardPadRight = mobileLayout ? "0" : (compact ? "56px" : "68px");
     const handEndPad = mobileLandscape ? "0 " + (endTurnSizePx + 20) + "px 0 4px" : "0 4px";
     // Портрет и десктоп укладывают веер в экран расчётом — контейнер не должен
     // обрезать поднятую карту; в ландшафте узких экранов остаётся скролл-страховка.
@@ -1887,9 +1924,17 @@ class Component extends DCLogic {
 
     const fieldVM = (side) => {
       if (!g) return [];
-      return g[side].field.filter((h) => !!h).map((h) => {
+      const live = g[side].field.filter((h) => !!h);
+      const n = live.length;
+      return live.map((h, idx) => {
+        const mid = (n - 1) / 2;
+        const off = idx - mid;
+        const arcY = Math.round(Math.abs(off) * Math.abs(off) * 3.2) * (side === "bot" ? 1 : -1);
+        const arcRot = Math.round(off * 3.2 * 10) / 10;
+        const arcTransform = "translateY(" + arcY + "px) rotate(" + arcRot + "deg)";
         const isPending = !!g.pendingBonus;
         const readyToAttack = h.alive && !h.sick && !h.usedAttack && !h.dying;
+        const targetableForPlayer = side === "bot" && g.turn === "player" && !!g.selectedUid && !h.sick && !isPending && !h.dying;
         let onClick = null;
         if (h.dying) onClick = null;
         else if (isPending) onClick = () => resolveTarget(side, h.uid);
@@ -1910,23 +1955,27 @@ class Component extends DCLogic {
           if (h.justIn) animParts.push("cardIn .5s cubic-bezier(.2,.8,.25,1) both");
           if (fx) animParts.push("shakeHit .4s ease");
           if (isAttacking) animParts.push((side === "player" ? "lungeUp" : "lungeDown") + " .5s ease, atkGlow .5s ease infinite");
+          else if (side === "bot" && targetableForPlayer) animParts.push("atkGlow 1.4s ease infinite");
           else if (h.buffed) animParts.push("buffGlow 1.8s ease infinite");
           else if (h.debuffed) animParts.push("debuffGlow 1.8s ease infinite");
-          else if (readyToAttack) animParts.push("readyGlow 2s ease infinite");
+          else if (side === "player" && readyToAttack) animParts.push("readyGlow 2s ease infinite");
         }
+        const nameFontPx = Math.max(6.5, Math.round(fH * 0.066 * (h.name.length > 16 ? 0.72 : h.name.length > 11 ? 0.86 : 1)));
         return {
-          filled: true, name: h.name, hp: h.hp, str: h.stats.s,
+          filled: true, name: h.name, hp: h.hp, str: h.stats.s, nameFont: nameFontPx + "px",
           art: h.art, onClick: onClick,
-          lift: isSel ? "translateY(-12px) scale(1.06)" : "none",
+          lift: isSel ? "translateY(-12px) scale(1.06)" : arcTransform,
           z: isSel ? 6 : 1,
           cursor: onClick ? "pointer" : "default",
-          cardFilter: (h.sick || h.usedAttack) ? "grayscale(0.55) brightness(0.62)" : "none",
+          cardFilter: side === "player"
+            ? ((h.sick || h.usedAttack) ? "grayscale(0.55) brightness(0.62)" : "none")
+            : (targetableForPlayer ? "none" : "grayscale(0.4) brightness(0.75)"),
           hasState: !!stateLabel, stateLabel: stateLabel,
           kwIcons: kwIconsOf(h.keywords), hasKws: !!(h.keywords && h.keywords.length),
           hasFx: !!fx, fxText: fx ? (fx.dead ? "☠" : "-" + fx.dmg) : "",
           anim: animParts.length ? animParts.join(", ") : "none",
           openInfo: openFieldCard(h),
-          border: isSel ? "3px solid " + acc : (isPending ? "2px dashed #14a893" : (isAttacking ? "2px solid #ffd27a" : "2px solid #17140f"))
+          border: isSel ? "3px solid " + acc : (isPending ? "2px dashed #14a893" : (isAttacking ? "2px solid #ffd27a" : (side === "bot" && targetableForPlayer ? "3px solid " + acc : "2px solid #17140f")))
         };
       });
     };
@@ -2034,6 +2083,7 @@ class Component extends DCLogic {
           overlap: i === 0 ? "0px" : (handOverlapPx + "px"),
           z: isHover ? 100 : i,
           transform: transform,
+          anim: c.justDrawn ? "drawIn .5s cubic-bezier(.2,.8,.25,1) both" : "none",
           shadow: isHover ? "0 20px 34px -10px #00000070, 0 0 0 3px " + acc : "2px 2px 0 #17140f30"
         };
       });
@@ -2087,9 +2137,9 @@ class Component extends DCLogic {
       isSetup: isSetup,
       isBattle: isBattle,
       game: g ? { history: (() => {
-        let hst = (g.logHistory || []).slice().reverse();
+        let hst = (g.logHistory || []).slice(-1).reverse();
         if (g.pendingBonus) hst = ["Выберите героя для карты «" + g.pendingBonus.name + "» (клик по герою на поле)."].concat(hst);
-        return hst.slice(0, 10).map((t, idx) => ({ text: t, weight: idx === 0 ? 800 : 600, color: idx === 0 ? ink : ink + "88" }));
+        return hst.slice(0, 1).map((t, idx) => ({ text: t, weight: 800, color: ink }));
       })() } : { history: [] },
       turnLabel: g ? (g.turn === "player" ? "Ваш ход" : "Ход бота") : "",
       turnColor: g ? (g.turn === "player" ? acc : ink + "99") : ink,
@@ -2112,13 +2162,15 @@ class Component extends DCLogic {
       setupAvatarFont: setupAvatarFont, setupCardPad: setupCardPad, setupCardGap: setupCardGap,
       turnFontSize: turnFontSize, turnPad: turnPad,
       deckPileW: deckPileW, deckPileH: deckPileH,
+      botDeckAnim: g && g.deckFx === "bot" ? "deckPulse .5s ease" : "none",
+      playerDeckAnim: g && g.deckFx === "player" ? "deckPulse .5s ease" : "none",
       manaPipSize: manaPipSize,
       fieldArenaPad: fieldArenaPad, fieldGap: fieldGap, fieldArenaH: fieldArenaH,
       logPad: logPad, logFont: logFont, logMaxH: logMaxH,
       handCardW: handCardW, handPad: handPad,
       handNameFont: handNameFont, handTypeFont: handTypeFont, handCostSize: handCostSize, handCostFont: handCostFont, handStatFont: handStatFont, handNameTop: handNameTop, handBadgeInset: handBadgeInset,
       endTurnPad: endTurnPad, endTurnFont: endTurnFont, endTurnMinH: endTurnMinH,
-      endTurnPosition: endTurnPosition, handEndPad: handEndPad,
+      endTurnPosition: endTurnPosition, handEndPad: handEndPad, boardPadRight: boardPadRight,
       playerRowPad: playerRowPad,
       botFieldCardW: botFieldCardW, botFieldCardH: botFieldCardH,
       playerFieldCardW: playerFieldCardW, playerFieldCardH: playerFieldCardH,
@@ -2145,7 +2197,7 @@ class Component extends DCLogic {
         ? "Аватар противника уничтожен. Ваши герои удержали поле."
         : "Ваш аватар пал. В следующий раз держите защиту из трёх героев дольше.",
       winColor: g && g.winner === "player" ? "#ffd27a" : "#ff6a6a",
-      playAgain: () => { this.blip(440, 0.12, "triangle", 0.05); this.setState({ game: null, fieldSel: null, discardView: null, peekCard: null }); },
+      playAgain: () => { this.blip(440, 0.12, "triangle", 0.05); this.startBgm(1200); this.setState({ game: null, fieldSel: null, discardView: null, peekCard: null }); },
       startBg: st.pickedAvatar ? acc : paper,
       startColor: st.pickedAvatar ? "#fff" : ink + "80",
       startCursor: st.pickedAvatar ? "pointer" : "default",
@@ -2163,13 +2215,14 @@ class Component extends DCLogic {
         this.blip(280, 0.08, "sine", 0.03);
         this.runBotTurn();
       },
-      navCollectionBg: isCollection ? acc : paper,
+      navCollectionBg: isCollection ? "#14a893" : paper,
       navCollectionColor: isCollection ? "#fff" : ink,
       navPlayBg: isPlay ? acc : paper,
       navPlayColor: isPlay ? "#fff" : ink,
-      goCollection: () => { this.blip(280, 0.08, "sine", 0.03); exitFullscreenSafe(); this.setState({ screen: "collection" }); },
-      goPlay: () => { this.blip(280, 0.08, "sine", 0.03); if (mobileLayout) requestFullscreenSafe(); this.setState({ screen: "play" }); },
-      backToCollection: () => { exitFullscreenSafe(); this.setState({ screen: "collection", game: null }); },
+      goCollection: () => { this.blip(280, 0.08, "sine", 0.03); exitFullscreenSafe(); this.stopBgm(1500); this.setState({ screen: "collection" }); },
+      goPlay: () => { this.blip(280, 0.08, "sine", 0.03); if (mobileLayout) requestFullscreenSafe(); this.startBgm(1400); this.setState({ screen: "play" }); },
+      backToCollection: () => { exitFullscreenSafe(); this.stopBgm(1500); this.setState({ screen: "collection", game: null }); },
+      bgmRef: this.bgmRef,
       toggleTheme: () => { this.blip(300, 0.1, "sine", 0.04); this.buzz(10); this.setState((s) => ({ dark: !s.dark })); },
       pickAvatar: () => {
         this.blip(360, 0.1, "sine", 0.04); this.buzz(10);
