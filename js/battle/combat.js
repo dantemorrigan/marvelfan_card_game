@@ -28,12 +28,31 @@ function killHero(game, side, uid, reason) {
   const idx = p.field.findIndex((h) => h && h.uid === uid);
   if (idx < 0) return;
   const hero = p.field[idx];
+  // Дэдпул "Не умирает": первая гибель за матч возвращает его в руку с 1 HP
+  // вместо сброса. Пассивки onHeroDestroyed всё равно срабатывают — он погиб,
+  // просто не остаётся в сбросе.
+  if (hero.ability === "cantDie" && !hero.usedRevive && p.hand.length < 7) {
+    hero.usedRevive = true;
+    hero.alive = false;
+    hero.dying = false;
+    p.field[idx] = null;
+    firePassive(game, "onHeroDestroyed", [side, hero]).forEach((m) => logEvent(game, m));
+    fireHeroOnAnyDeath(game, side, hero);
+    hero.alive = true;
+    hero.hp = 1;
+    hero.sick = false;
+    hero.usedAttack = false;
+    p.hand.push(hero);
+    logEvent(game, hero.name + " не умирает — возвращается в руку с 1 HP.");
+    return;
+  }
   hero.alive = false;
   hero.dying = false;
   hero.discardReason = reason || "Уничтожен в бою.";
   p.discard.push(hero);
   p.field[idx] = null;
   firePassive(game, "onHeroDestroyed", [side, hero]).forEach((m) => logEvent(game, m));
+  fireHeroOnAnyDeath(game, side, hero);
 }
 let uidCounter = 1;
 function makeInstance(d) {
@@ -45,6 +64,7 @@ function makeInstance(d) {
     legendary: !!d.legendary, type: isBonus ? "bonus" : "hero",
     tags: d.tags || [], keywords: cardKeywords(d), key: d.key || null, cost: d.cost || 1,
     stats: stats, hp: hp, maxHp: hp, alive: true,
-    sick: false, usedAttack: false
+    sick: false, usedAttack: false,
+    ability: isBonus ? null : (HERO_ABILITY_TABLE[d.name] || null)
   };
 }

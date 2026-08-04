@@ -13,10 +13,11 @@ const BONUS_EFFECTS = {
     resolve(game, casterSide, targetSide, targetUid) {
       const hero = findHero(game, targetSide, targetUid);
       if (!hero) return "Перчатка Бесконечности: цель не найдена.";
-      if (hero.name === "Танос") {
+      if (hasAbility(hero, "theMadTitan")) {
         hero.stats = { s: 5, a: 5, i: 5, k: 5 };
         recalcHp(hero);
-        return "Перчатка Бесконечности надета Таносом — все характеристики 5.";
+        hero.hp = Math.min(hero.maxHp, hero.hp + 5);
+        return "Перчатка Бесконечности надета Таносом — все характеристики 5, +5 HP.";
       }
       if (hero.stats.k >= 4) {
         hero.stats.s += 1; hero.stats.a += 1; hero.stats.i += 1; hero.stats.k += 1;

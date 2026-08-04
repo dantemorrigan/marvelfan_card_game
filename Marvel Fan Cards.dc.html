@@ -21,10 +21,12 @@
 <script src="./js/cards/bonusCards.js" defer></script>
 <script src="./js/cards/keywords.js" defer></script>
 <script src="./js/cards/avatars.js" defer></script>
+<script src="./js/cards/heroAbilities.js" defer></script>
 <script src="./js/battle/combat.js" defer></script>
 <script src="./js/battle/keywords.js" defer></script>
 <script src="./js/battle/avatars.js" defer></script>
 <script src="./js/battle/bonusCards.js" defer></script>
+<script src="./js/battle/heroAbilities.js" defer></script>
 <script src="./js/core/preloader.js" defer></script>
 </head>
 <body>
@@ -533,6 +535,15 @@
             <div style="position: absolute; top: 0; left: 0; right: 0; padding: 24px 24px 0; pointer-events: none;">
               <div style="margin-top: {{ sel.badgeOffsetModal }}; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(20px, 5vw, 28px); line-height: 1.08; text-transform: uppercase; text-wrap: balance; overflow-wrap: break-word; word-break: break-word; hyphens: auto; color: #fff;">{{ sel.name }}</div>
               <div style="margin-top: 8px; font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #ffffffcc;">{{ sel.sub }}</div>
+              <sc-if value="{{ sel.hasAbility }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 3px; padding: 7px 9px; border-radius: 10px; background: var(--acc, #e0212f)33; border: 1px solid var(--acc, #e0212f)77;">
+                  <div style="display: flex; align-items: center; gap: 7px; flex-wrap: wrap;">
+                    <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 9.5px; letter-spacing: 0.08em; text-transform: uppercase; color: #fff;">{{ sel.abilityName }}</div>
+                    <div style="font-size: 8px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #ffffffb3;">{{ sel.abilityType }}</div>
+                  </div>
+                  <div style="font-size: 9.5px; font-weight: 500; line-height: 1.35; color: #ffffffe0; text-wrap: pretty;">{{ sel.abilityText }}</div>
+                </div>
+              </sc-if>
               <sc-if value="{{ sel.hasKws }}" hint-placeholder-val="{{ false }}">
                 <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 6px;">
                   <sc-for list="{{ sel.kws }}" as="k" hint-placeholder-count="2">
@@ -614,6 +625,21 @@
               </sc-for>
             </div>
           </sc-if>
+          <sc-if value="{{ fieldSel.hasAbility }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; gap: 5px; padding: 9px 11px; border-radius: 12px; background: var(--acc, #e0212f)12; border: 2px solid var(--acc, #e0212f)40;">
+              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--acc, #e0212f);">{{ fieldSel.abilityName }}</div>
+                <div style="font-size: 8.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: {{ ink }}80;">{{ fieldSel.abilityType }}</div>
+              </div>
+              <div style="font-size: 11px; font-weight: 500; line-height: 1.4; color: {{ ink }}cc; text-wrap: pretty;">{{ fieldSel.abilityText }}</div>
+              <sc-if value="{{ fieldSel.canActivate }}" hint-placeholder-val="{{ false }}">
+                <button type="button" onClick="{{ fieldSel.activateAbility }}" style="margin-top: 4px; border: 2px solid var(--acc, #e0212f); background: var(--acc, #e0212f); color: #fff; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 10.5px; text-transform: uppercase; padding: 9px 14px; border-radius: 999px;" style-hover="filter: brightness(1.1);" style-active="transform: scale(0.97);">Активировать</button>
+              </sc-if>
+              <sc-if value="{{ fieldSel.abilityUsed }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size: 9.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: {{ ink }}66;">Уже использовано в этом матче</div>
+              </sc-if>
+            </div>
+          </sc-if>
           <div style="display: flex; gap: 6px; flex-wrap: wrap;">
             <div style="padding: 5px 11px; border-radius: 999px; background: {{ fieldSel.statusBg }}; font-family: 'Unbounded', sans-serif; font-size: 10px; font-weight: 800; text-transform: uppercase; color: #fff;">{{ fieldSel.statusLabel }}</div>
             <sc-if value="{{ fieldSel.buffed }}" hint-placeholder-val="{{ false }}">
@@ -668,7 +694,7 @@ class Component extends DCLogic {
   state = {
     sel: null, flipped: false, dark: false, screen: "collection",
     game: null, search: "", filter: "all",
-    handHover: null, fieldSel: null, discardView: null, toast: null,
+    handHover: null, fieldSel: null, discardView: null, toast: null, pendingRevive: null,
     pickedAvatar: null, peekCard: null, logOpen: false,
     editingName: false, nameDraft: "", customName: readStoredName(),
     showNameOnboarding: !readNameOnboardingSeen(),
@@ -744,6 +770,10 @@ class Component extends DCLogic {
       kws: kwChips(cardKeywords(d)),
       kwIcons: kwIconsOf(cardKeywords(d)),
       hasKws: cardKeywords(d).length > 0,
+      hasAbility: !!HERO_ABILITY_TABLE[d.name],
+      abilityName: HERO_ABILITY_TABLE[d.name] ? HERO_ABILITIES[HERO_ABILITY_TABLE[d.name]].name : "",
+      abilityType: HERO_ABILITY_TABLE[d.name] ? HERO_ABILITIES[HERO_ABILITY_TABLE[d.name]].type : "",
+      abilityText: HERO_ABILITY_TABLE[d.name] ? HERO_ABILITIES[HERO_ABILITY_TABLE[d.name]].text : "",
       cost: d.collectionOnly ? null : (d.cost || 1),
       costRibbonColor: d.bonus ? "#14a893" : acc,
       costTop: d.legendary ? "44px" : "10px",
@@ -827,10 +857,19 @@ class Component extends DCLogic {
     const p = game[side];
     p.manaCap = Math.min(10, p.manaCap + 1);
     p.mana = p.manaCap;
-    p.field.forEach((h) => { if (h) { h.sick = false; h.usedAttack = false; } });
+    // Мёрзлая земля (Айсмен): замороженный герой пропускает ровно один следующий ход,
+    // затем оттаивает и снова атакует по обычным правилам.
+    p.field.forEach((h) => {
+      if (!h) return;
+      h.sick = false;
+      h.usedAttack = !!h.frozen;
+      h.frozen = false;
+    });
     p.heroesPlayedThisTurn = 0;
     game.burnFx = null;
     firePassive(game, "onTurnStart", [side]);
+    applyTurnStartAbilities(game, side).forEach((m) => logEvent(game, m));
+    recalcCaptainAura(game, side);
     const handBefore = p.hand.length;
     this.refillHand(game, side);
     const drew = p.hand.length - handBefore;
@@ -853,6 +892,20 @@ class Component extends DCLogic {
     p.field[slot] = card;
     p.heroesPlayedThisTurn = (p.heroesPlayedThisTurn || 0) + 1;
     firePassive(game, "onHeroPlayed", [side, card]).forEach((m) => logEvent(game, m));
+    recalcCaptainAura(game, side);
+    // Боевой клич: без цели — срабатывает сразу; с целью — переиспользуем pendingBonus
+    // (та же подсветка целей на поле и блокировка других действий, что и у бонус-карт).
+    if (card.ability && BATTLECRY_INSTANT[card.ability]) {
+      BATTLECRY_INSTANT[card.ability](game, side, card).forEach((m) => logEvent(game, m));
+      recalcCaptainAura(game, "player");
+      recalcCaptainAura(game, "bot");
+    } else if (card.ability && heroNeedsTarget(card.ability)) {
+      const targets = BATTLECRY_TARGETED[card.ability].validTargets(game, side, card);
+      if (targets.length) {
+        game.pendingBonus = { key: card.ability, name: card.name, isHeroAbility: true, heroUid: card.uid, heroSide: side };
+        return "pending";
+      }
+    }
     return true;
   }
   discardBonusCard(game, side, uid) {
@@ -873,9 +926,11 @@ class Component extends DCLogic {
     if (!attacker || !defender) return "Атака невозможна.";
     if (attacker.sick || attacker.usedAttack) return attacker.name + " не может атаковать сейчас.";
     if (defender.sick) { game.fx = []; return defender.name + " защищён усталостью призыва — атака невозможна."; }
-    const dmgToDefender = attacker.stats.s;
-    const dmgToAttacker = defender.stats.s;
+    const dodged = spiderDodge(defender);
+    const dmgToDefender = dodged ? 0 : Math.max(0, attacker.stats.s + attackDamageBonus(attacker, defender) - defenseDamageReduction(attacker, defender));
+    const dmgToAttacker = Math.max(0, defender.stats.s + attackDamageBonus(defender, attacker) - defenseDamageReduction(defender, attacker));
     attacker.usedAttack = true;
+    // Иллюзии Мистерио и так гибнут от любого попадания — у них 1 HP, а не отдельное правило.
     // Помечаем смертельный исход сразу (до отображения цифр урона), чтобы защита
     // аватара от количества героев на поле обновлялась в момент удара, а не
     // ждала конца анимации — сама анимация угасания карты (h.dying) не трогается.
@@ -889,6 +944,7 @@ class Component extends DCLogic {
       defender: { side: defenderSide, uid: defenderUid, dmg: dmgToDefender, name: defender.name },
       attacker: { side: attackerSide, uid: attackerUid, dmg: dmgToAttacker, name: attacker.name }
     };
+    if (dodged) return attacker.name + " атакует " + defender.name + ", но промахивается (Паучье чутьё)! Получает " + dmgToAttacker + " урона в ответ.";
     return attacker.name + " наносит " + defender.name + " " + dmgToDefender + " урона и получает " + dmgToAttacker + " в ответ.";
   }
   // Применяет накопленный урон после того, как числа урона уже показаны игроку (задержка для читаемости).
@@ -918,6 +974,12 @@ class Component extends DCLogic {
       }
     }
     if (dying.length) {
+      // Если погиб только один из двух — переживший получает бонусы "за убийство"
+      // (Пир симбиота, Пламя, Сила Новы). При обоюдной гибели бонус никому не даётся.
+      const bothDied = dying.length === 2;
+      const killerOf = bothDied ? null : (dying[0].side === pend.attacker.side
+        ? { side: pend.defender.side, uid: pend.defender.uid }
+        : { side: pend.attacker.side, uid: pend.attacker.uid });
       setTimeout(() => {
         const g2 = this.state.game;
         if (!g2) return;
@@ -925,6 +987,10 @@ class Component extends DCLogic {
           const still = findHero(g2, d.side, d.uid);
           if (still && still.dying) killHero(g2, d.side, d.uid, d.reason);
         });
+        if (killerOf) {
+          const killer = findHero(g2, killerOf.side, killerOf.uid);
+          if (killer) onCombatKill(g2, killerOf.side, killer).forEach((m) => logEvent(g2, m));
+        }
         this.setState({ game: Object.assign({}, g2) });
       }, 480);
     }
@@ -935,7 +1001,8 @@ class Component extends DCLogic {
     const av = game[defenderSide].avatar;
     if (!attacker || !av) return "Атака невозможна.";
     if (attacker.sick || attacker.usedAttack) return attacker.name + " не может атаковать сейчас.";
-    if (avatarProtected(game, defenderSide)) return av.name + " защищён героями — атака невозможна.";
+    if (attacker.isIllusion) return "Иллюзия не может атаковать аватара.";
+    if (avatarProtected(game, defenderSide) && !bypassesAvatarProtection(attacker)) return av.name + " защищён героями — атака невозможна.";
     const dmg = attacker.stats.s;
     attacker.usedAttack = true;
     game.avatarFx = { side: defenderSide, dmg: dmg, key: "af" + (uidCounter++) };
@@ -993,8 +1060,23 @@ class Component extends DCLogic {
     if (!card) return false;
     if (card.type === "hero") {
       const name = card.name, cost = card.cost;
-      this.playHeroCard(game, "bot", card.uid);
+      const result = this.playHeroCard(game, "bot", card.uid);
       logEvent(game, "Бот выводит на поле: " + name + " (⚡" + cost + ").");
+      // Боевой клич с выбором цели — бот выбирает случайную из допустимых целей сразу же.
+      if (result === "pending" && game.pendingBonus && game.pendingBonus.isHeroAbility) {
+        const pb = game.pendingBonus;
+        const caster = findHero(game, pb.heroSide, pb.heroUid);
+        const ability = BATTLECRY_TARGETED[pb.key];
+        const targets = caster ? ability.validTargets(game, pb.heroSide, caster) : [];
+        if (targets.length && caster) {
+          const t = targets[Math.floor(Math.random() * targets.length)];
+          const tSide = game.bot.field.indexOf(t) >= 0 ? "bot" : "player";
+          logEvent(game, ability.resolve(game, pb.heroSide, caster, tSide, t.uid));
+          recalcCaptainAura(game, "player");
+          recalcCaptainAura(game, "bot");
+        }
+        game.pendingBonus = null;
+      }
       return true;
     }
     const eff = BONUS_EFFECTS[card.key];
@@ -1019,11 +1101,29 @@ class Component extends DCLogic {
   // Атаки бота разыгрываются по одной с задержкой (queueBotAttacks), чтобы каждый удар был виден отдельно.
   runBotTurn() {
     const g = JSON.parse(JSON.stringify(this.state.game));
+    applyTurnEndAbilities(g, "player").forEach((m) => logEvent(g, m));
     this.startTurn(g, "bot");
+    this.botTryReviveHero(g);
     g.fx = null;
     this.setState({ game: g });
     this.clearFxLater(1700);
     setTimeout(() => this.queueBotPlays(), 700);
+  }
+  // Око Агамотто у бота: если доступно, возвращает случайного погибшего героя в руку.
+  botTryReviveHero(game) {
+    const p = game.bot;
+    const caster = p.field.find((h) => h && h.alive && !h.dying && h.ability === "eyeOfAgamotto" && !h.usedActive);
+    if (!caster || p.hand.length >= 7) return;
+    const revivable = p.discard.filter((d) => d.type === "hero");
+    if (!revivable.length) return;
+    const pick = revivable[Math.floor(Math.random() * revivable.length)];
+    const idx = p.discard.indexOf(pick);
+    p.discard.splice(idx, 1);
+    pick.alive = true; pick.dying = false; pick.discardReason = null;
+    pick.hp = pick.maxHp; pick.sick = false; pick.usedAttack = false;
+    p.hand.push(pick);
+    caster.usedActive = true;
+    logEvent(game, caster.name + " (Око Агамотто) возвращает " + pick.name + " в руку бота.");
   }
   // Карты разыгрываются одна за другой, пока хватает маны или есть что разыграть — как в Хартстоун.
   queueBotPlays() {
@@ -1045,6 +1145,7 @@ class Component extends DCLogic {
       setTimeout(() => {
         const g3 = this.state.game;
         if (!g3 || g3.winner) return;
+        applyTurnEndAbilities(g3, "bot").forEach((m) => logEvent(g3, m));
         this.startTurn(g3, "player");
         this.setState({ game: Object.assign({}, g3) });
         this.clearFxLater(1700);
@@ -1052,7 +1153,7 @@ class Component extends DCLogic {
       return;
     }
     const h = ready[idx];
-    const faceOpen = !avatarProtected(g, "player");
+    const faceOpen = !h.isIllusion && (!avatarProtected(g, "player") || bypassesAvatarProtection(h));
     const target = g.player.field.find((x) => x && x.alive && !x.dying && !x.sick);
     if (!faceOpen && !target) {
       setTimeout(() => this.queueBotAttacks(idx + 1), 80);
@@ -1317,7 +1418,8 @@ class Component extends DCLogic {
     const doAttackAvatar = () => {
       const cur = this.state.game;
       if (!cur || cur.winner || !cur.selectedUid || cur.pendingBonus || cur.turn !== "player") return;
-      if (avatarProtected(cur, "bot")) { this.showToast("Аватар защищён героями — сначала атакуйте героев."); return; }
+      const attackerHero = findHero(cur, "player", cur.selectedUid);
+      if (avatarProtected(cur, "bot") && !bypassesAvatarProtection(attackerHero)) { this.showToast("Аватар защищён героями — сначала атакуйте героев."); return; }
       const atkUid = cur.selectedUid;
       this.blip(320, 0.08, "sine", 0.03);
       this.setState({ game: Object.assign({}, cur, { atkFx: { side: "player", uid: atkUid }, selectedUid: null }) });
@@ -1364,6 +1466,7 @@ class Component extends DCLogic {
         if (!cur.player.field.some((h) => h === null)) return;
         const next = JSON.parse(JSON.stringify(cur));
         const ok = this.playHeroCard(next, "player", card.uid);
+        if (ok === "pending") { this.blip(300, 0.1, "sine", 0.04); this.setState({ game: next }); return; }
         if (ok) { logEvent(next, card.name + " выходит на поле (⚡" + card.cost + ", усталость призыва — атакует со следующего хода)."); this.blip(360, 0.1, "triangle", 0.05); this.setState({ game: next }); }
         return;
       }
@@ -1388,10 +1491,19 @@ class Component extends DCLogic {
     const resolveTarget = (side, uid) => {
       const cur = this.state.game;
       if (!cur || !cur.pendingBonus) return;
-      const eff = BONUS_EFFECTS[cur.pendingBonus.key];
+      const pb = cur.pendingBonus;
       const next = JSON.parse(JSON.stringify(cur));
-      logEvent(next, eff.resolve(next, "player", side, uid));
-      next.castFx = bonusFx(cur.pendingBonus.key, cur.pendingBonus.name);
+      if (pb.isHeroAbility) {
+        const ability = BATTLECRY_TARGETED[pb.key];
+        const caster = findHero(next, pb.heroSide, pb.heroUid);
+        logEvent(next, caster ? ability.resolve(next, pb.heroSide, caster, side, uid) : pb.name + ": заклинатель не найден.");
+        recalcCaptainAura(next, "player");
+        recalcCaptainAura(next, "bot");
+      } else {
+        const eff = BONUS_EFFECTS[pb.key];
+        logEvent(next, eff.resolve(next, "player", side, uid));
+      }
+      next.castFx = bonusFx(pb.key, pb.name);
       next.pendingBonus = null;
       this.blip(560, 0.2, "triangle", 0.07); this.buzz(24);
       this.setState({ game: next });
@@ -1404,7 +1516,37 @@ class Component extends DCLogic {
     };
     const closeFieldCard = () => this.setState({ fieldSel: null });
     const openDiscard = (side) => () => { this.blip(300, 0.08, "sine", 0.03); this.setState({ discardView: side }); };
-    const closeDiscard = () => this.setState({ discardView: null });
+    const closeDiscard = () => this.setState({ discardView: null, pendingRevive: null });
+    // Око Агамотто (Доктор Стрэндж): активация открывает свой сброс для выбора героя.
+    const activateEyeOfAgamotto = (casterUid) => () => {
+      const cur = this.state.game;
+      if (!cur || cur.winner || cur.turn !== "player") return;
+      const caster = findHero(cur, "player", casterUid);
+      if (!caster || caster.ability !== "eyeOfAgamotto" || caster.usedActive) return;
+      if (!cur.player.discard.some((d) => d.type === "hero")) { this.showToast("В сбросе нет героев для возвращения."); return; }
+      this.blip(460, 0.14, "sine", 0.05);
+      this.setState({ discardView: "player", pendingRevive: casterUid, fieldSel: null });
+    };
+    const resolveRevive = (uid) => {
+      const cur = this.state.game;
+      if (!cur || !cur.pendingRevive) return;
+      const casterUid = cur.pendingRevive;
+      const next = JSON.parse(JSON.stringify(cur));
+      const caster = findHero(next, "player", casterUid);
+      const idx = next.player.discard.findIndex((d) => d.uid === uid);
+      if (!caster || idx < 0 || next.player.hand.length >= 7) {
+        this.setState({ discardView: null, pendingRevive: null });
+        return;
+      }
+      const revived = next.player.discard.splice(idx, 1)[0];
+      revived.alive = true; revived.dying = false; revived.discardReason = null;
+      revived.hp = revived.maxHp; revived.sick = false; revived.usedAttack = false;
+      next.player.hand.push(revived);
+      caster.usedActive = true;
+      logEvent(next, caster.name + " (Око Агамотто) возвращает " + revived.name + " в руку.");
+      this.blip(560, 0.2, "triangle", 0.07); this.buzz(24);
+      this.setState({ game: next, discardView: null, pendingRevive: null });
+    };
 
     const fieldVM = (side) => {
       if (!g) return [];
@@ -1469,11 +1611,19 @@ class Component extends DCLogic {
       const h = st.fieldSel;
       if (!h) return null;
       const vals = [h.stats.s, h.stats.a, h.stats.i, h.stats.k];
+      const ability = h.ability ? HERO_ABILITIES[h.ability] : null;
+      const onPlayerField = !!g && g.player.field.some((x) => x && x.uid === h.uid);
+      const canActivate = onPlayerField && h.ability === "eyeOfAgamotto" && !h.usedActive
+        && !!g && g.turn === "player" && !g.pendingBonus && !g.winner
+        && g.player.discard.some((d) => d.type === "hero");
       return {
         name: h.name, art: h.art, hp: h.hp, maxHp: h.maxHp,
         hpPct: h.maxHp ? Math.max(0, Math.min(100, Math.round((h.hp / h.maxHp) * 100))) : 0,
         stats: LABELS.map((l, k) => ({ label: l, pips: [0, 1, 2, 3, 4].map((n) => ({ bg: n < vals[k] ? acc : ink + "22" })) })),
         kws: kwChips(h.keywords), hasKws: !!(h.keywords && h.keywords.length),
+        hasAbility: !!ability, abilityName: ability ? ability.name : "", abilityType: ability ? ability.type : "", abilityText: ability ? ability.text : "",
+        abilityUsed: !!h.usedActive || !!h.usedRevive,
+        canActivate: canActivate, activateAbility: activateEyeOfAgamotto(h.uid),
         discardReason: !h.alive ? (h.discardReason || null) : null,
         statusLabel: !h.alive ? "Уничтожен" : (h.sick ? "Усталость призыва" : (h.usedAttack ? "Уже атаковал" : "Готов к атаке")),
         statusBg: !h.alive ? "#c21f2b" : (h.sick ? "#8a8a8a" : (h.usedAttack ? "#8a8a8a" : "#2b8a3e")),
@@ -1483,10 +1633,11 @@ class Component extends DCLogic {
     const discardVM = (() => {
       if (!g || !st.discardView) return null;
       const side = st.discardView;
+      const reviving = side === "player" && !!st.pendingRevive;
       const list = g[side].discard.slice().reverse().map((h) => ({
         uid: h.uid, name: h.name, art: h.art,
-        reason: h.discardReason || "Причина не зафиксирована.",
-        open: () => this.setState({ fieldSel: h })
+        reason: (reviving && h.type === "hero") ? "Нажмите, чтобы вернуть в руку" : (h.discardReason || "Причина не зафиксирована."),
+        open: (reviving && h.type === "hero") ? (() => resolveRevive(h.uid)) : (() => this.setState({ fieldSel: h }))
       }));
       return { side: side, label: side === "player" ? "Ваш сброс" : "Сброс бота", cards: list, empty: list.length === 0 };
     })();
@@ -1497,7 +1648,8 @@ class Component extends DCLogic {
       const prot = avatarProtected(g, side);
       const fx = g.avatarFx && g.avatarFx.side === side ? g.avatarFx : null;
       const canTarget = side === "bot" && g.turn === "player" && !!g.selectedUid && !g.pendingBonus && !g.winner;
-      const attackable = canTarget && !prot;
+      const selectedHero = canTarget ? findHero(g, "player", g.selectedUid) : null;
+      const attackable = canTarget && !(selectedHero && selectedHero.isIllusion) && (!prot || bypassesAvatarProtection(selectedHero));
       return {
         name: av.name, title: av.title, glyph: av.glyph, image: av.image,
         hp: av.health, maxHp: av.maxHealth,

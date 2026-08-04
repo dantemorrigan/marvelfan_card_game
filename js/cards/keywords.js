@@ -30,7 +30,7 @@ const KEYWORD_TABLE = {
   "Халк": ["defender"],
   "Капитан Марвел": ["cosmic", "flying"],
   "Соколиный Глаз": ["ranged"],
-  "Оса": ["flying"],
+  "Оса": ["flying", "charge"],
   "Сокол": ["flying"],
   "Алая Ведьма": ["magic"],
   "Вижн": ["technology", "flying"],
