@@ -1,0 +1,2041 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;800;900&amp;family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+* { box-sizing: border-box; }
+body { margin: 0; background: #f4efe1; color: #17140f; font-family: 'Inter', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
+a { color: #c21f2b; text-decoration: none; }
+a:hover { color: #9c1620; }
+.mfc-cost-ribbon { opacity: 0; transition: opacity .22s ease; }
+.mfc-card:hover .mfc-cost-ribbon { opacity: 1; }
+::selection { background: #e0212f55; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes turnPop { 0% { opacity: 0; transform: translateY(-10px) scale(0.9); } 60% { opacity: 1; transform: translateY(0) scale(1.04); } 100% { opacity: 1; transform: none; } }
+@keyframes shakeHit { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); } }
+@keyframes floatFade { 0% { opacity: 0; transform: translateY(4px) scale(0.8); } 25% { opacity: 1; transform: translateY(-6px) scale(1.1); } 100% { opacity: 0; transform: translateY(-30px) scale(1); } }
+@keyframes cardIn { 0% { opacity: 0; transform: scale(0.5) translateY(24px) rotate(-6deg); } 60% { opacity: 1; transform: scale(1.06) translateY(-3px) rotate(2deg); } 100% { opacity: 1; transform: none; } }
+@keyframes atkGlow { 0%, 100% { box-shadow: 0 0 0 2px #ffd27a, 0 0 14px 3px #ffd27a99; } 50% { box-shadow: 0 0 0 4px #ffd27a, 0 0 22px 6px #ffd27acc; } }
+@keyframes castFlash { 0% { opacity: 0; } 12% { opacity: 1; } 78% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes dotBounce { 0%, 80%, 100% { transform: translateY(0); opacity: .4; } 40% { transform: translateY(-4px); opacity: 1; } }
+@keyframes ringPulseSoft { 0%, 100% { box-shadow: 3px 3px 0 #17140f40; } 50% { box-shadow: 3px 3px 0 #17140f40, 0 0 0 6px var(--acc, #e0212f)40; } }
+@keyframes rotateHint { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-90deg); } }
+@keyframes hitFlash { 0% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes buffGlow { 0%, 100% { box-shadow: 0 0 0 2px #2ecc71, 0 0 14px 3px #2ecc7199; } 50% { box-shadow: 0 0 0 4px #2ecc71, 0 0 22px 6px #2ecc71cc; } }
+@keyframes readyGlow { 0%, 100% { box-shadow: 0 0 0 2px #58a6ff, 0 0 10px 2px #58a6ff88; } 50% { box-shadow: 0 0 0 3px #58a6ff, 0 0 16px 4px #58a6ffbb; } }
+@keyframes debuffGlow { 0%, 100% { box-shadow: 0 0 0 2px #8a6fd6, 0 0 14px 3px #8a6fd699; } 50% { box-shadow: 0 0 0 4px #8a6fd6, 0 0 22px 6px #8a6fd6cc; } }
+@keyframes dieFade { 0% { opacity: 1; transform: scale(1) translateY(0); } 60% { opacity: 0.4; transform: scale(0.82) translateY(6px); } 100% { opacity: 0; transform: scale(0.5) translateY(20px); } }
+@keyframes lungeUp { 0%, 100% { transform: translateY(0); } 45% { transform: translateY(-16px); } }
+@keyframes lungeDown { 0%, 100% { transform: translateY(0); } 45% { transform: translateY(16px); } }
+@keyframes fxGold { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+@keyframes fxElectric { 0%, 100% { opacity: 0; } 10%, 30%, 50%, 70% { opacity: 1; } 20%, 40%, 60%, 80% { opacity: 0.25; } }
+@keyframes fxFire { 0% { transform: scale(0.6); opacity: 0; } 40% { opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }
+@keyframes fxRift { 0%, 100% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(2.5deg) scale(1.02); } }
+@keyframes fxGlitch { 0%, 100% { opacity: 0; } 15% { opacity: .9; } 25% { opacity: 0; } 35% { opacity: .7; } 45% { opacity: 0; } 60% { opacity: .5; } }
+@keyframes shieldBreak { 0% { opacity: 0; transform: scale(1.5) rotate(-6deg); filter: blur(2px); } 45% { opacity: 1; transform: scale(0.94) rotate(2deg); filter: none; } 100% { opacity: 1; transform: none; } }
+@keyframes winPop { 0% { opacity: 0; transform: scale(0.6) translateY(20px); } 55% { opacity: 1; transform: scale(1.08); } 100% { opacity: 1; transform: none; } }
+@keyframes winRays { 0% { opacity: 0.25; transform: rotate(0deg) scale(1); } 100% { opacity: 0.45; transform: rotate(360deg) scale(1.1); } }
+@keyframes burnAway { 0% { opacity: 0; transform: translateX(-50%) translateY(12px) scale(0.9); } 18% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); } 72% { opacity: 1; transform: translateX(-50%) translateY(-4px) scale(1); } 100% { opacity: 0; transform: translateX(-50%) translateY(-26px) scale(0.95); } }
+</style>
+</helmet>
+
+<div style="--acc: {{ accent }}; min-height: 100vh; padding: 0 max(0px, env(safe-area-inset-bottom)) 72px; background-image: radial-gradient({{ dotColor }} 1.6px, transparent 1.6px); background-size: 16px 16px; background-color: {{ bg }}; transition: background-color .3s ease;">
+
+  <div style="max-width: 1280px; margin: 0 auto; padding: max(20px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left));">
+
+    <div style="display: flex; gap: 10px; padding-bottom: 22px;">
+      <button type="button" onClick="{{ goCollection }}" style="border: 3px solid {{ ink }}; background: {{ navCollectionBg }}; color: {{ navCollectionColor }}; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 12px; text-transform: uppercase; padding: 12px 20px; min-height: 44px; border-radius: 999px; box-shadow: 3px 3px 0 {{ ink }}40;" style-hover="filter: brightness(0.96);" style-active="transform: translate(1px,1px) scale(0.97);">Коллекция</button>
+      <button type="button" onClick="{{ goPlay }}" style="border: 3px solid {{ ink }}; background: {{ navPlayBg }}; color: {{ navPlayColor }}; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 12px; text-transform: uppercase; padding: 12px 20px; min-height: 44px; border-radius: 999px; box-shadow: 3px 3px 0 {{ ink }}40;" style-hover="filter: brightness(0.96);" style-active="transform: translate(1px,1px) scale(0.97);">Играть</button>
+    </div>
+
+    <sc-if value="{{ isCollection }}" hint-placeholder-val="{{ true }}">
+    <div style="display: flex; flex-direction: column; gap: 14px; padding: 4px 0 28px; animation: fadeUp .5s ease both;">
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <div style="width: 72px; height: 72px; flex: 0 0 auto; border-radius: 50%; overflow: hidden; background: {{ paper }}; border: 3px solid {{ ink }}; box-shadow: 0 0 0 4px var(--acc, #e0212f), 5px 5px 0 {{ ink }}; pointer-events: none;">
+          <image-slot id="mfc-avatar" shape="circle" placeholder="фото" style="width:100%;height:100%"></image-slot>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 auto;">
+          <div style="font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--acc, #e0212f);">Профиль игрока</div>
+          <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(22px, 5.6vw, 40px); line-height: 0.95; text-transform: uppercase; letter-spacing: 0.01em; color: {{ ink }};">{{ playerName }}</div>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 50%; background: var(--acc, #e0212f); border: 3px solid {{ ink }}; box-shadow: 3px 3px 0 {{ ink }}; flex: 0 0 auto;">
+          <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 15px; line-height: 1; color: #fff;">{{ collected }}</div>
+          <div style="font-size: 6.5px; letter-spacing: 0.1em; text-transform: uppercase; color: #ffffffcc;">карт</div>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+        <button type="button" onClick="{{ pickAvatar }}" style="border: 3px solid {{ ink }}; background: {{ paper }}; color: {{ ink }}; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 10px; text-transform: uppercase; padding: 10px 14px; min-height: 44px; border-radius: 999px; box-shadow: 3px 3px 0 {{ ink }}40; white-space: nowrap;" style-hover="filter: brightness(0.96);" style-active="transform: translate(1px,1px) scale(0.97); box-shadow: 1px 1px 0 {{ ink }}40;">Сменить фото</button>
+        <button type="button" onClick="{{ toggleTheme }}" style="border: 3px solid {{ ink }}; background: {{ paper }}; color: {{ ink }}; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 10px; text-transform: uppercase; padding: 10px 14px; min-height: 44px; border-radius: 999px; box-shadow: 3px 3px 0 {{ ink }}40; white-space: nowrap;" style-hover="filter: brightness(0.96);" style-active="transform: translate(1px,1px) scale(0.97); box-shadow: 1px 1px 0 {{ ink }}40;">{{ themeLabel }}</button>
+      </div>
+    </div>
+
+    <div style="display: flex; align-items: baseline; gap: 14px; padding-bottom: 16px; animation: fadeUp .6s ease both;">
+      <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(20px, 3.2vw, 27px); letter-spacing: 0; text-transform: uppercase; color: {{ ink }}; white-space: nowrap;">Коллекция</div>
+      <div style="flex: 1; height: 3px; background: {{ ink }}; border-radius: 2px;"></div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 10px; padding-bottom: 22px;">
+      <input type="text" value="{{ search }}" onChange="{{ onSearch }}" placeholder="Поиск по названию…" style="border: 3px solid {{ ink }}; background: {{ paper }}; color: {{ ink }}; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px; padding: 12px 16px; min-height: 44px; border-radius: 999px; box-shadow: 3px 3px 0 {{ ink }}20; width: 100%;">
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button type="button" onClick="{{ setFilterAll }}" style="border: 2.5px solid {{ ink }}; background: {{ filterAllBg }}; color: {{ filterAllColor }}; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 10px; text-transform: uppercase; padding: 9px 14px; min-height: 40px; border-radius: 999px;" style-hover="filter: brightness(0.97);">Все</button>
+        <button type="button" onClick="{{ setFilterHero }}" style="border: 2.5px solid {{ ink }}; background: {{ filterHeroBg }}; color: {{ filterHeroColor }}; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 10px; text-transform: uppercase; padding: 9px 14px; min-height: 40px; border-radius: 999px;" style-hover="filter: brightness(0.97);">Герои</button>
+        <button type="button" onClick="{{ setFilterBonus }}" style="border: 2.5px solid #14a893; background: {{ filterBonusBg }}; color: {{ filterBonusColor }}; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 10px; text-transform: uppercase; padding: 9px 14px; min-height: 40px; border-radius: 999px;" style-hover="filter: brightness(0.97);">Бонусные</button>
+      </div>
+    </div>
+
+    <sc-if value="{{ showHeroSection }}" hint-placeholder-val="{{ true }}">
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(min(44vw, 240px), 1fr)); gap: clamp(12px, 3vw, 30px);">
+      <sc-for list="{{ filteredCards }}" as="c" hint-placeholder-count="6">
+        <div style="transform: rotate({{ c.rot }}deg); transition: transform .3s cubic-bezier(.2,.8,.25,1); animation: fadeUp .55s ease both;" style-hover="transform: rotate(0deg) translateY(-8px);">
+          <div onClick="{{ pick }}" onPointerMove="{{ tilt }}" onPointerLeave="{{ untilt }}" data-idx="{{ c.i }}" class="mfc-card" style="position: relative; aspect-ratio: 2 / 3; border-radius: 14px; overflow: hidden; cursor: pointer; touch-action: manipulation; background: #17140f; border: 3px solid #17140f; box-shadow: {{ c.shadow }}; transform-style: preserve-3d; transition: transform .35s cubic-bezier(.2,.8,.25,1), box-shadow .3s ease;" style-hover="box-shadow: {{ c.shadowHover }};" style-active="transform: scale(0.96); box-shadow: {{ c.shadowActive }};">
+            <div data-par="1" style="position: absolute; inset: 0; transition: transform .35s ease; pointer-events: none; background: {{ c.art }};"></div>
+            <div style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, #17140fd6 0%, #17140f26 32%, #17140f33 52%, #17140fea 100%);"></div>
+            <div data-gloss="1" style="position: absolute; inset: 0; pointer-events: none; opacity: 0.6;"></div>
+
+            <sc-if value="{{ c.legendary }}" hint-placeholder-val="{{ false }}">
+              <div style="position: absolute; top: 10px; right: 10px; max-width: 46%; padding: 4px 7px; border-radius: 999px; background: linear-gradient(135deg, #f7dd8a, #fff6d9, #b8860b); box-shadow: 0 0 0 1px #17140f66; pointer-events: none;">
+                <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 7px; letter-spacing: 0.06em; text-transform: uppercase; color: #17140f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Легендарная</div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ c.bonus }}" hint-placeholder-val="{{ false }}">
+              <div style="position: absolute; top: 10px; left: 10px; max-width: 46%; padding: 4px 7px; border-radius: 999px; background: linear-gradient(135deg, #7fe9df, #eafffb, #14a893); box-shadow: 0 0 0 1px #17140f66; pointer-events: none;">
+                <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 7px; letter-spacing: 0.06em; text-transform: uppercase; color: #0a3d36; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Бонус</div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ c.cost }}" hint-placeholder-val="{{ true }}">
+            <div class="mfc-cost-ribbon" style="position: absolute; top: 14px; right: -32px; width: 120px; padding: 5px 0; text-align: center; transform: rotate(45deg); background: var(--acc, #e0212f); box-shadow: 0 2px 6px #00000055; pointer-events: none; z-index: 5;">
+              <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 11px; color: #fff;">{{ c.cost }}⚡</div>
+            </div>
+            </sc-if>
+
+            <div style="position: absolute; top: 0; left: 0; right: 0; padding: 14px 14px 0; pointer-events: none;">
+              <div style="margin-top: {{ c.badgeOffset }}; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(13px, 2.1vw, 17px); line-height: 1.05; text-transform: uppercase; text-wrap: balance; overflow-wrap: break-word; word-break: break-word; hyphens: auto; color: #fff;">{{ c.name }}</div>
+              <div style="margin-top: 5px; font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffffb3;">{{ c.sub }}</div>
+              <sc-if value="{{ c.hasKws }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top: 7px; font-size: 13px; letter-spacing: 0.08em;">{{ c.kwIcons }}</div>
+              </sc-if>
+            </div>
+
+            <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 0 14px 14px; display: flex; flex-direction: column; gap: 6px; pointer-events: none;">
+              <sc-for list="{{ c.stats }}" as="s" hint-placeholder-count="4">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <div style="font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #ffffffcc; flex: 1; min-width: 0;">{{ s.label }}</div>
+                  <div style="display: flex; gap: 4px;">
+                    <sc-for list="{{ s.pips }}" as="p" hint-placeholder-count="5">
+                      <div style="width: 7px; height: 7px; border-radius: 50%; background: {{ p.bg }}; box-shadow: 0 0 0 1px #ffffff40;"></div>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ noHeroResults }}" hint-placeholder-val="{{ false }}">
+      <div style="padding: 30px 0; text-align: center; font-size: 13px; font-weight: 600; color: {{ ink }}66;">Героев по запросу «{{ search }}» не найдено.</div>
+    </sc-if>
+
+    <sc-if value="{{ showBonusSection }}" hint-placeholder-val="{{ true }}">
+    <div style="display: flex; align-items: baseline; gap: 14px; padding: 34px 0 20px; animation: fadeUp .6s ease both;">
+      <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(20px, 3.2vw, 27px); letter-spacing: 0; text-transform: uppercase; color: {{ ink }}; white-space: nowrap;">Бонусные карты</div>
+      <div style="flex: 1; height: 3px; background: linear-gradient(90deg, #14a893, transparent);"></div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(min(44vw, 240px), 1fr)); gap: clamp(12px, 3vw, 30px);">
+      <sc-for list="{{ filteredBonus }}" as="c" hint-placeholder-count="0">
+        <div style="transform: rotate({{ c.rot }}deg); transition: transform .3s cubic-bezier(.2,.8,.25,1); animation: fadeUp .55s ease both;" style-hover="transform: rotate(0deg) translateY(-8px);">
+          <div onClick="{{ pick }}" onPointerMove="{{ tilt }}" onPointerLeave="{{ untilt }}" data-idx="{{ c.i }}" class="mfc-card" style="position: relative; aspect-ratio: 2 / 3; border-radius: 14px; overflow: hidden; cursor: pointer; touch-action: manipulation; background: #17140f; border: 3px solid #17140f; box-shadow: {{ c.shadow }}; transform-style: preserve-3d; transition: transform .35s cubic-bezier(.2,.8,.25,1), box-shadow .3s ease;" style-hover="box-shadow: {{ c.shadowHover }};" style-active="transform: scale(0.96); box-shadow: {{ c.shadowActive }};">
+            <div data-par="1" style="position: absolute; inset: 0; transition: transform .35s ease; pointer-events: none; background: {{ c.art }};"></div>
+            <div style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, #17140fd6 0%, #17140f26 32%, #17140f33 52%, #17140fea 100%);"></div>
+            <div data-gloss="1" style="position: absolute; inset: 0; pointer-events: none; opacity: 0.6;"></div>
+
+            <sc-if value="{{ c.legendary }}" hint-placeholder-val="{{ false }}">
+              <div style="position: absolute; top: 10px; right: 10px; max-width: 46%; padding: 4px 7px; border-radius: 999px; background: linear-gradient(135deg, #f7dd8a, #fff6d9, #b8860b); box-shadow: 0 0 0 1px #17140f66; pointer-events: none;">
+                <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 7px; letter-spacing: 0.06em; text-transform: uppercase; color: #17140f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Легендарная</div>
+              </div>
+            </sc-if>
+            <div style="position: absolute; top: 10px; left: 10px; max-width: 46%; padding: 4px 7px; border-radius: 999px; background: linear-gradient(135deg, #7fe9df, #eafffb, #14a893); box-shadow: 0 0 0 1px #17140f66; pointer-events: none;">
+              <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 7px; letter-spacing: 0.06em; text-transform: uppercase; color: #0a3d36; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Бонус</div>
+            </div>
+
+            <div class="mfc-cost-ribbon" style="position: absolute; top: 14px; right: -32px; width: 120px; padding: 5px 0; text-align: center; transform: rotate(45deg); background: #14a893; box-shadow: 0 2px 6px #00000055; pointer-events: none; z-index: 5;">
+              <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 11px; color: #fff;">{{ c.cost }}⚡</div>
+            </div>
+
+            <div style="position: absolute; top: 0; left: 0; right: 0; padding: 14px 14px 0; pointer-events: none;">
+              <div style="margin-top: {{ c.badgeOffset }}; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(13px, 2.1vw, 17px); line-height: 1.05; text-transform: uppercase; text-wrap: balance; overflow-wrap: break-word; word-break: break-word; hyphens: auto; color: #fff;">{{ c.name }}</div>
+              <div style="margin-top: 5px; font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffffb3;">{{ c.sub }}</div>
+              <sc-if value="{{ c.hasKws }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top: 7px; font-size: 13px; letter-spacing: 0.08em;">{{ c.kwIcons }}</div>
+              </sc-if>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+
+      <sc-for list="{{ bonusPlaceholders }}" as="ph" hint-placeholder-count="3">
+        <div style="position: relative; aspect-ratio: 2 / 3; border-radius: 14px; border: 2.5px dashed #14a893; background: #14a89312; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; padding: 16px; animation: fadeUp .55s ease both;">
+          <div style="width: 34px; height: 34px; border-radius: 50%; border: 2.5px dashed #14a893; display: flex; align-items: center; justify-content: center; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 16px; color: #14a893;">+</div>
+          <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: {{ ink }}99;">Бонусная карта</div>
+          <div style="font-size: 9.5px; color: {{ ink }}66;">Скоро</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{ noBonusResults }}" hint-placeholder-val="{{ false }}">
+      <div style="padding: 30px 0; text-align: center; font-size: 13px; font-weight: 600; color: {{ ink }}66;">Бонусных карт по запросу «{{ search }}» не найдено.</div>
+    </sc-if>
+    </sc-if>
+
+    </sc-if>
+
+    <sc-if value="{{ isPlay }}" hint-placeholder-val="{{ false }}">
+
+      <sc-if value="{{ showRotatePrompt }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; text-align: center; padding: 70px 24px; animation: fadeUp .4s ease both; min-height: 50vh;">
+          <div style="width: 64px; height: 64px; border: 3px solid {{ ink }}; border-radius: 14px; display: flex; align-items: center; justify-content: center;">
+            <div style="width: 30px; height: 44px; border: 2.5px solid {{ ink }}; border-radius: 4px; animation: rotateHint 1.6s ease infinite;"></div>
+          </div>
+          <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(18px, 5vw, 24px); text-transform: uppercase; color: {{ ink }};">Поверните телефон</div>
+          <div style="font-size: 13px; font-weight: 600; color: {{ ink }}99; max-width: 320px; line-height: 1.5;">Матч удобнее играть в горизонтальной ориентации — переверните устройство, чтобы видеть поле и карты целиком.</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isSetup }}" hint-placeholder-val="{{ true }}">
+        <div style="position: fixed; inset: 0; z-index: 15; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 30px; padding: 40px max(24px, env(safe-area-inset-right)) 40px max(24px, env(safe-area-inset-left)); background: {{ bg }}; background-image: radial-gradient({{ dotColor }} 1.6px, transparent 1.6px); background-size: 16px 16px; animation: fadeUp .5s ease both;">
+          <button type="button" onClick="{{ goCollection }}" style="position: absolute; top: max(16px, env(safe-area-inset-top)); left: max(16px, env(safe-area-inset-left)); border: 2px solid {{ ink }}40; background: transparent; color: {{ ink }}80; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 11px; text-transform: uppercase; padding: 9px 14px; border-radius: 999px;" style-hover="color: {{ ink }}; border-color: {{ ink }}80;">Выйти</button>
+          <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(30px, 5.4vw, 56px); line-height: 1; text-transform: uppercase; color: {{ ink }};">Выберите аватара</div>
+          <div style="font-size: clamp(13px, 1.7vw, 17px); font-weight: 500; color: {{ ink }}99; max-width: 660px; line-height: 1.55;">Цель матча — уничтожить аватара противника. Пока на его поле три героя или больше, аватар защищён — сначала придётся разобраться с героями. Аватар бота выбирается случайно.</div>
+          <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;">
+            <sc-for list="{{ avatarChoices }}" as="a" hint-placeholder-count="3">
+              <div onClick="{{ a.onClick }}" style="width: 226px; display: flex; flex-direction: column; align-items: center; gap: 9px; padding: 18px 16px 20px; border-radius: 20px; background: {{ paper }}; border: {{ a.border }}; box-shadow: {{ a.shadow }}; transform: {{ a.lift }}; cursor: pointer; transition: transform .25s cubic-bezier(.2,.8,.25,1), box-shadow .25s ease, border-color .2s ease; text-align: center;" style-hover="transform: translateY(-6px);">
+                <div style="width: 92px; height: 92px; border-radius: 50%; background: {{ a.image }}; border: 3px solid {{ ink }}; display: flex; align-items: center; justify-content: center; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 38px; color: #ffffffd9;">{{ a.glyph }}</div>
+                <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 17px; text-transform: uppercase; color: {{ ink }}; line-height: 1.1;">{{ a.name }}</div>
+                <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 14px; color: #c21f2b; white-space: nowrap;">❤️ {{ a.hp }} HP</div>
+                <div style="font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: {{ ink }}80; line-height: 1.4;">{{ a.statsText }}</div>
+                <div style="height: 2px; width: 42px; background: {{ ink }}22; border-radius: 2px;"></div>
+                <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 11px; text-transform: uppercase; color: var(--acc, #e0212f);">{{ a.passiveName }}</div>
+                <div style="font-size: 12px; font-weight: 500; line-height: 1.45; color: {{ ink }}b3; text-wrap: pretty;">{{ a.passiveText }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <button type="button" onClick="{{ startMatch }}" style="border: 3px solid {{ ink }}; background: {{ startBg }}; color: {{ startColor }}; opacity: {{ startOpacity }}; cursor: {{ startCursor }}; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: clamp(15px, 1.8vw, 18px); text-transform: uppercase; padding: 18px 38px; min-height: 44px; border-radius: 999px; box-shadow: 5px 5px 0 {{ ink }}40; transition: background-color .25s ease, opacity .25s ease;" style-hover="filter: brightness(1.08);" style-active="transform: translate(2px,2px) scale(0.97); box-shadow: 3px 3px 0 {{ ink }}40;">{{ startLabel }}</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isBattle }}" hint-placeholder-val="{{ false }}">
+        <div style="position: fixed; inset: 0; z-index: 20; display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; background: {{ bg }}; background-image: radial-gradient({{ dotColor }} 1.6px, transparent 1.6px); background-size: 16px 16px; padding: max(6px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(6px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left)); animation: fadeIn .35s ease both;">
+
+          <div style="position: relative; display: flex; align-items: center; justify-content: center; padding-bottom: 12px; min-height: 38px; flex: 0 0 auto;">
+            <button type="button" onClick="{{ backToCollection }}" style="position: absolute; left: 0; border: 2px solid {{ ink }}40; background: transparent; color: {{ ink }}80; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 9px; text-transform: uppercase; padding: 7px 10px; border-radius: 999px;" style-hover="color: {{ ink }}; border-color: {{ ink }}80;">Выйти</button>
+            <sc-if value="{{ isPlayerTurn }}" hint-placeholder-val="{{ true }}">
+              <div style="animation: turnPop .4s ease both; display: flex; align-items: center; gap: 7px; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ turnFontSize }}; text-transform: uppercase; color: #fff; background: var(--acc, #e0212f); border: 2.5px solid {{ ink }}; padding: {{ turnPad }}; border-radius: 999px; box-shadow: 3px 3px 0 {{ ink }}40;">▶ Ваш ход</div>
+            </sc-if>
+            <sc-if value="{{ isBotAttacking }}" hint-placeholder-val="{{ false }}">
+              <div style="animation: turnPop .3s ease both, atkGlow .6s ease infinite; display: flex; align-items: center; gap: 7px; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ turnFontSize }}; text-transform: uppercase; color: #fff; background: #c21f2b; border: 2.5px solid {{ ink }}; padding: {{ turnPad }}; border-radius: 999px; box-shadow: 3px 3px 0 {{ ink }}40;">⚔ Бот атакует!</div>
+            </sc-if>
+            <sc-if value="{{ isBotThinking }}" hint-placeholder-val="{{ false }}">
+              <div style="animation: turnPop .4s ease both; display: flex; align-items: center; gap: 9px; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ turnFontSize }}; text-transform: uppercase; color: {{ ink }}; background: {{ paper }}; border: 2.5px solid {{ ink }}; padding: {{ turnPad }}; border-radius: 999px; box-shadow: 3px 3px 0 {{ ink }}40;">
+                <span>Ход бота</span>
+                <span style="display: flex; gap: 3px;">
+                  <span style="width: 4px; height: 4px; border-radius: 50%; background: {{ ink }}99; animation: dotBounce 1.1s ease infinite;"></span>
+                  <span style="width: 4px; height: 4px; border-radius: 50%; background: {{ ink }}99; animation: dotBounce 1.1s ease infinite .15s;"></span>
+                  <span style="width: 4px; height: 4px; border-radius: 50%; background: {{ ink }}99; animation: dotBounce 1.1s ease infinite .3s;"></span>
+                </span>
+              </div>
+            </sc-if>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 10px; padding: 0 2px 8px; flex: 0 0 auto;">
+            <div onClick="{{ botAvatar.onClick }}" style="position: relative; display: flex; align-items: center; gap: 10px; padding: 6px 14px 6px 6px; border-radius: 999px; background: {{ paper }}; border: 3px solid {{ ink }}; box-shadow: {{ botAvatar.ring }}; cursor: {{ botAvatar.cursor }}; animation: {{ botAvatar.anim }}; transition: box-shadow .25s ease; flex: 0 0 auto;">
+              <div style="width: {{ avatarSize }}; height: {{ avatarSize }}; flex: 0 0 auto; border-radius: 50%; background: {{ botAvatar.image }}; border: 2.5px solid {{ ink }}; display: flex; align-items: center; justify-content: center; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ avatarGlyphSize }}; color: #ffffffd9;">{{ botAvatar.glyph }}</div>
+              <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0;">
+                <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ avatarNameFont }}; text-transform: uppercase; color: {{ ink }}; white-space: nowrap;">{{ botAvatar.name }}</div>
+                <div style="display: flex; align-items: center; gap: 7px;">
+                  <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ avatarHpFont }}; color: #c21f2b; white-space: nowrap;">❤️ {{ botAvatar.hp }}/{{ botAvatar.maxHp }}</div>
+                  <div style="width: {{ avatarBarW }}; height: 7px; border-radius: 999px; background: {{ ink }}18; overflow: hidden;">
+                    <div style="height: 100%; width: {{ botAvatar.hpPct }}%; background: #c21f2b; border-radius: 999px; transition: width .45s cubic-bezier(.2,.8,.25,1);"></div>
+                  </div>
+                </div>
+                <sc-if value="{{ botAvatar.protected }}" hint-placeholder-val="{{ true }}">
+                  <div style="font-size: 8.5px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #3d7fd6; white-space: nowrap; animation: fadeIn .3s ease both;">🛡 Защищён героями</div>
+                </sc-if>
+                <sc-if value="{{ botAvatar.open }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-size: 8.5px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #c21f2b; white-space: nowrap; animation: shieldBreak .55s ease both;">⚔ Щит разбит — открыт</div>
+                </sc-if>
+              </div>
+              <sc-if value="{{ botAvatar.hasFx }}" hint-placeholder-val="{{ false }}">
+                <div style="position: absolute; inset: 0; border-radius: 999px; background: #ff2d2d40; animation: hitFlash .5s ease; pointer-events: none;"></div>
+                <div style="position: absolute; top: -16px; left: 50%; transform: translateX(-50%); pointer-events: none; animation: floatFade .9s ease both; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 22px; color: #ff4d4d; text-shadow: 0 0 6px #000, 0 0 2px #000;">{{ botAvatar.fxText }}</div>
+              </sc-if>
+            </div>
+            <div style="position: relative; width: {{ deckPileW }}; height: {{ deckPileH }}; flex: 0 0 auto;">
+              <div style="position: absolute; inset: 0; transform: rotate(-7deg); border-radius: 5px; background: #17140f center/cover no-repeat url('./assets/marvelcomics-card.jpg'); border: 1.5px solid #00000055;"></div>
+              <div style="position: absolute; inset: 0; transform: rotate(3deg); border-radius: 5px; background: #17140f center/cover no-repeat url('./assets/marvelcomics-card.jpg'); border: 1.5px solid #00000055;"></div>
+              <div style="position: absolute; inset: 0; border-radius: 5px; background: #17140f center/cover no-repeat url('./assets/marvelcomics-card.jpg'); border: 1.5px solid {{ ink }};"></div>
+              <div style="position: absolute; bottom: -5px; right: -5px; min-width: 16px; height: 16px; padding: 0 3px; border-radius: 999px; background: {{ ink }}; color: {{ paper }}; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 8px; display: flex; align-items: center; justify-content: center;">{{ bot.deckCount }}</div>
+            </div>
+            <div style="flex: 1; min-width: 0;">
+              <div onClick="{{ openDiscardBot }}" style="font-size: 9.5px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: {{ ink }}80; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;">Бот · сброс {{ bot.discardCount }}</div>
+              <div style="display: flex; gap: 4px; align-items: center; margin-top: 3px;">
+                <sc-for list="{{ bot.manaPips }}" as="m" hint-placeholder-count="10">
+                  <div style="width: {{ manaPipSize }}; height: {{ manaPipSize }}; border-radius: 3px; transform: rotate(45deg); background: {{ m.bg }}; box-shadow: {{ m.glow }}; flex: 0 0 auto;"></div>
+                </sc-for>
+                <div style="font-size: 10px; font-weight: 800; color: {{ ink }}80; margin-left: 4px; white-space: nowrap;">{{ bot.mana }}/{{ bot.manaCap }}⚡</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="flex: 0 0 auto; height: {{ fieldArenaH }}; min-height: 0; overflow: hidden; box-sizing: border-box; border-radius: 16px; padding: {{ fieldArenaPad }}; background: linear-gradient(160deg, #24352b, #131d17); border: 2px solid #00000040; box-shadow: inset 0 3px 12px #00000066;">
+            <div style="height: 100%; display: flex; align-items: center; justify-content: center; gap: {{ fieldGap }};">
+              <sc-if value="{{ bot.fieldEmpty }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size: 10px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: #ffffff40; animation: fadeIn .4s ease both;">Поле противника пусто</div>
+              </sc-if>
+              <sc-for list="{{ bot.field }}" as="h" hint-placeholder-count="3">
+                <div onClick="{{ h.onClick }}" style="position: relative; height: 100%; aspect-ratio: 2 / 3; max-width: {{ fieldCardMaxW }}; flex: 0 1 auto; border-radius: 12px; overflow: hidden; cursor: {{ h.cursor }}; background: #17140f; border: {{ h.border }}; filter: {{ h.cardFilter }}; transform: {{ h.lift }}; z-index: {{ h.z }}; animation: {{ h.anim }}; transition: transform .28s cubic-bezier(.2,.8,.25,1), filter .3s ease, border-color .2s ease, box-shadow .25s ease; box-shadow: 0 6px 16px -6px #00000088;" style-hover="transform: translateY(-8px) scale(1.05); box-shadow: 0 14px 26px -8px #000000aa;">
+                  <div style="position: absolute; inset: 0; background: {{ h.art }};"></div>
+                  <div style="position: absolute; inset: 0; background: linear-gradient(180deg, #17140fbf 0%, transparent 38%, #17140fe6 100%);"></div>
+                  <div style="position: absolute; top: {{ fieldInset }}; left: {{ fieldInset }}; right: {{ fieldNameRight }}; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ fieldNameFont }}; line-height: 1.15; letter-spacing: -0.01em; color: #fff; text-transform: uppercase; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: {{ fieldNameClamp }}; -webkit-box-orient: vertical; overflow: hidden;">{{ h.name }}</div>
+                  <div onClick="{{ h.openInfo }}" style="position: absolute; top: {{ fieldInset }}; right: {{ fieldInset }}; width: {{ fieldInfoSize }}; height: {{ fieldInfoSize }}; border-radius: 50%; background: #00000099; border: 1px solid #ffffff66; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 3;">
+                    <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ fieldStateFont }}; color: #fff;">i</div>
+                  </div>
+                  <sc-if value="{{ h.hasKws }}" hint-placeholder-val="{{ false }}">
+                    <div style="position: absolute; top: {{ fieldKwTop }}; right: {{ fieldInset }}; font-size: {{ fieldKwFont }}; line-height: 1.2; text-align: right; letter-spacing: 0.04em; text-shadow: 0 1px 3px #000;">{{ h.kwIcons }}</div>
+                  </sc-if>
+                  <sc-if value="{{ h.hasState }}" hint-placeholder-val="{{ false }}">
+                    <div style="position: absolute; bottom: {{ fieldStateBottom }}; left: {{ fieldInset }}; right: {{ fieldInset }}; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: {{ fieldStateFont }}; letter-spacing: 0.02em; text-transform: uppercase; color: #ffd27a; white-space: nowrap; overflow: hidden;">{{ h.stateLabel }}</div>
+                  </sc-if>
+                  <sc-if value="{{ h.hasFx }}" hint-placeholder-val="{{ false }}">
+                    <div style="position: absolute; inset: 0; background: #ff2d2d55; animation: hitFlash .5s ease; pointer-events: none;"></div>
+                    <div style="position: absolute; top: -8px; left: 0; right: 0; text-align: center; pointer-events: none; animation: floatFade .9s ease both; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 20px; color: #ff4d4d; text-shadow: 0 0 6px #000, 0 0 2px #000;">{{ h.fxText }}</div>
+                  </sc-if>
+                  <div style="position: absolute; bottom: {{ fieldInset }}; left: {{ fieldInset }}; right: {{ fieldInset }}; display: flex; justify-content: space-between; align-items: center; gap: 3px;">
+                    <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ fieldStatFont }}; color: #ff8a8a; white-space: nowrap;">❤️{{ h.hp }}</div>
+                    <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ fieldStatFont }}; color: var(--acc, #e0212f); white-space: nowrap;">{{ h.str }}⚔</div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: center; padding: 6px 10px; flex: 0 0 auto;">
+            <div style="width: 100%; max-width: 640px; max-height: {{ logMaxH }}; overflow-y: auto; display: flex; flex-direction: column; gap: 3px; background: {{ paper }}; border: 2px solid {{ ink }}30; border-radius: 12px; padding: 6px 14px; box-shadow: 2px 2px 0 {{ ink }}20;">
+              <sc-for list="{{ game.history }}" as="entry" hint-placeholder-count="3">
+                <div style="font-size: {{ logFont }}; font-weight: {{ entry.weight }}; color: {{ entry.color }}; line-height: 1.3;">{{ entry.text }}</div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="flex: 0 0 auto; height: {{ fieldArenaH }}; min-height: 0; overflow: hidden; box-sizing: border-box; border-radius: 16px; padding: {{ fieldArenaPad }}; background: linear-gradient(200deg, var(--acc, #e0212f)18, #17140f08); border: 2px solid var(--acc, #e0212f)40; box-shadow: inset 0 3px 12px #00000022;">
+            <div style="height: 100%; display: flex; align-items: center; justify-content: center; gap: {{ fieldGap }};">
+              <sc-if value="{{ player.fieldEmpty }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size: 10px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: {{ ink }}40; animation: fadeIn .4s ease both;">Разыграйте героя из руки</div>
+              </sc-if>
+              <sc-for list="{{ player.field }}" as="h" hint-placeholder-count="3">
+                <div onClick="{{ h.onClick }}" style="position: relative; height: 100%; aspect-ratio: 2 / 3; max-width: {{ fieldCardMaxW }}; flex: 0 1 auto; border-radius: 12px; overflow: hidden; cursor: {{ h.cursor }}; background: #17140f; border: {{ h.border }}; filter: {{ h.cardFilter }}; transform: {{ h.lift }}; z-index: {{ h.z }}; animation: {{ h.anim }}; transition: transform .28s cubic-bezier(.2,.8,.25,1), filter .3s ease, border-color .2s ease, box-shadow .25s ease; box-shadow: 0 6px 16px -6px #00000088;" style-hover="transform: translateY(-8px) scale(1.05); box-shadow: 0 14px 26px -8px #000000aa;">
+                  <div style="position: absolute; inset: 0; background: {{ h.art }};"></div>
+                  <div style="position: absolute; inset: 0; background: linear-gradient(180deg, #17140fbf 0%, transparent 38%, #17140fe6 100%);"></div>
+                  <div style="position: absolute; top: {{ fieldInset }}; left: {{ fieldInset }}; right: {{ fieldNameRight }}; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ fieldNameFont }}; line-height: 1.15; letter-spacing: -0.01em; color: #fff; text-transform: uppercase; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: {{ fieldNameClamp }}; -webkit-box-orient: vertical; overflow: hidden;">{{ h.name }}</div>
+                  <div onClick="{{ h.openInfo }}" style="position: absolute; top: {{ fieldInset }}; right: {{ fieldInset }}; width: {{ fieldInfoSize }}; height: {{ fieldInfoSize }}; border-radius: 50%; background: #00000099; border: 1px solid #ffffff66; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 3;">
+                    <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ fieldStateFont }}; color: #fff;">i</div>
+                  </div>
+                  <sc-if value="{{ h.hasKws }}" hint-placeholder-val="{{ false }}">
+                    <div style="position: absolute; top: {{ fieldKwTop }}; right: {{ fieldInset }}; font-size: {{ fieldKwFont }}; line-height: 1.2; text-align: right; letter-spacing: 0.04em; text-shadow: 0 1px 3px #000;">{{ h.kwIcons }}</div>
+                  </sc-if>
+                  <sc-if value="{{ h.hasState }}" hint-placeholder-val="{{ false }}">
+                    <div style="position: absolute; bottom: {{ fieldStateBottom }}; left: {{ fieldInset }}; right: {{ fieldInset }}; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: {{ fieldStateFont }}; letter-spacing: 0.02em; text-transform: uppercase; color: #ffd27a; white-space: nowrap; overflow: hidden;">{{ h.stateLabel }}</div>
+                  </sc-if>
+                  <sc-if value="{{ h.hasFx }}" hint-placeholder-val="{{ false }}">
+                    <div style="position: absolute; inset: 0; background: #ff2d2d55; animation: hitFlash .5s ease; pointer-events: none;"></div>
+                    <div style="position: absolute; top: -8px; left: 0; right: 0; text-align: center; pointer-events: none; animation: floatFade .9s ease both; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 20px; color: #ff4d4d; text-shadow: 0 0 6px #000, 0 0 2px #000;">{{ h.fxText }}</div>
+                  </sc-if>
+                  <div style="position: absolute; bottom: {{ fieldInset }}; left: {{ fieldInset }}; right: {{ fieldInset }}; display: flex; justify-content: space-between; align-items: center; gap: 3px;">
+                    <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ fieldStatFont }}; color: #ff8a8a; white-space: nowrap;">❤️{{ h.hp }}</div>
+                    <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ fieldStatFont }}; color: var(--acc, #e0212f); white-space: nowrap;">{{ h.str }}⚔</div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 10px; padding: 12px 2px 4px; flex: 0 0 auto;">
+            <div style="position: relative; display: flex; align-items: center; gap: 10px; padding: 6px 14px 6px 6px; border-radius: 999px; background: {{ paper }}; border: 3px solid {{ ink }}; box-shadow: {{ playerAvatar.ring }}; animation: {{ playerAvatar.anim }}; transition: box-shadow .25s ease; flex: 0 0 auto;">
+              <div style="width: {{ avatarSize }}; height: {{ avatarSize }}; flex: 0 0 auto; border-radius: 50%; background: {{ playerAvatar.image }}; border: 2.5px solid {{ ink }}; display: flex; align-items: center; justify-content: center; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ avatarGlyphSize }}; color: #ffffffd9;">{{ playerAvatar.glyph }}</div>
+              <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0;">
+                <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ avatarNameFont }}; text-transform: uppercase; color: {{ ink }}; white-space: nowrap;">{{ playerAvatar.name }}</div>
+                <div style="display: flex; align-items: center; gap: 7px;">
+                  <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ avatarHpFont }}; color: #c21f2b; white-space: nowrap;">❤️ {{ playerAvatar.hp }}/{{ playerAvatar.maxHp }}</div>
+                  <div style="width: {{ avatarBarW }}; height: 7px; border-radius: 999px; background: {{ ink }}18; overflow: hidden;">
+                    <div style="height: 100%; width: {{ playerAvatar.hpPct }}%; background: #c21f2b; border-radius: 999px; transition: width .45s cubic-bezier(.2,.8,.25,1);"></div>
+                  </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <sc-if value="{{ playerAvatar.protected }}" hint-placeholder-val="{{ true }}">
+                    <div style="font-size: 8.5px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #3d7fd6; white-space: nowrap; animation: fadeIn .3s ease both;">🛡 Защищён героями</div>
+                  </sc-if>
+                  <sc-if value="{{ playerAvatar.open }}" hint-placeholder-val="{{ false }}">
+                    <div style="font-size: 8.5px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #c21f2b; white-space: nowrap; animation: shieldBreak .55s ease both;">⚔ Щит разбит — уязвим</div>
+                  </sc-if>
+                  <sc-if value="{{ playerAvatar.canPeek }}" hint-placeholder-val="{{ false }}">
+                    <button type="button" onClick="{{ peekTop }}" style="border: 2px solid var(--acc, #e0212f); background: transparent; color: var(--acc, #e0212f); cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 8.5px; text-transform: uppercase; padding: 5px 9px; border-radius: 999px; white-space: nowrap;" style-hover="background: var(--acc, #e0212f); color: #fff;">◉ Заглянуть в колоду</button>
+                  </sc-if>
+                </div>
+              </div>
+              <sc-if value="{{ playerAvatar.hasFx }}" hint-placeholder-val="{{ false }}">
+                <div style="position: absolute; inset: 0; border-radius: 999px; background: #ff2d2d40; animation: hitFlash .5s ease; pointer-events: none;"></div>
+                <div style="position: absolute; top: -16px; left: 50%; transform: translateX(-50%); pointer-events: none; animation: floatFade .9s ease both; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 22px; color: #ff4d4d; text-shadow: 0 0 6px #000, 0 0 2px #000;">{{ playerAvatar.fxText }}</div>
+              </sc-if>
+            </div>
+            <div style="position: relative; width: {{ deckPileW }}; height: {{ deckPileH }}; flex: 0 0 auto;">
+              <div style="position: absolute; inset: 0; transform: rotate(-7deg); border-radius: 5px; background: #17140f center/cover no-repeat url('./assets/marvelcomics-card.jpg'); border: 1.5px solid #00000055;"></div>
+              <div style="position: absolute; inset: 0; transform: rotate(3deg); border-radius: 5px; background: #17140f center/cover no-repeat url('./assets/marvelcomics-card.jpg'); border: 1.5px solid #00000055;"></div>
+              <div style="position: absolute; inset: 0; border-radius: 5px; background: #17140f center/cover no-repeat url('./assets/marvelcomics-card.jpg'); border: 1.5px solid var(--acc, #e0212f);"></div>
+              <div style="position: absolute; bottom: -5px; right: -5px; min-width: 16px; height: 16px; padding: 0 3px; border-radius: 999px; background: var(--acc, #e0212f); color: #fff; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 8px; display: flex; align-items: center; justify-content: center;">{{ player.deckCount }}</div>
+            </div>
+            <div style="flex: 1; min-width: 0;">
+              <div onClick="{{ openDiscardPlayer }}" style="font-size: 9.5px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: {{ ink }}80; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;">Рука {{ player.handCount }}/7 · сброс {{ player.discardCount }}</div>
+              <div style="display: flex; gap: 4px; align-items: center; margin-top: 3px;">
+                <sc-for list="{{ player.manaPips }}" as="m" hint-placeholder-count="10">
+                  <div style="width: {{ manaPipSize }}; height: {{ manaPipSize }}; border-radius: 3px; transform: rotate(45deg); background: {{ m.bg }}; box-shadow: {{ m.glow }}; flex: 0 0 auto;"></div>
+                </sc-for>
+                <div style="font-size: 10px; font-weight: 800; color: var(--acc, #e0212f); margin-left: 4px; white-space: nowrap;">{{ player.mana }}/{{ player.manaCap }}⚡</div>
+              </div>
+            </div>
+            <button type="button" onClick="{{ endTurn }}" style="border: 3px solid {{ ink }}; background: {{ endTurnBg }}; color: {{ endTurnColor }}; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: {{ endTurnFont }}; text-transform: uppercase; padding: {{ endTurnPad }}; min-height: {{ endTurnMinH }}; border-radius: 999px; white-space: nowrap; flex: 0 0 auto; animation: {{ endTurnAnim }};" style-hover="filter: brightness(0.96);" style-active="transform: translate(1px,1px) scale(0.97);">Закончить ход</button>
+          </div>
+
+          <div style="display: flex; justify-content: center; padding: {{ handPad }}; flex: 0 0 auto;">
+            <div style="display: flex; align-items: flex-end;">
+              <sc-for list="{{ player.hand }}" as="c" hint-placeholder-count="5">
+                <div onClick="{{ c.onClick }}" onPointerEnter="{{ c.onEnter }}" onPointerLeave="{{ c.onLeave }}" style="position: relative; flex: 0 0 auto; width: {{ handCardW }}; aspect-ratio: 2 / 3; margin-left: {{ c.overlap }}; border-radius: 12px; overflow: hidden; cursor: {{ c.cursor }}; touch-action: manipulation; background: #17140f; border: 3px solid {{ c.border }}; box-shadow: {{ c.shadow }}; opacity: {{ c.dim }}; transform: {{ c.transform }}; transition: transform .25s cubic-bezier(.2,.8,.25,1), box-shadow .25s ease; z-index: {{ c.z }};" style-active="transform: scale(0.97);">
+                  <div style="position: absolute; inset: 0; background: {{ c.art }};"></div>
+                  <div style="position: absolute; inset: 0; background: linear-gradient(180deg, #17140fb3 0%, transparent 44%, #17140fe6 100%);"></div>
+                  <div style="position: absolute; top: {{ handBadgeInset }}; left: {{ handBadgeInset }}; right: {{ handBadgeInset }}; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ handTypeFont }}; letter-spacing: 0.05em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; background: {{ c.typeColor }}; color: #17140f; display: inline-block; width: fit-content;">{{ c.typeLabel }}</div>
+                  <div style="position: absolute; top: {{ handBadgeInset }}; right: {{ handBadgeInset }}; width: {{ handCostSize }}; height: {{ handCostSize }}; border-radius: 50%; background: var(--acc, #e0212f); border: 2px solid #fff; display: flex; align-items: center; justify-content: center;">
+                    <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ handCostFont }}; color: #fff;">{{ c.cost }}</div>
+                  </div>
+                  <div style="position: absolute; top: {{ handNameTop }}; left: {{ handBadgeInset }}; right: {{ handBadgeInset }}; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ handNameFont }}; line-height: 1.15; color: #fff; text-transform: uppercase;">{{ c.name }}</div>
+                  <sc-if value="{{ c.hasKws }}" hint-placeholder-val="{{ false }}">
+                    <div style="position: absolute; bottom: {{ handKwBottom }}; left: {{ handBadgeInset }}; right: {{ handBadgeInset }}; font-size: {{ handKwFont }}; letter-spacing: 0.06em; white-space: nowrap; overflow: hidden;">{{ c.kwIcons }}</div>
+                  </sc-if>
+                  <sc-if value="{{ c.isHero }}" hint-placeholder-val="{{ true }}">
+                    <div style="position: absolute; bottom: {{ handBadgeInset }}; left: {{ handBadgeInset }}; right: {{ handBadgeInset }}; display: flex; justify-content: space-between;">
+                      <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ handStatFont }}; color: #ff8a8a;">❤️ {{ c.hp }}</div>
+                      <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ handStatFont }}; color: var(--acc, #e0212f);">{{ c.str }}⚔</div>
+                    </div>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <sc-if value="{{ hasCastFx }}" hint-placeholder-val="{{ false }}">
+            <div style="position: fixed; inset: 0; z-index: 60; pointer-events: none; display: flex; align-items: center; justify-content: center; animation: {{ castAnim }}; background: radial-gradient(circle, {{ castColor }}55, transparent 62%);">
+              <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(20px, 5vw, 32px); text-transform: uppercase; color: #fff; text-shadow: 0 0 18px {{ castColor }}, 0 2px 6px #000; letter-spacing: 0.03em; text-align: center; padding: 0 20px;">{{ castName }}</div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ burnFx }}" hint-placeholder-val="{{ false }}">
+            <div style="position: fixed; left: 50%; bottom: 32%; z-index: 78; pointer-events: none; display: flex; align-items: center; gap: 9px; padding: 9px 17px; border-radius: 999px; background: #17140fe8; border: 2px solid #ff8a3d; box-shadow: 0 12px 28px -10px #000000aa; animation: burnAway 1.6s ease both;">
+              <div style="font-size: 15px;">🔥</div>
+              <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 10.5px; text-transform: uppercase; color: #ffb37a; white-space: nowrap;">Рука переполнена · {{ burnFx.name }} потеряна</div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ peekCard }}" hint-placeholder-val="{{ false }}">
+            <div style="position: fixed; left: 18px; bottom: 34%; z-index: 75; width: 124px; border-radius: 14px; overflow: hidden; border: 3px solid {{ ink }}; box-shadow: 0 16px 34px -10px #000000aa; animation: fadeUp .3s cubic-bezier(.2,.8,.25,1) both; background: #17140f;">
+              <div style="position: relative; aspect-ratio: 2 / 3; background: {{ peekCard.art }};">
+                <div style="position: absolute; inset: 0; background: linear-gradient(180deg, #17140fcc 0%, transparent 40%, #17140fee 100%);"></div>
+                <div style="position: absolute; top: 7px; left: 7px; right: 7px; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 9px; line-height: 1.15; color: #fff; text-transform: uppercase;">{{ peekCard.name }}</div>
+                <div style="position: absolute; bottom: 7px; left: 7px; right: 7px; display: flex; justify-content: space-between; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 9px; color: #ffd27a;">
+                  <div>⚡ {{ peekCard.cost }}</div>
+                  <div>{{ peekCard.typeLabel }}</div>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ hasWinner }}" hint-placeholder-val="{{ false }}">
+            <div style="position: fixed; inset: 0; z-index: 90; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding: 40px; background: #17140fee; backdrop-filter: blur(10px); animation: fadeIn .4s ease both;">
+              <div style="position: absolute; width: 120vmax; height: 120vmax; pointer-events: none; background: conic-gradient(from 0deg, {{ winColor }}22 0deg, transparent 18deg, {{ winColor }}22 36deg, transparent 54deg, {{ winColor }}22 72deg, transparent 90deg); animation: winRays 22s linear infinite;"></div>
+              <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(34px, 7vw, 76px); line-height: 1; text-transform: uppercase; color: {{ winColor }}; text-shadow: 0 0 34px {{ winColor }}66; animation: winPop .7s cubic-bezier(.2,.8,.25,1) both; text-align: center; position: relative;">{{ winTitle }}</div>
+              <div style="font-size: clamp(13px, 1.8vw, 17px); font-weight: 500; color: #ffffffcc; text-align: center; max-width: 480px; line-height: 1.55; animation: fadeUp .6s ease .18s both; position: relative;">{{ winText }}</div>
+              <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; animation: fadeUp .6s ease .34s both; position: relative;">
+                <button type="button" onClick="{{ playAgain }}" style="border: 3px solid #f4efe1; background: var(--acc, #e0212f); color: #fff; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 13px; text-transform: uppercase; padding: 15px 28px; min-height: 44px; border-radius: 999px;" style-hover="filter: brightness(1.1);" style-active="transform: scale(0.97);">Играть снова</button>
+                <button type="button" onClick="{{ backToCollection }}" style="border: 3px solid #f4efe1; background: transparent; color: #f4efe1; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 13px; text-transform: uppercase; padding: 15px 28px; min-height: 44px; border-radius: 999px;" style-hover="background: #f4efe118;" style-active="transform: scale(0.97);">В коллекцию</button>
+              </div>
+            </div>
+          </sc-if>
+
+        </div>
+      </sc-if>
+
+    </sc-if>
+
+  </div>
+
+  <sc-if value="{{ sel }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ close }}" style="position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; padding: 20px; background: #17140fd9; backdrop-filter: blur(8px); animation: fadeIn .25s ease both;">
+      <div onClick="{{ stop }}" onPointerMove="{{ tilt }}" onPointerLeave="{{ untilt }}" style="position: relative; width: min(380px, 84vw, 50vh); aspect-ratio: 2 / 3; margin-bottom: 58px; transform-style: preserve-3d; transition: transform .4s cubic-bezier(.2,.8,.25,1); animation: fadeUp .35s ease both;">
+        <div style="position: absolute; inset: 0; transform-style: preserve-3d; transition: transform .75s cubic-bezier(.3,.9,.25,1); transform: {{ selFlip }};">
+
+          <div style="position: absolute; inset: 0; backface-visibility: hidden; border-radius: 20px; overflow: hidden; background: #17140f; border: 4px solid #17140f; box-shadow: {{ sel.shadowModal }};">
+            <div data-par="1" style="position: absolute; inset: 0; transition: transform .35s ease; pointer-events: none; background: {{ sel.art }};"></div>
+            <div style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, #17140fdb 0%, #17140f1f 34%, #17140f33 50%, #17140ff0 100%);"></div>
+            <div data-gloss="1" style="position: absolute; inset: 0; pointer-events: none; opacity: 0.75;"></div>
+
+            <sc-if value="{{ sel.legendary }}" hint-placeholder-val="{{ false }}">
+              <div style="position: absolute; top: 18px; right: 18px; max-width: 46%; padding: 6px 11px; border-radius: 999px; background: linear-gradient(135deg, #f7dd8a, #fff6d9, #b8860b); box-shadow: 0 0 0 1px #17140f66; pointer-events: none;">
+                <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: #17140f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Легендарная</div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ sel.bonus }}" hint-placeholder-val="{{ false }}">
+              <div style="position: absolute; top: 18px; left: 18px; max-width: 46%; padding: 6px 11px; border-radius: 999px; background: linear-gradient(135deg, #7fe9df, #eafffb, #14a893); box-shadow: 0 0 0 1px #17140f66; pointer-events: none;">
+                <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: #0a3d36; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Бонус</div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ sel.cost }}" hint-placeholder-val="{{ true }}">
+            <div style="position: absolute; top: 20px; right: -34px; width: 150px; padding: 7px 0; text-align: center; transform: rotate(45deg); background: {{ sel.costRibbonColor }}; box-shadow: 0 3px 8px #00000055; pointer-events: none; z-index: 5;">
+              <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 13px; color: #fff;">{{ sel.cost }}⚡</div>
+            </div>
+            </sc-if>
+
+            <div style="position: absolute; top: 0; left: 0; right: 0; padding: 24px 24px 0; pointer-events: none;">
+              <div style="margin-top: {{ sel.badgeOffsetModal }}; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(20px, 5vw, 28px); line-height: 1.08; text-transform: uppercase; text-wrap: balance; overflow-wrap: break-word; word-break: break-word; hyphens: auto; color: #fff;">{{ sel.name }}</div>
+              <div style="margin-top: 8px; font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #ffffffcc;">{{ sel.sub }}</div>
+              <sc-if value="{{ sel.hasKws }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 6px;">
+                  <sc-for list="{{ sel.kws }}" as="k" hint-placeholder-count="2">
+                    <div style="display: flex; align-items: flex-start; gap: 7px; padding: 6px 9px; border-radius: 10px; background: #00000066; border: 1px solid #ffffff26;">
+                      <div style="font-size: 13px; line-height: 1.1;">{{ k.icon }}</div>
+                      <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0;">
+                        <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 9.5px; letter-spacing: 0.08em; text-transform: uppercase; color: #ffd27a;">{{ k.name }}</div>
+                        <div style="font-size: 9.5px; font-weight: 500; line-height: 1.35; color: #ffffffcc; text-wrap: pretty;">{{ k.text }}</div>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+
+            <sc-if value="{{ sel.showStats }}" hint-placeholder-val="{{ true }}">
+              <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 0 24px 22px; display: flex; flex-direction: column; gap: 11px; pointer-events: none;">
+                <sc-for list="{{ sel.stats }}" as="s" hint-placeholder-count="4">
+                  <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #ffffffd9; flex: 1; min-width: 0;">{{ s.label }}</div>
+                    <div style="display: flex; gap: 6px;">
+                      <sc-for list="{{ s.pips }}" as="p" hint-placeholder-count="5">
+                        <div style="width: 11px; height: 11px; border-radius: 50%; background: {{ p.bg }}; box-shadow: 0 0 0 1.5px #ffffff40;"></div>
+                      </sc-for>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+
+          <div style="position: absolute; inset: 0; backface-visibility: hidden; transform: rotateY(180deg); border-radius: 20px; overflow: hidden; border: 4px solid #17140f; box-shadow: {{ sel.shadowModal }}; background: #17140f center/cover no-repeat url('./assets/marvelcomics-card.jpg');"></div>
+        </div>
+
+        <div style="position: absolute; left: 0; right: 0; bottom: -58px; display: flex; justify-content: center; gap: 12px;">
+          <button type="button" onClick="{{ flip }}" style="border: 3px solid #17140f; background: var(--acc, #e0212f); color: #fff; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0; text-transform: uppercase; padding: 12px 20px; min-height: 44px; border-radius: 999px; box-shadow: 4px 4px 0 #17140f40;" style-hover="filter: brightness(1.08);" style-active="transform: translate(2px,2px) scale(0.97); box-shadow: 2px 2px 0 #17140f40;">Перевернуть</button>
+          <button type="button" onClick="{{ close }}" style="border: 3px solid #17140f; background: {{ paper }}; color: {{ ink }}; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0; text-transform: uppercase; padding: 12px 20px; min-height: 44px; border-radius: 999px; box-shadow: 4px 4px 0 #17140f40;" style-hover="filter: brightness(0.96);" style-active="transform: translate(2px,2px) scale(0.97); box-shadow: 2px 2px 0 #17140f40;">Закрыть</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ fieldSel }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeFieldCard }}" style="position: fixed; inset: 0; z-index: 70; display: flex; align-items: center; justify-content: center; padding: 20px; background: #17140fd9; backdrop-filter: blur(8px); animation: fadeIn .2s ease both;">
+      <div onClick="{{ stop }}" style="position: relative; width: min(320px, 82vw); max-height: 88vh; overflow-y: auto; background: {{ paper }}; border-radius: 18px; border: 3px solid {{ ink }}; box-shadow: 6px 6px 0 {{ ink }}30; animation: fadeUp .3s ease both;">
+        <div style="position: relative; aspect-ratio: 3 / 4; background: {{ fieldSel.art }};">
+          <div style="position: absolute; inset: 0; background: linear-gradient(180deg, #17140f00 45%, #17140fee 100%);"></div>
+          <div style="position: absolute; bottom: 12px; left: 14px; right: 14px;">
+            <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 21px; line-height: 1.05; color: #fff; text-transform: uppercase;">{{ fieldSel.name }}</div>
+          </div>
+        </div>
+        <div style="padding: 16px 18px 20px; display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 15px; color: #e0212f; white-space: nowrap;">❤️ {{ fieldSel.hp }} / {{ fieldSel.maxHp }}</div>
+            <div style="flex: 1; height: 8px; border-radius: 999px; background: {{ ink }}18; overflow: hidden;">
+              <div style="height: 100%; width: {{ fieldSel.hpPct }}%; background: #e0212f; border-radius: 999px; transition: width .3s ease;"></div>
+            </div>
+          </div>
+          <sc-for list="{{ fieldSel.stats }}" as="s" hint-placeholder-count="4">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: {{ ink }}99; flex: 1; min-width: 0;">{{ s.label }}</div>
+              <div style="display: flex; gap: 5px;">
+                <sc-for list="{{ s.pips }}" as="p" hint-placeholder-count="5">
+                  <div style="width: 9px; height: 9px; border-radius: 50%; background: {{ p.bg }}; box-shadow: 0 0 0 1px {{ ink }}22;"></div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+          <sc-if value="{{ fieldSel.hasKws }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; gap: 7px; padding-top: 2px;">
+              <sc-for list="{{ fieldSel.kws }}" as="k" hint-placeholder-count="2">
+                <div style="display: flex; align-items: flex-start; gap: 8px; padding: 7px 10px; border-radius: 12px; background: {{ ink }}0d; border: 2px solid {{ ink }}18;">
+                  <div style="font-size: 14px; line-height: 1.1;">{{ k.icon }}</div>
+                  <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0;">
+                    <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--acc, #e0212f);">{{ k.name }}</div>
+                    <div style="font-size: 11px; font-weight: 500; line-height: 1.4; color: {{ ink }}b3; text-wrap: pretty;">{{ k.text }}</div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+          <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+            <div style="padding: 5px 11px; border-radius: 999px; background: {{ fieldSel.statusBg }}; font-family: 'Unbounded', sans-serif; font-size: 10px; font-weight: 800; text-transform: uppercase; color: #fff;">{{ fieldSel.statusLabel }}</div>
+            <sc-if value="{{ fieldSel.buffed }}" hint-placeholder-val="{{ false }}">
+              <div style="padding: 5px 11px; border-radius: 999px; background: #2ecc71; font-family: 'Unbounded', sans-serif; font-size: 10px; font-weight: 800; text-transform: uppercase; color: #fff;">Усилен</div>
+            </sc-if>
+            <sc-if value="{{ fieldSel.debuffed }}" hint-placeholder-val="{{ false }}">
+              <div style="padding: 5px 11px; border-radius: 999px; background: #8a6fd6; font-family: 'Unbounded', sans-serif; font-size: 10px; font-weight: 800; text-transform: uppercase; color: #fff;">Ослаблен</div>
+            </sc-if>
+          </div>
+          <sc-if value="{{ fieldSel.discardReason }}" hint-placeholder-val="{{ false }}">
+            <div style="padding: 9px 12px; border-radius: 12px; background: {{ ink }}0d; border: 2px solid {{ ink }}18;">
+              <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 9.5px; letter-spacing: 0.08em; text-transform: uppercase; color: {{ ink }}99; padding-bottom: 3px;">Причина сброса</div>
+              <div style="font-size: 11.5px; font-weight: 500; line-height: 1.4; color: {{ ink }}cc; text-wrap: pretty;">{{ fieldSel.discardReason }}</div>
+            </div>
+          </sc-if>
+          <button type="button" onClick="{{ closeFieldCard }}" style="border: 3px solid {{ ink }}; background: {{ ink }}; color: {{ paper }}; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 12px; text-transform: uppercase; padding: 11px 20px; min-height: 44px; border-radius: 999px;" style-hover="filter: brightness(1.15);" style-active="transform: scale(0.97);">Закрыть</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ discardView }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeDiscard }}" style="position: fixed; inset: 0; z-index: 65; display: flex; align-items: center; justify-content: center; padding: 20px; background: #17140fd9; backdrop-filter: blur(8px); animation: fadeIn .2s ease both;">
+      <div onClick="{{ stop }}" style="position: relative; width: min(420px, 90vw); max-height: 80vh; overflow-y: auto; background: {{ paper }}; border-radius: 18px; border: 3px solid {{ ink }}; box-shadow: 6px 6px 0 {{ ink }}30; padding: 18px; animation: fadeUp .3s ease both;">
+        <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 16px; text-transform: uppercase; color: {{ ink }}; padding-bottom: 12px;">{{ discardView.label }}</div>
+        <sc-if value="{{ discardView.empty }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size: 12px; color: {{ ink }}80; padding: 10px 0;">Сброс пуст.</div>
+        </sc-if>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 8px;">
+          <sc-for list="{{ discardView.cards }}" as="d" hint-placeholder-count="6">
+            <div onClick="{{ d.open }}" style="display: flex; flex-direction: column; gap: 5px; cursor: pointer;">
+              <div style="position: relative; aspect-ratio: 2 / 3; border-radius: 8px; overflow: hidden; background: #17140f; border: 2px solid {{ ink }};">
+                <div style="position: absolute; inset: 0; background: {{ d.art }}; filter: grayscale(0.4) brightness(0.75);"></div>
+                <div style="position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, #17140fee 100%);"></div>
+                <div style="position: absolute; bottom: 3px; left: 3px; right: 3px; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 7.5px; line-height: 1.1; color: #fff; text-transform: uppercase;">{{ d.name }}</div>
+              </div>
+              <div style="font-size: 8.5px; font-weight: 600; line-height: 1.3; color: {{ ink }}99; text-wrap: pretty;">{{ d.reason }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <button type="button" onClick="{{ closeDiscard }}" style="margin-top: 14px; border: 3px solid {{ ink }}; background: {{ ink }}; color: {{ paper }}; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 12px; text-transform: uppercase; padding: 11px 20px; min-height: 44px; border-radius: 999px; width: 100%;" style-hover="filter: brightness(1.15);" style-active="transform: scale(0.97);">Закрыть</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div style="position: fixed; top: max(70px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); z-index: 80; background: {{ ink }}; color: {{ paper }}; font-size: 12px; font-weight: 700; padding: 10px 18px; border-radius: 999px; box-shadow: 0 6px 18px #00000055; animation: fadeUp .25s ease both; pointer-events: none; text-align: center; max-width: 80vw;">{{ toast }}</div>
+  </sc-if>
+</div></x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;playerName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Никита&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#e0212f&quot;,&quot;options&quot;:[&quot;#e0212f&quot;,&quot;#1c4fd6&quot;,&quot;#e0a300&quot;,&quot;#6c2bd9&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Оформление&quot;},&quot;tilt&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Интерактив&quot;},&quot;sound&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Интерактив&quot;},&quot;haptics&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Интерактив&quot;}}">
+const DATA = [
+  // --- Мстители и союзники, Земля-616 ---
+  { name: "Человек\u2011Паук", sub: "с Земли 616", s: [3, 5, 5, 4], cost: 7, art: "center/cover no-repeat url('./assets/spiderman.png')" },
+  { name: "Капитан Америка", sub: "с Земли 616", s: [3, 4, 4, 5], cost: 6, art: "center/cover no-repeat url('./assets/captain616.jpg')" },
+  { name: "Железный Человек", sub: "с Земли 616", s: [4, 3, 5, 5], cost: 7, art: "center/cover no-repeat url('./assets/ironman616.jpg')" },
+  { name: "Тор", sub: "с Земли 616", s: [5, 3, 3, 4], cost: 5, art: "center/cover no-repeat url('./assets/thor616.jpg')" },
+  { name: "Халк", sub: "с Земли 616", s: [5, 2, 3, 2], cost: 2, art: "center/cover no-repeat url('./assets/hulk616.jpg')" },
+  { name: "Черная Вдова", sub: "с Земли 616", s: [2, 5, 4, 5], cost: 6, art: "center/cover no-repeat url('./assets/blackwidow616.jpg')" },
+  { name: "Соколиный Глаз", sub: "с Земли 616", s: [2, 5, 3, 5], cost: 5, art: "center/cover no-repeat url('./assets/hawkeye616.jpg')" },
+  { name: "Капитан Марвел", sub: "с Земли 616", s: [5, 4, 3, 4], cost: 6, art: "center/cover no-repeat url('./assets/captainmarvel616.jpg')" },
+  { name: "Черная Пантера", sub: "с Земли 616", s: [3, 5, 5, 5], cost: 8, art: "center/cover no-repeat url('./assets/blackpanther616.jpg')" },
+  { name: "Человек\u2011Муравей", sub: "с Земли 616", s: [2, 4, 4, 3], cost: 3, art: "center/cover no-repeat url('./assets/antman616.jpg')" },
+  { name: "Оса", sub: "с Земли 616", s: [2, 5, 4, 4], cost: 5, art: "center/cover no-repeat url('./assets/wasp616.jpg')" },
+  { name: "Сокол", sub: "с Земли 616", s: [2, 5, 3, 4], cost: 4, art: "center/cover no-repeat url('./assets/falcon616.jpg')" },
+  { name: "Алая Ведьма", sub: "с Земли 616", s: [2, 3, 4, 5], cost: 4, art: "center/cover no-repeat url('./assets/scarletwitch616.jpg')" },
+  { name: "Вижн", sub: "с Земли 616", s: [4, 4, 5, 4], cost: 7, art: "center/cover no-repeat url('./assets/vision616.jpg')" },
+  { name: "Женщина\u2011Халк", sub: "с Земли 616", s: [5, 3, 3, 3], cost: 4, art: "center/cover no-repeat url('./assets/shehulk616.jpg')" },
+
+  // --- Люди Икс, Земля-616 (mutant) ---
+  { name: "Профессор Икс", sub: "с Земли 616", s: [1, 1, 5, 5], cost: 2, tags: ["mutant"], art: "center 20%/cover no-repeat url('./assets/professorx616.jpg')" },
+  { name: "Росомаха", sub: "с Земли 616", s: [4, 4, 3, 5], cost: 6, tags: ["mutant"], art: "center/cover no-repeat url('./assets/wolverine616.jpg')" },
+  { name: "Циклоп", sub: "с Земли 616", s: [3, 3, 4, 5], cost: 5, tags: ["mutant"], art: "center/cover no-repeat url('./assets/cyclops616.jpg')" },
+  { name: "Джин Грей", sub: "с Земли 616", s: [3, 3, 5, 5], cost: 6, tags: ["mutant"], art: "center/cover no-repeat url('./assets/jeangrey616.jpg')" },
+  { name: "Шторм", sub: "с Земли 616", s: [2, 4, 4, 5], cost: 5, tags: ["mutant"], art: "center/cover no-repeat url('./assets/storm616.jpg')" },
+  { name: "Зверь", sub: "с Земли 616", s: [4, 5, 5, 3], cost: 7, tags: ["mutant"], art: "center/cover no-repeat url('./assets/beast616.jpg')" },
+  { name: "Колосс", sub: "с Земли 616", s: [5, 2, 3, 3], cost: 3, tags: ["mutant"], art: "center/cover no-repeat url('./assets/colossus616.jpg')" },
+  { name: "Роуг", sub: "с Земли 616", s: [4, 3, 3, 4], cost: 4, tags: ["mutant"], art: "center/cover no-repeat url('./assets/rogue616.jpg')" },
+  { name: "Китти Прайд", sub: "с Земли 616", s: [2, 5, 4, 3], cost: 4, tags: ["mutant"], art: "center/cover no-repeat url('./assets/kittypryde616.jpg')" },
+  { name: "Ночной Змей", sub: "с Земли 616", s: [2, 5, 3, 5], cost: 5, tags: ["mutant"], art: "center/cover no-repeat url('./assets/nightcrawler616.jpg')" },
+  { name: "Гамбит", sub: "с Земли 616", s: [2, 5, 3, 5], cost: 5, tags: ["mutant"], art: "center/cover no-repeat url('./assets/gambit616.jpg')" },
+  { name: "Айсмен", sub: "с Земли 616", s: [3, 3, 3, 4], cost: 3, tags: ["mutant"], art: "center/cover no-repeat url('./assets/iceman616.jpg')" },
+  { name: "Магнето", sub: "с Земли 616", s: [4, 2, 5, 5], cost: 6, tags: ["mutant"], art: "center/cover no-repeat url('./assets/magneto616-v2.jpg')" },
+
+  // --- Фантастическая четвёрка, Земля-616 ---
+  { name: "Мистер Фантастик", sub: "с Земли 616", s: [2, 3, 5, 4], cost: 4, art: "center/cover no-repeat url('./assets/mrfantastic616.jpg')" },
+  { name: "Невидимая Женщина", sub: "с Земли 616", s: [2, 3, 4, 5], cost: 4, art: "center/cover no-repeat url('./assets/invisiblewoman616.jpg')" },
+  { name: "Человек\u2011Факел", sub: "с Земли 616", s: [2, 4, 3, 4], cost: 3, art: "center/cover no-repeat url('./assets/humantorch616.jpg')" },
+  { name: "Существо", sub: "с Земли 616", s: [5, 2, 3, 3], cost: 3, art: "center/cover no-repeat url('./assets/thething616.jpg')" },
+
+  // --- Стражи Галактики и космос, Земля-616 ---
+  { name: "Звёздный Лорд", sub: "с Земли 616", s: [3, 4, 3, 4], cost: 4, art: "center/cover no-repeat url('./assets/starlord616.jpg')" },
+  { name: "Гамора", sub: "с Земли 616", s: [3, 5, 3, 5], cost: 6, art: "center/cover no-repeat url('./assets/gamora616.jpg')" },
+  { name: "Дракс", sub: "с Земли 616", s: [5, 3, 2, 3], cost: 3, art: "center/cover no-repeat url('./assets/drax616.jpg')" },
+  { name: "Ракета", sub: "с Земли 616", s: [2, 4, 4, 5], cost: 5, art: "center/cover no-repeat url('./assets/rocketracoon616.jpg')" },
+  { name: "Грут", sub: "с Земли 616", s: [5, 2, 2, 2], cost: 1, art: "center/cover no-repeat url('./assets/groot616.webp')" },
+  { name: "Мантис", sub: "с Земли 616", s: [2, 3, 4, 4], cost: 3, art: "center/cover no-repeat url('./assets/mantis616.jpg')" },
+  { name: "Нова", sub: "с Земли 616", s: [4, 4, 3, 4], cost: 5, art: "center/cover no-repeat url('./assets/nova616.jpg')" },
+  { name: "Серебряный Сёрфер", sub: "с Земли 616", s: [4, 4, 4, 4], cost: 6, art: "center/cover no-repeat url('./assets/silversurfer616.jpg')" },
+
+  // --- Уличный уровень и антигерои, Земля-616 ---
+  { name: "Сорвиголова", sub: "с Земли 616", s: [3, 5, 4, 5], cost: 7, art: "center/cover no-repeat url('./assets/daredevil616.jpg')" },
+  { name: "Каратель", sub: "с Земли 616", s: [3, 3, 3, 5], cost: 4, art: "center/cover no-repeat url('./assets/punisher616.jpg')" },
+  { name: "Лунный Рыцарь", sub: "с Земли 616", s: [3, 5, 3, 5], cost: 6, art: "center/cover no-repeat url('./assets/moonknight616.jpg')" },
+  { name: "Дэдпул", sub: "с Земли 616", s: [4, 5, 3, 5], cost: 7, art: "center/cover no-repeat url('./assets/deadpool616.jpg')" },
+  { name: "Доктор Стрэндж", sub: "с Земли 616", s: [2, 3, 5, 5], cost: 5, art: "center/cover no-repeat url('./assets/drstrange616.jpg')" },
+  { name: "Призрачный Гонщик", sub: "с Земли 616", s: [5, 3, 2, 4], cost: 4, art: "center/cover no-repeat url('./assets/ghostrider616.jpg')" },
+
+  // --- Симбиоты и угрозы, Земля-616 ---
+  { name: "Веном", sub: "с Земли 616", s: [5, 4, 3, 4], cost: 6, art: "center/cover no-repeat url('./assets/venom616.jpg')" },
+  { name: "Карнаж", sub: "с Земли 616", s: [5, 4, 2, 3], cost: 4, art: "center/cover no-repeat url('./assets/carnage616.jpg')" },
+  { name: "Танос", sub: "с Земли 616", s: [5, 3, 5, 4], cost: 9, art: "center/cover no-repeat url('./assets/thanos616.jpg')" },
+
+  // --- Другие вселенные ---
+  { name: "Человек\u2011Паук 1610: Майлз Моралес", sub: "с Земли 1610 · Ultimate", s: [3, 4, 4, 3], cost: 4, art: "center/cover no-repeat url('./assets/spidermiles1610.jpg')" },
+
+  // --- Второй эшелон, дешёвые карты (1-3 энергии) — арт ждёт загрузки, плейсхолдер-градиент временно ---
+  { name: "Агент Щ.И.Т.", sub: "с Земли 616", s: [2, 3, 2, 2], cost: 1, art: "center/cover no-repeat url('./assets/shieldagent616.jpg')" },
+  { name: "Агент ГИДРЫ", sub: "с Земли 616", s: [2, 2, 2, 2], cost: 1, art: "center/cover no-repeat url('./assets/hydraagent.jpg')" },
+  { name: "Рядовой солдат Крии", sub: "с Земли 616", s: [3, 2, 1, 2], cost: 1, art: "center/cover no-repeat url('./assets/kreesoldier616.jpg')" },
+  { name: "Воин Читаури", sub: "с Земли 616", s: [3, 2, 1, 1], cost: 1, art: "center/cover no-repeat url('./assets/Chitauri616.jpg')" },
+  { name: "Ниндзя Руки", sub: "с Земли 616", s: [2, 3, 1, 2], cost: 1, art: "center/cover no-repeat url('./assets/handclan616.jpg')" },
+  { name: "Солдат AIM", sub: "с Земли 616", s: [1, 2, 3, 2], cost: 1, art: "center/cover no-repeat url('./assets/AIMsoldier616.jpg')" },
+  { name: "Полицейский Нью-Йорка", sub: "с Земли 616", s: [1, 2, 1, 1], cost: 1, art: "center/cover no-repeat url('./assets/NYCpolice616.jpg')" },
+  { name: "Мария Хилл", sub: "с Земли 616", s: [2, 3, 3, 3], cost: 2, art: "center/cover no-repeat url('./assets/maryhill616.jpg')" },
+  { name: "Фил Колсон", sub: "с Земли 616", s: [2, 2, 3, 3], cost: 2, art: "center/cover no-repeat url('./assets/philcoulson616.jpg')" },
+  { name: "Пересмешница", sub: "с Земли 616", s: [2, 4, 2, 3], cost: 2, art: "center/cover no-repeat url('./assets/mockinbird616-50c2ad17.jpg')" },
+  { name: "Кейт Бишоп", sub: "с Земли 616", s: [2, 4, 2, 2], cost: 2, art: "center/cover no-repeat url('./assets/katebishop616.jpg')" },
+  { name: "Йонду", sub: "с Земли 616", s: [3, 4, 2, 2], cost: 2, art: "center/cover no-repeat url('./assets/youndu616.jpg')" },
+  { name: "Небула", sub: "с Земли 616", s: [3, 4, 2, 3], cost: 2, art: "center/cover no-repeat url('./assets/nebula616.jpg')" },
+  { name: "Шури", sub: "с Земли 616", s: [1, 2, 5, 3], cost: 2, art: "center/cover no-repeat url('./assets/shuri616.jpg')" },
+  { name: "Вонг", sub: "с Земли 616", s: [2, 2, 4, 3], cost: 2, art: "center/cover no-repeat url('./assets/wong616.jpg')" },
+  { name: "Корг", sub: "с Земли 616", s: [4, 2, 2, 2], cost: 2, art: "center/cover no-repeat url('./assets/korg616.jpg')" },
+  { name: "М\u2019Баку", sub: "с Земли 616", s: [4, 3, 2, 2], cost: 2, art: "center/cover no-repeat url('./assets/mbaku616.jpg')" },
+  { name: "Локи", sub: "с Земли 616", s: [2, 3, 4, 4], cost: 3, art: "center/cover no-repeat url('./assets/loki616.jpg')" },
+  { name: "Зимний солдат", sub: "с Земли 616", s: [4, 4, 2, 3], cost: 3, art: "center/cover no-repeat url('./assets/wintersoldier616.jpg')" },
+  { name: "Воитель", sub: "с Земли 616", s: [3, 3, 3, 4], cost: 3, art: "center/cover no-repeat url('./assets/warmachine616.jpg')" },
+  { name: "Сокол (Сэм Уилсон)", sub: "с Земли 616", s: [3, 4, 2, 3], cost: 3, art: "center/cover no-repeat url('./assets/samwilson616.jpg')" },
+  { name: "БЕЛАЯ ТИГРИЦА", sub: "с Земли 616", s: [4, 4, 2, 3], cost: 3, art: "center/cover no-repeat url('./assets/whitetiger616.jpg')" },
+  { name: "Электра", sub: "с Земли 616", s: [3, 5, 2, 3], cost: 3, art: "center/cover no-repeat url('./assets/electra616.jpg')" },
+  { name: "Меченый", sub: "с Земли 616", s: [3, 4, 2, 4], cost: 3, art: "center/cover no-repeat url('./assets/bullseye616.jpg')" },
+  { name: "Мистерио", sub: "с Земли 616", s: [1, 3, 4, 4], cost: 3, art: "center/cover no-repeat url('./assets/misterio616.jpg')" },
+  { name: "Плащ", sub: "с Земли 616", s: [2, 2, 4, 4], cost: 3, art: "center/cover no-repeat url('./assets/cloak616.jpg')" },
+  { name: "Кинжал", sub: "с Земли 616", s: [2, 3, 4, 3], cost: 3, art: "center/cover no-repeat url('./assets/dagger616.jpg')" },
+  // Когда фото будут загружены, замени art каждой карточки выше на "center/cover no-repeat url('./assets/ИМЯ_ФАЙЛА')"
+
+  // --- Легендарная карта (замыкает коллекцию) ---
+  { name: "Стэн Ли", sub: "Excelsior!", s: [5, 5, 5, 5], cost: 10, legendary: true, collectionOnly: true, art: "center 22%/cover no-repeat url('./assets/stanlee.jpg')" }
+];
+// Быстро добавить карточку: скопируй строку выше и заполни поля.
+// name       — имя персонажа (строка, "\u2011" вместо дефиса чтобы не переносилось)
+// sub        — подпись под именем ("с Земли 616" и т.п.)
+// s          — [Сила, Ловкость, Интеллект, Мастерство], каждое 1-5
+// legendary  — true даёт золотую рамку и бейдж «Легендарная» (необязательно)
+// collectionOnly — true исключает карту из игровой колоды (только для коллекции, например Стэн Ли)
+// tags       — необязательно: ["mutant"] отмечает мутантов (влияет на карту "Пришествие Феникса" в игровом режиме)
+// art        — CSS background картинки: "center/cover no-repeat url('./assets/ИМЯ_ФАЙЛА')"
+//              (артворк положить в /assets через copy_files, потом сюда путь)
+// Порядок в массиве = порядок в сетке коллекции. Ротация карточек берётся из ROTS по кругу — ничего менять не нужно.
+
+// Бонусные карты — отдельная категория, не персонажи (события, промо-арты, спецвыпуски и т.п.).
+// Показываются в коллекции отдельным блоком "Бонусные карты" со своей рамкой (бирюзовое свечение).
+// key — идентификатор игровой механики карты (см. BONUS_EFFECTS в игровом движке ниже).
+const BONUS = [
+  { name: "Перчатка Бесконечности", sub: "Артефакт", s: [5, 3, 5, 5], cost: 10, bonus: true, legendary: true, key: "gauntlet", art: "center/cover no-repeat url('./assets/bonus-infinity-gauntlet.jpg')" },
+  { name: "Мьёльнир", sub: "Артефакт", s: [5, 2, 3, 5], cost: 4, bonus: true, rarity: "rare", key: "mjolnir", art: "center/cover no-repeat url('./assets/bonus-mjolnir.jpg')" },
+  { name: "Пришествие Феникса", sub: "Событие", s: [4, 4, 5, 5], cost: 7, bonus: true, legendary: true, key: "phoenix", art: "center/cover no-repeat url('./assets/bonus-phoenix-powers.jpg')" },
+  { name: "Мультивселенский разлом", sub: "Событие", s: [3, 3, 5, 4], cost: 6, bonus: true, rarity: "rare", key: "rift", art: "center/cover no-repeat url('./assets/bonus-multiverse-rift.jpg')" },
+  { name: "Ярость Альтрона", sub: "Событие", s: [5, 4, 4, 3], cost: 5, bonus: true, rarity: "rare", key: "ultron", art: "center/cover no-repeat url('./assets/bonus-ultrons-rage.jpg')" }
+];
+// Быстро добавить бонусную карту: скопируй строку-образец выше и заполни поля.
+// bonus — всегда true (маркер категории + бейдж «Бонус» + бирюзовая рамка)
+// rarity — необязательно: "rare" даёт серебристо-голубую рамку; legendary:true — золотую
+// key — свяжи с новым обработчиком в BONUS_EFFECTS, если карта должна что-то делать в игровом режиме
+const LABELS = ["💪 Сила", "🤸 Ловкость", "🧠 Интеллект", "⚔️ Мастерство"];
+const ROTS = [-2.2, 1.6, -1.2, 2, -1.8, 1.3];
+const BONUS_PLACEHOLDERS = 3;
+const MAX_FIELD = 5;
+const START_HAND = 5;
+
+// --- Игровой движок: эффекты бонусных карт ---
+// Каждый обработчик получает (game, casterSide, targetUid|null) и мутирует game.player/game.bot напрямую.
+// caster — сторона, разыгравшая карту ("player" | "bot"); target — сторона, где стоит выбранный герой (если applyTo==='target').
+const BONUS_EFFECTS = {
+  gauntlet: {
+    needsTarget: true,
+    resolve(game, casterSide, targetSide, targetUid) {
+      const hero = findHero(game, targetSide, targetUid);
+      if (!hero) return "Перчатка Бесконечности: цель не найдена.";
+      if (hero.name === "Танос") {
+        hero.stats = { s: 5, a: 5, i: 5, k: 5 };
+        recalcHp(hero);
+        return "Перчатка Бесконечности надета Таносом — все характеристики 5.";
+      }
+      if (hero.stats.k >= 4) {
+        hero.stats.s += 1; hero.stats.a += 1; hero.stats.i += 1; hero.stats.k += 1;
+        hero.buffed = true;
+        recalcHp(hero);
+        hero.hp = Math.max(0, hero.hp - 3);
+        if (hero.hp <= 0) killHero(game, targetSide, hero.uid, "Не выдержал силу Перчатки Бесконечности.");
+        return hero.name + " использует Перчатку: характеристики +1, но получает 3 урона от силы Камней.";
+      }
+      killHero(game, targetSide, hero.uid, "Оказался недостоин Перчатки Бесконечности.");
+      return hero.name + " не выдерживает силу Перчатки и погибает.";
+    }
+  },
+  mjolnir: {
+    needsTarget: true,
+    resolve(game, casterSide, targetSide, targetUid) {
+      const hero = findHero(game, targetSide, targetUid);
+      if (!hero) return "Мьёльнир: цель не найдена.";
+      if (hasKw(hero, "worthy")) {
+        hero.stats.s = 5; hero.stats.a = 5;
+        hero.buffed = true;
+        recalcHp(hero);
+        return hero.name + " поднимает Мьёльнир — Сила и Ловкость 5.";
+      }
+      return hero.name + " не достоин Мьёльнира. Молот возвращается в сброс.";
+    }
+  },
+  phoenix: {
+    needsTarget: false,
+    resolve(game) {
+      const all = game.player.field.concat(game.bot.field).filter((h) => h && h.alive);
+      const mutants = all.filter((h) => hasKw(h, "mutant"));
+      if (mutants.length) {
+        mutants.forEach((h) => { h.stats.s = 5; h.buffed = true; recalcHp(h); });
+        return "Пришествие Феникса усиливает мутантов на поле — Сила 5.";
+      }
+      all.forEach((h) => { h.hp = Math.max(0, h.hp - 3); });
+      [["player", game.player], ["bot", game.bot]].forEach(([side, p]) => {
+        p.field.filter((h) => h && h.hp <= 0).forEach((h) => killHero(game, side, h.uid, "Сгорел в пламени Феникса."));
+      });
+      return "Мутантов не найдено — Феникс обжигает всех героев на 3 урона.";
+    }
+  },
+  rift: {
+    needsTarget: false,
+    resolve(game) {
+      ["player", "bot"].forEach((side) => {
+        const p = game[side];
+        const destroyed = p.field.filter((h) => h);
+        destroyed.forEach((h) => { h.discardReason = "Поле стёрто Мультивселенским Разломом."; });
+        p.discard = p.discard.concat(destroyed);
+        p.field = [];
+        p.deck = shuffleArr(p.deck.concat(p.discard));
+        p.discard = [];
+      });
+      return "Мультивселенский разлом стирает поле — обе колоды пересобраны заново.";
+    }
+  },
+  ultron: {
+    needsTarget: false,
+    resolve(game) {
+      let ironManHit = false;
+      ["player", "bot"].forEach((side) => {
+        const p = game[side];
+        p.field.forEach((h) => {
+          if (!h) return;
+          if (h.name === "Железный Человек") { killHero(game, side, h.uid, "Уничтожен Яростью Альтрона."); ironManHit = true; }
+        });
+      });
+      let tech = 0;
+      ["player", "bot"].forEach((side) => {
+        const p = game[side];
+        p.field.forEach((h) => {
+          if (!h || !h.alive) return;
+          if (!hasKw(h, "technology")) return;
+          h.stats.i = Math.max(1, h.stats.i - 1);
+          h.debuffed = true;
+          recalcHp(h);
+          tech++;
+        });
+      });
+      const techMsg = tech ? "Технологические герои теряют 1 Интеллект (" + tech + ")." : "Технологических героев на поле нет.";
+      return (ironManHit ? "Ярость Альтрона уничтожает Железного Человека. " : "Ярость Альтрона проходит по полю. ") + techMsg;
+    }
+  }
+};
+
+function shuffleArr(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+function recalcHp(hero) {
+  const max = hero.stats.s + hero.stats.a + hero.stats.i + hero.stats.k;
+  const dmgTaken = hero.maxHp - hero.hp;
+  hero.maxHp = max;
+  hero.hp = Math.max(0, max - dmgTaken);
+}
+function findHero(game, side, uid) {
+  return game[side].field.find((h) => h && h.uid === uid) || null;
+}
+function killHero(game, side, uid, reason) {
+  const p = game[side];
+  const idx = p.field.findIndex((h) => h && h.uid === uid);
+  if (idx < 0) return;
+  const hero = p.field[idx];
+  hero.alive = false;
+  hero.dying = false;
+  hero.discardReason = reason || "Уничтожен в бою.";
+  p.discard.push(hero);
+  p.field[idx] = null;
+  firePassive(game, "onHeroDestroyed", [side, hero]).forEach((m) => logEvent(game, m));
+}
+let uidCounter = 1;
+function makeInstance(d) {
+  const isBonus = !!d.bonus;
+  const stats = isBonus ? null : { s: d.s[0], a: d.s[1], i: d.s[2], k: d.s[3] };
+  const hp = isBonus ? null : (d.s[0] + d.s[1] + d.s[2] + d.s[3]);
+  return {
+    uid: "c" + (uidCounter++), name: d.name, sub: d.sub, art: d.art,
+    legendary: !!d.legendary, type: isBonus ? "bonus" : "hero",
+    tags: d.tags || [], keywords: cardKeywords(d), key: d.key || null, cost: d.cost || 1,
+    stats: stats, hp: hp, maxHp: hp, alive: true,
+    sick: false, usedAttack: false
+  };
+}
+
+// --- Ключевые слова (Keywords) ---------------------------------------------
+// Независимый реестр: каждое слово — отдельная запись с иконкой, названием и описанием.
+// Механику дают только те, у кого она указана ниже в движке (defender, charge);
+// остальные пока чисто описательные и уже готовы к будущим картам.
+// Добавить новое слово = добавить запись в KEYWORDS (+ при желании раздать в KEYWORD_TABLE).
+const KEYWORDS = {
+  defender:   { icon: "🛡", name: "Defender",   text: "Пока на поле есть Defender, ваш аватар полностью защищён." },
+  charge:     { icon: "⚡", name: "Charge",     text: "Атакует сразу после выхода на поле, без усталости призыва." },
+  flying:     { icon: "🪽", name: "Flying",     text: "Полёт. Механика появится в будущих обновлениях." },
+  ranged:     { icon: "🏹", name: "Ranged",     text: "Дальний бой. В будущем сможет бить через защитников." },
+  mutant:     { icon: "🧬", name: "Mutant",     text: "Мутант. Усиливается «Пришествием Феникса»." },
+  technology: { icon: "🤖", name: "Technology", text: "Технологический герой. Страдает от «Ярости Альтрона»." },
+  magic:      { icon: "🔮", name: "Magic",      text: "Магия. Тег для будущих карт и аватаров." },
+  cosmic:     { icon: "🌌", name: "Cosmic",     text: "Космос. Тег для будущих карт и аватаров." },
+  worthy:     { icon: "⚒", name: "Worthy",     text: "Достойный. Может поднять Мьёльнир." }
+};
+// Раздача ключевых слов по именам карт. Массив DATA не трогаем: карте можно задать
+// и своё поле keywords: [...] — оба источника складываются.
+const KEYWORD_TABLE = {
+  "Капитан Америка": ["worthy"],
+  "Железный Человек": ["technology", "flying"],
+  "Тор": ["worthy", "flying"],
+  "Халк": ["defender"],
+  "Капитан Марвел": ["cosmic", "flying"],
+  "Соколиный Глаз": ["ranged"],
+  "Оса": ["flying"],
+  "Сокол": ["flying"],
+  "Алая Ведьма": ["magic"],
+  "Вижн": ["technology", "flying"],
+  "Женщина\u2011Халк": ["defender"],
+  "Джин Грей": ["magic"],
+  "Шторм": ["flying"],
+  "Колосс": ["defender"],
+  "Ночной Змей": ["charge"],
+  "Магнето": ["flying"],
+  "Существо": ["defender"],
+  "Человек\u2011Факел": ["flying", "charge"],
+  "Звёздный Лорд": ["cosmic"],
+  "Гамора": ["cosmic"],
+  "Ракета": ["ranged"],
+  "Нова": ["cosmic", "flying"],
+  "Серебряный Сёрфер": ["cosmic", "flying"],
+  "Каратель": ["ranged"],
+  "Доктор Стрэндж": ["magic"],
+  "Призрачный Гонщик": ["magic"],
+  "Танос": ["cosmic"],
+  "Локи": ["magic"],
+  "Вонг": ["magic"],
+  "Шури": ["technology"],
+  "Воитель": ["technology", "flying"],
+  "Зимний солдат": ["technology"],
+  "Небула": ["technology"],
+  "Сокол (Сэм Уилсон)": ["flying"],
+  "Кейт Бишоп": ["ranged"],
+  "Мистерио": ["magic"],
+  "Плащ": ["magic"],
+  "Кинжал": ["magic"],
+  "Корг": ["defender"],
+  "Рядовой солдат Крии": ["cosmic"],
+  "Воин Читаури": ["cosmic"]
+};
+function cardKeywords(d) {
+  const out = [];
+  (d.keywords || []).concat(KEYWORD_TABLE[d.name] || [], d.tags || []).forEach((id) => {
+    if (KEYWORDS[id] && out.indexOf(id) < 0) out.push(id);
+  });
+  return out;
+}
+function hasKw(hero, id) {
+  return !!hero && !!hero.keywords && hero.keywords.indexOf(id) >= 0;
+}
+function kwIconsOf(list) {
+  return (list || []).map((id) => KEYWORDS[id] && KEYWORDS[id].icon).filter(Boolean).join(" ");
+}
+function kwChips(list) {
+  return (list || []).map((id) => KEYWORDS[id]).filter(Boolean).map((k) => ({ icon: k.icon, name: k.name, text: k.text }));
+}
+
+// --- Аватары ---------------------------------------------------------------
+// Отдельная сущность: аватары НЕ используют класс героев (makeInstance) и не пересекаются с ними.
+// Добавить аватара = добавить запись в AVATARS. Способность = ключ в AVATAR_PASSIVES
+// (хуки onTurnStart / onHeroPlayed / onHeroDestroyed) или в AVATAR_ACTIVES (заготовка).
+// cls — «класс» аватара: задел под усиление колод определённого типа (cosmic / unique / events).
+const AVATARS = [
+  {
+    id: "watcher", name: "Наблюдатель", title: "The Watcher", cls: "cosmic",
+    maxHealth: 34, image: "center/cover no-repeat url('./assets/watcher_avatar.jpg')", glyph: "",
+    tags: ["cosmic", "observer"], passive: "peekTop", active: null,
+    passiveName: "Взгляд сквозь миры",
+    passiveText: "Раз в ход можно посмотреть верхнюю карту своей колоды.",
+    statsText: "Очень высокий интеллект · много здоровья"
+  },
+  {
+    id: "collector", name: "Коллекционер", title: "The Collector", cls: "unique",
+    maxHealth: 28, image: "center 20%/cover no-repeat url('./assets/thecollector_avatar.jpg')", glyph: "",
+    tags: ["collector"], passive: "healOnDeath", active: null,
+    passiveName: "Пополнение коллекции",
+    passiveText: "При уничтожении любого героя аватар восстанавливает 2 HP.",
+    statsText: "Среднее здоровье · выигрывает от долгой игры"
+  },
+  {
+    id: "grandmaster", name: "Грандмастер", title: "Grandmaster", cls: "events",
+    maxHealth: 24, image: "center 15%/cover no-repeat url('./assets/grandmaster_avatar.jpg')", glyph: "",
+    tags: ["grandmaster"], passive: "buffFirstHero", active: null,
+    passiveName: "Правила игры",
+    passiveText: "Первый герой, сыгранный за ход, получает +1 к случайной характеристике.",
+    statsText: "Меньше здоровья · сильный темп"
+  }
+];
+const AVATAR_PASSIVES = {
+  peekTop: {
+    onTurnStart(game, side, avatarSide) {
+      if (side === avatarSide) game[avatarSide].avatar.peekUsed = false;
+      return null;
+    }
+  },
+  healOnDeath: {
+    onHeroDestroyed(game, side, deadHero, avatarSide) {
+      const av = game[avatarSide].avatar;
+      const before = av.health;
+      av.health = Math.min(av.maxHealth, av.health + 2);
+      if (av.health > before) return av.name + " восстанавливает " + (av.health - before) + " HP (" + deadHero.name + " уничтожен).";
+      return null;
+    }
+  },
+  buffFirstHero: {
+    onHeroPlayed(game, side, hero, avatarSide) {
+      if (side !== avatarSide) return null;
+      if (game[avatarSide].heroesPlayedThisTurn > 1) return null;
+      const keys = ["s", "a", "i", "k"];
+      const names = { s: "Силе", a: "Ловкости", i: "Интеллекту", k: "Мастерству" };
+      const k = keys[Math.floor(Math.random() * keys.length)];
+      hero.stats[k] = hero.stats[k] + 1;
+      hero.buffed = true;
+      recalcHp(hero);
+      return hero.name + " получает +1 к " + names[k] + " от Грандмастера.";
+    }
+  }
+};
+const AVATAR_ACTIVES = {}; // задел под активные и ультимативные способности
+function avatarDef(id) { return AVATARS.find((a) => a.id === id) || AVATARS[0]; }
+function makeAvatar(id) {
+  const d = avatarDef(id);
+  return {
+    id: d.id, name: d.name, title: d.title, image: d.image, glyph: d.glyph,
+    health: d.maxHealth, maxHealth: d.maxHealth,
+    passiveAbility: d.passive, activeAbility: d.active,
+    passiveName: d.passiveName, passiveText: d.passiveText,
+    cls: d.cls, tags: d.tags.slice(), peekUsed: false
+  };
+}
+function firePassive(game, hook, args) {
+  const msgs = [];
+  ["player", "bot"].forEach((avatarSide) => {
+    const av = game[avatarSide] && game[avatarSide].avatar;
+    if (!av) return;
+    const p = AVATAR_PASSIVES[av.passiveAbility];
+    if (!p || !p[hook]) return;
+    const out = p[hook].apply(null, [game].concat(args, [avatarSide]));
+    if (out) msgs.push(out);
+  });
+  return msgs;
+}
+// Роль «Защитник» живёт в tags героя: пока ни у одной карты её нет, но движок уже её учитывает.
+function hasDefender(game, side) {
+  return game[side].field.some((h) => h && h.alive && !h.dying && hasKw(h, "defender"));
+}
+function liveHeroCount(game, side) {
+  return game[side].field.filter((h) => h && h.alive && !h.dying).length;
+}
+function avatarProtected(game, side) {
+  return liveHeroCount(game, side) >= 3 || hasDefender(game, side);
+}
+
+function progressionOrder(cards) {
+  return cards
+    .map((c) => ({ c, key: c.cost + Math.random() * 3.2 }))
+    .sort((a, b) => a.key - b.key)
+    .map((x) => x.c);
+}
+function logEvent(game, text) {
+  game.log = text;
+  game.logHistory = (game.logHistory || []).concat([text]).slice(-10);
+}
+function bonusFx(key, name) {
+  const map = {
+    gauntlet: { color: "#f2c14e", effect: "gold" },
+    mjolnir: { color: "#8ecbff", effect: "electric" },
+    phoenix: { color: "#ff6a3d", effect: "fire" },
+    rift: { color: "#8a6fd6", effect: "rift" },
+    ultron: { color: "#e0212f", effect: "glitch" }
+  };
+  const m = map[key] || { color: "#14a893", effect: "plain" };
+  return { name: name, color: m.color, effect: m.effect };
+}
+
+function computeViewport() {
+  if (typeof window === "undefined") return { isPortraitMobile: false, isCompact: false, vh: 800 };
+  const w = window.innerWidth, h = window.innerHeight;
+  const short = Math.min(w, h);
+  const isMobileDevice = short <= 520;
+  const isPortrait = h > w;
+  return { isPortraitMobile: isMobileDevice && isPortrait, isCompact: h <= 700, vh: h };
+}
+
+class Component extends DCLogic {
+  state = {
+    sel: null, flipped: false, dark: false, screen: "collection",
+    game: null, search: "", filter: "all",
+    handHover: null, fieldSel: null, discardView: null, toast: null,
+    pickedAvatar: null, peekCard: null,
+    ...computeViewport()
+  };
+
+  componentDidMount() {
+    this.onKey = (e) => { if (e.key === "Escape") this.setState({ sel: null, fieldSel: null, discardView: null, peekCard: null }); };
+    window.addEventListener("keydown", this.onKey);
+    this.onViewport = () => this.setState(computeViewport());
+    window.addEventListener("resize", this.onViewport);
+    window.addEventListener("orientationchange", this.onViewport);
+  }
+  componentWillUnmount() {
+    window.removeEventListener("keydown", this.onKey);
+    window.removeEventListener("resize", this.onViewport);
+    window.removeEventListener("orientationchange", this.onViewport);
+  }
+
+  buzz(ms) {
+    if (this.props.haptics === false) return;
+    if (navigator.vibrate) { try { navigator.vibrate(ms); } catch (e) {} }
+  }
+  showToast(text) {
+    this.setState({ toast: text });
+    clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => this.setState((s) => (s.toast === text ? { toast: null } : null)), 1800);
+  }
+  clearFxLater(ms) {
+    setTimeout(() => {
+      const g = this.state.game;
+      if (g && (g.fx || g.castFx || g.burnFx)) this.setState({ game: Object.assign({}, g, { fx: null, castFx: null, burnFx: null }) });
+    }, ms);
+  }
+  blip(freq, dur, type, gain) {
+    if (this.props.sound === false) return;
+    try {
+      if (!this.ac) this.ac = new (window.AudioContext || window.webkitAudioContext)();
+      const ac = this.ac;
+      if (ac.state === "suspended") ac.resume();
+      const o = ac.createOscillator(), g = ac.createGain();
+      o.type = type || "triangle";
+      o.frequency.setValueAtTime(freq, ac.currentTime);
+      o.frequency.exponentialRampToValueAtTime(Math.max(60, freq * 0.55), ac.currentTime + dur);
+      g.gain.setValueAtTime(0, ac.currentTime);
+      g.gain.linearRampToValueAtTime(gain == null ? 0.06 : gain, ac.currentTime + 0.008);
+      g.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + dur);
+      o.connect(g); g.connect(ac.destination);
+      o.start(); o.stop(ac.currentTime + dur + 0.02);
+    } catch (e) {}
+  }
+  cardVM(d, i) {
+    const acc = this.props.accent || "#e0212f";
+    let ring = "";
+    if (d.legendary) ring = ", 0 0 0 3px #f7dd8a, 0 0 0 5px #fff6d9, 0 0 0 7px #b8860b";
+    else if (d.rarity === "rare") ring = ", 0 0 0 3px #a9d8ff, 0 0 0 5px #eaf6ff, 0 0 0 7px #4a90c9";
+    else if (d.bonus) ring = ", 0 0 0 3px #7fe9df, 0 0 0 5px #eafffb, 0 0 0 7px #14a893";
+    return {
+      i: i, name: d.name, sub: d.sub, slot: "mfc-card-" + i,
+      ph: d.name, art: d.art, rot: ROTS[i % ROTS.length],
+      legendary: !!d.legendary, bonus: !!d.bonus, showStats: !d.bonus,
+      badgeOffset: (d.legendary || d.bonus) ? "24px" : "0px",
+      badgeOffsetModal: (d.legendary || d.bonus) ? "32px" : "0px",
+      shadow: "3px 3px 0 #17140f26" + ring,
+      shadowHover: "4px 4px 0 #17140f40" + ring,
+      shadowActive: "2px 2px 0 #17140f40" + ring,
+      shadowModal: "5px 5px 0 #00000030" + ring,
+      kws: kwChips(cardKeywords(d)),
+      kwIcons: kwIconsOf(cardKeywords(d)),
+      hasKws: cardKeywords(d).length > 0,
+      cost: d.collectionOnly ? null : (d.cost || 1),
+      costRibbonColor: d.bonus ? "#14a893" : acc,
+      costTop: d.legendary ? "44px" : "10px",
+      costTopModal: d.legendary ? "62px" : "18px",
+      stats: LABELS.map((l, k) => ({
+        label: l, val: d.s[k],
+        pips: [0, 1, 2, 3, 4].map((n) => ({ bg: n < d.s[k] ? acc : "#ffffff33" }))
+      }))
+    };
+  }
+
+  // --- Игровой движок: пошаговый цикл ---
+  // startTurn -> playCard/playBonus (один за ход) -> attack (каждый готовый герой один раз) -> endTurn
+  // opts: { playerAvatar, botAvatar, playerCards, botCards } — карты пока не используются
+  // (задел под будущий конструктор колод), аватары обязательны.
+  buildGame(opts) {
+    const o = opts || {};
+    const customPlayerCards = o.playerCards, customBotCards = o.botCards;
+    let playerSrc, botSrc;
+    if (customPlayerCards && customBotCards) {
+      playerSrc = customPlayerCards.map((d) => makeInstance(d));
+      botSrc = customBotCards.map((d) => makeInstance(d));
+    } else {
+      const pool = shuffleArr(DATA.concat(BONUS).filter((d) => !d.collectionOnly).map((d) => makeInstance(d)));
+      const half = Math.floor(pool.length / 2);
+      playerSrc = pool.slice(0, half);
+      botSrc = pool.slice(half, half * 2);
+    }
+    const game = {
+      player: { deck: progressionOrder(playerSrc), hand: [], field: [null, null, null, null, null], discard: [], mana: 1, manaCap: 1, heroesPlayedThisTurn: 0, avatar: makeAvatar(o.playerAvatar || AVATARS[0].id) },
+      bot: { deck: progressionOrder(botSrc), hand: [], field: [null, null, null, null, null], discard: [], mana: 0, manaCap: 0, heroesPlayedThisTurn: 0, avatar: makeAvatar(o.botAvatar || AVATARS[0].id) },
+      turn: "player",
+      selectedUid: null,
+      pendingBonus: null,
+      winner: null,
+      phase: "idle", atkFx: null, castFx: null, avatarFx: null,
+      log: "", logHistory: []
+    };
+    for (let i = 0; i < START_HAND; i++) { this.draw(game, "player"); this.draw(game, "bot"); }
+    logEvent(game, "Противник выбрал аватара: " + game.bot.avatar.name + " (" + game.bot.avatar.maxHealth + " HP).");
+    logEvent(game, "Матч начался. У вас 1 ⚡. Ваш ход.");
+    return game;
+  }
+  // Колода никогда не пустеет насовсем: пуста колода — сброс перемешивается в новую колоду.
+  draw(game, side) {
+    const p = game[side];
+    if (!p.deck.length) {
+      if (!p.discard.length) return;
+      p.deck = shuffleArr(p.discard);
+      p.discard = [];
+      logEvent(game, (side === "player" ? "Ваш сброс" : "Сброс бота") + " перемешан в новую колоду.");
+    }
+    if (!p.deck.length) return;
+    const card = p.deck.shift();
+    // Лимит руки 7: лишняя карта сгорает и уходит в сброс.
+    if (p.hand.length >= 7) {
+      card.discardReason = "Рука была переполнена (7 карт) — карта сгорела при доборе.";
+      p.discard.push(card);
+      game.burnFx = { side: side, name: card.name, key: "b" + (uidCounter++) };
+      logEvent(game, "Рука переполнена. Карта потеряна.");
+      return;
+    }
+    p.hand.push(card);
+  }
+  // Экономика добора: в начале своего хода рука пополняется до 5 карт. 5 и больше — добора нет.
+  refillHand(game, side) {
+    const p = game[side];
+    for (let i = 0; i < 8 && p.hand.length < 5; i++) {
+      if (!p.deck.length && !p.discard.length) break;
+      this.draw(game, side);
+    }
+  }
+  startTurn(game, side) {
+    game.turn = side;
+    game.selectedUid = null;
+    game.phase = "idle";
+    game.atkFx = null;
+    game.castFx = null;
+    const p = game[side];
+    p.manaCap = Math.min(10, p.manaCap + 1);
+    p.mana = p.manaCap;
+    p.field.forEach((h) => { if (h) { h.sick = false; h.usedAttack = false; } });
+    p.heroesPlayedThisTurn = 0;
+    game.burnFx = null;
+    firePassive(game, "onTurnStart", [side]);
+    const handBefore = p.hand.length;
+    this.refillHand(game, side);
+    const drew = p.hand.length - handBefore;
+    logEvent(game, (side === "player" ? "Ваш ход." : "Ход бота.") + " ⚡ " + p.mana + "/" + p.manaCap + "."
+      + (drew > 0 ? " Добор до 5: +" + drew + "." : " Добора нет — в руке " + p.hand.length + "."));
+  }
+  playHeroCard(game, side, uid) {
+    const p = game[side];
+    const idx = p.hand.findIndex((c) => c.uid === uid);
+    if (idx < 0) return false;
+    const card = p.hand[idx];
+    if (p.mana < card.cost) return false;
+    const slot = p.field.findIndex((h) => h === null);
+    if (slot < 0) return false;
+    p.hand.splice(idx, 1);
+    p.mana -= card.cost;
+    // Charge игнорирует усталость призыва и может атаковать в тот же ход.
+    const charge = hasKw(card, "charge");
+    card.sick = !charge; card.usedAttack = !charge; card.justIn = true;
+    p.field[slot] = card;
+    p.heroesPlayedThisTurn = (p.heroesPlayedThisTurn || 0) + 1;
+    firePassive(game, "onHeroPlayed", [side, card]).forEach((m) => logEvent(game, m));
+    return true;
+  }
+  discardBonusCard(game, side, uid) {
+    const p = game[side];
+    const idx = p.hand.findIndex((c) => c.uid === uid);
+    if (idx < 0) return null;
+    const card = p.hand.splice(idx, 1)[0];
+    card.discardReason = "Бонусная карта использована («" + card.name + "»).";
+    p.discard.push(card);
+    return card;
+  }
+  // Герой с усталостью призыва не может ни атаковать, ни быть атакованным — иначе только что
+  // разыгранную карту сносят до того, как игрок успевает её использовать.
+  // Обмен ударами (как в Хартстоун): атакующий и защищающийся наносят друг другу урон одновременно.
+  attack(game, attackerSide, attackerUid, defenderSide, defenderUid) {
+    const attacker = findHero(game, attackerSide, attackerUid);
+    const defender = findHero(game, defenderSide, defenderUid);
+    if (!attacker || !defender) return "Атака невозможна.";
+    if (attacker.sick || attacker.usedAttack) return attacker.name + " не может атаковать сейчас.";
+    if (defender.sick) { game.fx = []; return defender.name + " защищён усталостью призыва — атака невозможна."; }
+    const dmgToDefender = attacker.stats.s;
+    const dmgToAttacker = defender.stats.s;
+    attacker.usedAttack = true;
+    game.fx = [
+      { side: defenderSide, uid: defenderUid, dmg: dmgToDefender, dead: false, key: "fx" + (uidCounter++) },
+      { side: attackerSide, uid: attackerUid, dmg: dmgToAttacker, dead: false, key: "fx" + (uidCounter++) }
+    ];
+    game.pendingDamage = {
+      defender: { side: defenderSide, uid: defenderUid, dmg: dmgToDefender, name: defender.name },
+      attacker: { side: attackerSide, uid: attackerUid, dmg: dmgToAttacker, name: attacker.name }
+    };
+    return attacker.name + " наносит " + defender.name + " " + dmgToDefender + " урона и получает " + dmgToAttacker + " в ответ.";
+  }
+  // Применяет накопленный урон после того, как числа урона уже показаны игроку (задержка для читаемости).
+  // Обе стороны обмена проверяются на смерть; если погибают оба — обе карты уходят в сброс одновременно.
+  resolveAttackDamage(game) {
+    const pend = game.pendingDamage;
+    if (!pend) return;
+    game.pendingDamage = null;
+    const defHero = findHero(game, pend.defender.side, pend.defender.uid);
+    const atkHero = findHero(game, pend.attacker.side, pend.attacker.uid);
+    const dying = [];
+    const markDead = (uid) => { if (Array.isArray(game.fx)) { const f = game.fx.find((x) => x.uid === uid); if (f) f.dead = true; } };
+    if (defHero) {
+      defHero.hp = Math.max(0, defHero.hp - pend.defender.dmg);
+      if (defHero.hp <= 0) {
+        defHero.dying = true;
+        dying.push({ side: pend.defender.side, uid: pend.defender.uid, reason: "Погиб в бою с " + pend.attacker.name + "." });
+        markDead(pend.defender.uid);
+      }
+    }
+    if (atkHero) {
+      atkHero.hp = Math.max(0, atkHero.hp - pend.attacker.dmg);
+      if (atkHero.hp <= 0) {
+        atkHero.dying = true;
+        dying.push({ side: pend.attacker.side, uid: pend.attacker.uid, reason: "Погиб в ответном ударе от " + pend.defender.name + "." });
+        markDead(pend.attacker.uid);
+      }
+    }
+    if (dying.length) {
+      setTimeout(() => {
+        const g2 = this.state.game;
+        if (!g2) return;
+        dying.forEach((d) => {
+          const still = findHero(g2, d.side, d.uid);
+          if (still && still.dying) killHero(g2, d.side, d.uid, d.reason);
+        });
+        this.setState({ game: Object.assign({}, g2) });
+      }, 480);
+    }
+  }
+  // Атака по аватару: урон = текущая Сила героя. Разрешена только если аватар не защищён.
+  attackAvatarNow(game, attackerSide, attackerUid, defenderSide) {
+    const attacker = findHero(game, attackerSide, attackerUid);
+    const av = game[defenderSide].avatar;
+    if (!attacker || !av) return "Атака невозможна.";
+    if (attacker.sick || attacker.usedAttack) return attacker.name + " не может атаковать сейчас.";
+    if (avatarProtected(game, defenderSide)) return av.name + " защищён героями — атака невозможна.";
+    const dmg = attacker.stats.s;
+    attacker.usedAttack = true;
+    game.avatarFx = { side: defenderSide, dmg: dmg, key: "af" + (uidCounter++) };
+    game.pendingAvatarDamage = { side: defenderSide, dmg: dmg };
+    return attacker.name + " бьёт по аватару «" + av.name + "» на " + dmg + " урона.";
+  }
+  resolveAvatarDamage(game) {
+    const pend = game.pendingAvatarDamage;
+    if (!pend) return;
+    game.pendingAvatarDamage = null;
+    const av = game[pend.side].avatar;
+    av.health = Math.max(0, av.health - pend.dmg);
+    if (av.health <= 0 && !game.winner) {
+      game.winner = pend.side === "bot" ? "player" : "bot";
+      game.phase = "over";
+      logEvent(game, av.name + " уничтожен. " + (game.winner === "player" ? "Вы победили!" : "Бот победил."));
+    }
+  }
+  botPlayCardStep(game) {
+    const bot = game.bot;
+    game.fx = null;
+    let card = null;
+    if (bot.field.some((h) => h === null)) {
+      card = bot.hand.find((c) => c.type === "hero" && c.cost <= bot.mana);
+    }
+    if (!card) card = bot.hand.find((c) => c.type === "bonus" && c.cost <= bot.mana);
+    if (!card) return false;
+    if (card.type === "hero") {
+      const name = card.name, cost = card.cost;
+      this.playHeroCard(game, "bot", card.uid);
+      logEvent(game, "Бот выводит на поле: " + name + " (⚡" + cost + ").");
+      return true;
+    }
+    const eff = BONUS_EFFECTS[card.key];
+    if (!eff) return false;
+    bot.mana -= card.cost;
+    this.discardBonusCard(game, "bot", card.uid);
+    game.castFx = bonusFx(card.key, card.name);
+    if (eff.needsTarget) {
+      const targets = game.player.field.concat(game.bot.field).filter((h) => h && !h.sick);
+      if (targets.length) {
+        const t = targets[Math.floor(Math.random() * targets.length)];
+        const tSide = game.bot.field.indexOf(t) >= 0 ? "bot" : "player";
+        logEvent(game, eff.resolve(game, "bot", tSide, t.uid));
+      } else {
+        logEvent(game, "Бот разыгрывает «" + card.name + "», но целей нет.");
+      }
+    } else {
+      logEvent(game, eff.resolve(game, "bot", null, null));
+    }
+    return true;
+  }
+  // Атаки бота разыгрываются по одной с задержкой (queueBotAttacks), чтобы каждый удар был виден отдельно.
+  runBotTurn() {
+    const g = JSON.parse(JSON.stringify(this.state.game));
+    this.startTurn(g, "bot");
+    g.fx = null;
+    this.setState({ game: g });
+    this.clearFxLater(1700);
+    setTimeout(() => this.queueBotPlays(), 700);
+  }
+  // Карты разыгрываются одна за другой, пока хватает маны или есть что разыграть — как в Хартстоун.
+  queueBotPlays() {
+    const g = this.state.game;
+    if (!g || g.winner) return;
+    const played = this.botPlayCardStep(g);
+    this.setState({ game: Object.assign({}, g) });
+    this.clearFxLater(700);
+    if (played) setTimeout(() => this.queueBotPlays(), 750);
+    else setTimeout(() => this.queueBotAttacks(0), 700);
+  }
+  queueBotAttacks(idx) {
+    const g = this.state.game;
+    if (!g || g.winner) return;
+    const ready = g.bot.field.filter((h) => h && h.alive && !h.dying && !h.sick && !h.usedAttack);
+    if (idx >= ready.length) {
+      g.phase = "idle";
+      this.setState({ game: Object.assign({}, g) });
+      setTimeout(() => {
+        const g3 = this.state.game;
+        if (!g3 || g3.winner) return;
+        this.startTurn(g3, "player");
+        this.setState({ game: Object.assign({}, g3) });
+        this.clearFxLater(1700);
+      }, 500);
+      return;
+    }
+    const h = ready[idx];
+    const faceOpen = !avatarProtected(g, "player");
+    const target = g.player.field.find((x) => x && x.alive && !x.dying && !x.sick);
+    if (!faceOpen && !target) {
+      setTimeout(() => this.queueBotAttacks(idx + 1), 80);
+      return;
+    }
+    g.phase = "botAttacking";
+    g.atkFx = { side: "bot", uid: h.uid };
+    logEvent(g, h.name + " готовится атаковать " + (faceOpen ? "аватара «" + g.player.avatar.name + "»" : target.name) + "…");
+    this.setState({ game: Object.assign({}, g) });
+    setTimeout(() => {
+      const g2 = this.state.game;
+      if (!g2 || g2.winner) return;
+      logEvent(g2, faceOpen
+        ? this.attackAvatarNow(g2, "bot", h.uid, "player")
+        : this.attack(g2, "bot", h.uid, "player", target.uid));
+      this.blip(220, 0.16, "sawtooth", 0.06); this.buzz(20);
+      g2.atkFx = null;
+      this.setState({ game: Object.assign({}, g2) });
+      setTimeout(() => {
+        const g2b = this.state.game;
+        if (!g2b) return;
+        const g2c = Object.assign({}, g2b);
+        this.resolveAttackDamage(g2c);
+        this.resolveAvatarDamage(g2c);
+        this.setState({ game: g2c });
+        if (g2c.winner) return;
+        setTimeout(() => {
+          const g2d = this.state.game;
+          if (g2d && g2d.avatarFx) this.setState({ game: Object.assign({}, g2d, { avatarFx: null }) });
+          this.queueBotAttacks(idx + 1);
+        }, 700);
+      }, 520);
+    }, 550);
+  }
+
+  renderVals() {
+    const cards = DATA.map((d, i) => this.cardVM(d, i));
+    const bonusCards = BONUS.map((d, i) => this.cardVM(d, DATA.length + i));
+    const st = this.state;
+    const norm = (s) => (s || "").toLowerCase().replace(/ё/g, "е");
+    const q = norm(st.search).trim();
+    const filteredCards = cards.filter((c) => !q || norm(c.name).indexOf(q) >= 0);
+    const filteredBonus = bonusCards.filter((c) => !q || norm(c.name).indexOf(q) >= 0);
+    const showHeroSection = st.filter !== "bonus";
+    const showBonusSection = st.filter !== "hero";
+    const bonusPlaceholders = (!q && showBonusSection) ? Array.from({ length: BONUS_PLACEHOLDERS }, (_, i) => ({ i: i })) : [];
+    const tiltOn = this.props.tilt !== false;
+
+    const tilt = (e) => {
+      if (!tiltOn || e.pointerType === "touch") return;
+      const el = e.currentTarget, r = el.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5, py = (e.clientY - r.top) / r.height - 0.5;
+      el.style.transform = "perspective(760px) rotateY(" + px * 13 + "deg) rotateX(" + (-py * 13) + "deg) scale(1.03)";
+      const par = el.querySelector("[data-par]");
+      if (par) par.style.transform = "translate(" + (-px * 12) + "px," + (-py * 12) + "px) scale(1.09)";
+      const gl = el.querySelector("[data-gloss]");
+      if (gl) gl.style.background = "radial-gradient(circle at " + (px + 0.5) * 100 + "% " + (py + 0.5) * 100 + "%, #ffffff33, transparent 58%)";
+    };
+    const untilt = (e) => {
+      const el = e.currentTarget;
+      el.style.transform = "";
+      const par = el.querySelector("[data-par]");
+      if (par) par.style.transform = "";
+      const gl = el.querySelector("[data-gloss]");
+      if (gl) gl.style.background = "";
+    };
+
+    const dark = st.dark;
+    const ink = dark ? "#f4efe1" : "#17140f";
+    const paper = dark ? "#231f18" : "#ffffff";
+    const acc = this.props.accent || "#e0212f";
+
+    const isCollection = st.screen === "collection";
+    const isPlay = st.screen === "play";
+    const g = st.game;
+    const compact = !!st.isCompact;
+    const showRotatePrompt = isPlay && !!st.isPortraitMobile;
+    const isSetup = isPlay && !g && !showRotatePrompt;
+    const isBattle = isPlay && !!g && !showRotatePrompt;
+
+    const turnFontSize = compact ? "11px" : "13px";
+    const turnPad = compact ? "6px 14px" : "8px 20px";
+    // --- Вертикальный бюджет боевого экрана -----------------------------------
+    // Всё считается от высоты окна: рука + две арены + строки аватаров + журнал
+    // укладываются без скролла. Карта на поле = 88% высоты карты руки.
+    const vh = st.vh || 800;
+    const headerH = compact ? 30 : 42;
+    const logMaxHPx = compact ? 24 : 58; // целое число строк журнала: 1 в compact, 3 на десктопе
+    const handPadPx = compact ? 8 : 16;
+    const avSize = Math.round(Math.max(38, Math.min(64, vh * 0.082)));
+    const avatarRowH = avSize + 16;
+    const arenaChrome = compact ? 18 : 30;
+    const chrome = headerH + (avatarRowH + 8) + (avatarRowH + 14) + (logMaxHPx + 14) + handPadPx + 10;
+    // 34px запас: веер руки наклоняет крайние карты вниз, плюс погрешность строк.
+    const avail = Math.max(180, vh - chrome - arenaChrome * 2 - 34);
+    const handH = Math.max(84, Math.min(avail / 2.76, 268));
+    const fieldH = Math.round(handH * 0.88);
+    const handWpx = Math.round(handH * 2 / 3);
+
+    const deckPileW = compact ? "30px" : "46px";
+    const deckPileH = compact ? "42px" : "64px";
+    const manaPipSize = compact ? "7px" : "9px";
+    const fieldArenaPad = compact ? "5px" : "10px";
+    const fieldGap = compact ? "6px" : "12px";
+    const fieldArenaH = (fieldH + arenaChrome) + "px"; // + padding и рамка арены, чтобы карта была ровно fieldH
+    // Инсеты и иконки пропорциональны ШИРИНЕ карты, иначе на узких картах текст съедается.
+    const fieldW = Math.round(fieldH * 2 / 3);
+    const tinyCards = fieldW < 74;
+    const fieldCardMaxW = fieldW + "px";
+    const fieldNameFont = Math.max(8, Math.round(fieldH * 0.066)) + "px";
+    const fieldNameRight = Math.round(fieldW * 0.3) + "px";
+    const fieldStatFontPx = Math.max(8.5, Math.round(fieldH * 0.072));
+    const fieldInsetPx = Math.max(3, Math.round(fieldW * 0.07));
+    const fieldInfoPx = Math.max(13, Math.round(fieldW * 0.24));
+    const fieldStatFont = fieldStatFontPx + "px";
+    const fieldStateFont = Math.max(7, Math.round(fieldH * 0.055)) + "px";
+    const fieldInfoSize = fieldInfoPx + "px";
+    const fieldInset = fieldInsetPx + "px";
+    const fieldNameClamp = tinyCards ? 2 : 3;
+    // Метка состояния ставится строго над строкой HP/атаки, а не по проценту высоты.
+    const fieldStateBottom = Math.round(fieldInsetPx + fieldStatFontPx * 1.6 + 3) + "px";
+    const fieldKwTop = (fieldInsetPx + fieldInfoPx + 3) + "px";
+    const fieldKwFont = Math.max(8, Math.round(fieldH * 0.062)) + "px";
+    const avatarSize = avSize + "px";
+    const avatarGlyphSize = Math.round(avSize * 0.42) + "px";
+    const avatarNameFont = (avSize < 50 ? 10 : 12) + "px";
+    const avatarHpFont = (avSize < 50 ? 10 : 12) + "px";
+    const avatarBarW = (avSize < 50 ? 54 : 92) + "px";
+    const logPad = compact ? "3px 10px" : "5px 16px";
+    const logFont = compact ? "10px" : "11.5px";
+    const logMaxH = logMaxHPx + "px";
+    const handCardW = handWpx + "px";
+    const handOverlapPx = -Math.round(handWpx * 0.42);
+    const handLiftPx = Math.round(handH * 0.3);
+    const handNameFont = Math.max(10, Math.round(handH * 0.082)) + "px";
+    const handTypeFont = Math.max(7.5, Math.round(handH * 0.055)) + "px";
+    const handCostSize = Math.max(20, Math.round(handH * 0.16)) + "px";
+    const handCostFont = Math.max(9, Math.round(handH * 0.068)) + "px";
+    const handStatFont = Math.max(10, Math.round(handH * 0.075)) + "px";
+    const handNameTop = Math.round(handH * 0.2) + "px";
+    const handBadgeInset = Math.max(5, Math.round(handH * 0.04)) + "px";
+    const handPad = (compact ? "5px" : "10px") + " 4px 2px";
+    const endTurnPad = compact ? "7px 12px" : "10px 16px";
+    const endTurnFont = compact ? "9px" : "10.5px";
+    const endTurnMinH = compact ? "32px" : "42px";
+
+    const selectAttacker = (uid) => {
+      const cur = this.state.game;
+      if (!cur || cur.winner || cur.pendingBonus || cur.turn !== "player") return;
+      this.blip(420, 0.08, "sine", 0.03);
+      this.setState({ game: Object.assign({}, cur, { selectedUid: uid }) });
+    };
+    const doAttack = (defUid) => {
+      const cur = this.state.game;
+      if (!cur || cur.winner || !cur.selectedUid || cur.pendingBonus || cur.turn !== "player") return;
+      const atkUid = cur.selectedUid;
+      const pre = Object.assign({}, cur, { atkFx: { side: "player", uid: atkUid }, selectedUid: null });
+      this.blip(320, 0.08, "sine", 0.03);
+      this.setState({ game: pre });
+      setTimeout(() => {
+        const cur2 = this.state.game;
+        if (!cur2) return;
+        const next = JSON.parse(JSON.stringify(cur2));
+        logEvent(next, this.attack(next, "player", atkUid, "bot", defUid));
+        next.atkFx = null;
+        this.blip(220, 0.16, "sawtooth", 0.06); this.buzz(20);
+        this.setState({ game: next });
+        setTimeout(() => {
+          const g3 = this.state.game;
+          if (!g3) return;
+          const g4 = Object.assign({}, g3);
+          this.resolveAttackDamage(g4);
+          this.setState({ game: g4 });
+          this.clearFxLater(650);
+        }, 520);
+      }, 320);
+    };
+    const doAttackAvatar = () => {
+      const cur = this.state.game;
+      if (!cur || cur.winner || !cur.selectedUid || cur.pendingBonus || cur.turn !== "player") return;
+      if (avatarProtected(cur, "bot")) { this.showToast("Аватар защищён героями — сначала атакуйте героев."); return; }
+      const atkUid = cur.selectedUid;
+      this.blip(320, 0.08, "sine", 0.03);
+      this.setState({ game: Object.assign({}, cur, { atkFx: { side: "player", uid: atkUid }, selectedUid: null }) });
+      setTimeout(() => {
+        const cur2 = this.state.game;
+        if (!cur2) return;
+        const next = JSON.parse(JSON.stringify(cur2));
+        logEvent(next, this.attackAvatarNow(next, "player", atkUid, "bot"));
+        next.atkFx = null;
+        this.blip(200, 0.2, "sawtooth", 0.07); this.buzz(28);
+        this.setState({ game: next });
+        setTimeout(() => {
+          const g3 = this.state.game;
+          if (!g3) return;
+          const g4 = Object.assign({}, g3);
+          this.resolveAvatarDamage(g4);
+          this.setState({ game: g4 });
+          setTimeout(() => {
+            const g5 = this.state.game;
+            if (g5 && g5.avatarFx) this.setState({ game: Object.assign({}, g5, { avatarFx: null }) });
+          }, 700);
+        }, 520);
+      }, 320);
+    };
+    const peekTop = () => {
+      const cur = this.state.game;
+      if (!cur || cur.winner || cur.turn !== "player") return;
+      const av = cur.player.avatar;
+      if (av.passiveAbility !== "peekTop" || av.peekUsed) return;
+      const top = cur.player.deck[0];
+      const next = JSON.parse(JSON.stringify(cur));
+      next.player.avatar.peekUsed = true;
+      logEvent(next, top ? "Верхняя карта колоды: " + top.name + " (⚡" + top.cost + ")." : "Колода пуста.");
+      this.blip(520, 0.12, "sine", 0.04);
+      const card = top ? { name: top.name, art: top.art, cost: top.cost, typeLabel: top.type === "hero" ? "Герой" : "Бонус" } : null;
+      this.setState({ game: next, peekCard: card });
+      if (card) setTimeout(() => this.setState((s) => (s.peekCard && s.peekCard.name === card.name ? { peekCard: null } : null)), 3200);
+    };
+    const playHand = (card) => {
+      const cur = this.state.game;
+      if (!cur || cur.winner || cur.turn !== "player" || cur.pendingBonus) return;
+      if (cur.player.mana < card.cost) return;
+      if (card.type === "hero") {
+        if (!cur.player.field.some((h) => h === null)) return;
+        const next = JSON.parse(JSON.stringify(cur));
+        const ok = this.playHeroCard(next, "player", card.uid);
+        if (ok) { logEvent(next, card.name + " выходит на поле (⚡" + card.cost + ", усталость призыва — атакует со следующего хода)."); this.blip(360, 0.1, "triangle", 0.05); this.setState({ game: next }); }
+        return;
+      }
+      const eff = BONUS_EFFECTS[card.key];
+      if (!eff) return;
+      const next = JSON.parse(JSON.stringify(cur));
+      next.player.mana -= card.cost;
+      this.discardBonusCard(next, "player", card.uid);
+      if (eff.needsTarget) {
+        next.pendingBonus = { key: card.key, name: card.name };
+        next.log = "Выберите героя для карты «" + card.name + "».";
+        this.blip(300, 0.1, "sine", 0.04);
+        this.setState({ game: next });
+        return;
+      }
+      logEvent(next, eff.resolve(next, "player", null, null));
+      next.castFx = bonusFx(card.key, card.name);
+      this.blip(500, 0.2, "triangle", 0.07); this.buzz(24);
+      this.setState({ game: next });
+      this.clearFxLater(1000);
+    };
+    const resolveTarget = (side, uid) => {
+      const cur = this.state.game;
+      if (!cur || !cur.pendingBonus) return;
+      const eff = BONUS_EFFECTS[cur.pendingBonus.key];
+      const next = JSON.parse(JSON.stringify(cur));
+      logEvent(next, eff.resolve(next, "player", side, uid));
+      next.castFx = bonusFx(cur.pendingBonus.key, cur.pendingBonus.name);
+      next.pendingBonus = null;
+      this.blip(560, 0.2, "triangle", 0.07); this.buzz(24);
+      this.setState({ game: next });
+      this.clearFxLater(1000);
+    };
+
+    const openFieldCard = (h) => (e) => {
+      if (e && e.stopPropagation) e.stopPropagation();
+      this.setState({ fieldSel: h });
+    };
+    const closeFieldCard = () => this.setState({ fieldSel: null });
+    const openDiscard = (side) => () => { this.blip(300, 0.08, "sine", 0.03); this.setState({ discardView: side }); };
+    const closeDiscard = () => this.setState({ discardView: null });
+
+    const fieldVM = (side) => {
+      if (!g) return [];
+      return g[side].field.filter((h) => !!h).map((h) => {
+        const isPending = !!g.pendingBonus;
+        const readyToAttack = h.alive && !h.sick && !h.usedAttack && !h.dying;
+        let onClick = null;
+        if (h.dying) onClick = null;
+        else if (isPending) onClick = () => resolveTarget(side, h.uid);
+        else if (side === "player") { if (g.turn === "player" && readyToAttack) onClick = () => selectAttacker(h.uid); }
+        else if (g.turn === "player" && g.selectedUid && !h.sick) onClick = () => doAttack(h.uid);
+        if (!onClick && side === "player" && h.alive && !isPending && !h.dying) {
+          if (h.sick) onClick = () => this.showToast("Эта карта восстанавливается после призыва — атакует со следующего хода.");
+          else if (h.usedAttack) onClick = () => this.showToast("Эта карта уже атаковала.");
+        }
+        const isSel = g.selectedUid === h.uid;
+        const stateLabel = h.sick ? (tinyCards ? "⏳" : "⏳ Усталость") : (h.usedAttack ? (tinyCards ? "✓" : "Атаковал") : "");
+        const fx = Array.isArray(g.fx) ? g.fx.find((f) => f.side === side && f.uid === h.uid) : null;
+        const isAttacking = !!g.atkFx && g.atkFx.side === side && g.atkFx.uid === h.uid;
+        const animParts = [];
+        if (h.dying) {
+          animParts.push("dieFade .5s ease forwards");
+        } else {
+          if (h.justIn) animParts.push("cardIn .5s cubic-bezier(.2,.8,.25,1) both");
+          if (fx) animParts.push("shakeHit .4s ease");
+          if (isAttacking) animParts.push((side === "player" ? "lungeUp" : "lungeDown") + " .5s ease, atkGlow .5s ease infinite");
+          else if (h.buffed) animParts.push("buffGlow 1.8s ease infinite");
+          else if (h.debuffed) animParts.push("debuffGlow 1.8s ease infinite");
+          else if (readyToAttack) animParts.push("readyGlow 2s ease infinite");
+        }
+        return {
+          filled: true, name: h.name, hp: h.hp, str: h.stats.s,
+          art: h.art, onClick: onClick,
+          lift: isSel ? "translateY(-12px) scale(1.06)" : "none",
+          z: isSel ? 6 : 1,
+          cursor: onClick ? "pointer" : "default",
+          cardFilter: (h.sick || h.usedAttack) ? "grayscale(0.55) brightness(0.62)" : "none",
+          hasState: !!stateLabel, stateLabel: stateLabel,
+          kwIcons: kwIconsOf(h.keywords), hasKws: !!(h.keywords && h.keywords.length),
+          hasFx: !!fx, fxText: fx ? (fx.dead ? "☠" : "-" + fx.dmg) : "",
+          anim: animParts.length ? animParts.join(", ") : "none",
+          openInfo: openFieldCard(h),
+          border: isSel ? "3px solid " + acc : (isPending ? "2px dashed #14a893" : (isAttacking ? "2px solid #ffd27a" : "2px solid #17140f"))
+        };
+      });
+    };
+    const fieldSelVM = (() => {
+      const h = st.fieldSel;
+      if (!h) return null;
+      const vals = [h.stats.s, h.stats.a, h.stats.i, h.stats.k];
+      return {
+        name: h.name, art: h.art, hp: h.hp, maxHp: h.maxHp,
+        hpPct: h.maxHp ? Math.max(0, Math.min(100, Math.round((h.hp / h.maxHp) * 100))) : 0,
+        stats: LABELS.map((l, k) => ({ label: l, pips: [0, 1, 2, 3, 4].map((n) => ({ bg: n < vals[k] ? acc : ink + "22" })) })),
+        kws: kwChips(h.keywords), hasKws: !!(h.keywords && h.keywords.length),
+        discardReason: !h.alive ? (h.discardReason || null) : null,
+        statusLabel: !h.alive ? "Уничтожен" : (h.sick ? "Усталость призыва" : (h.usedAttack ? "Уже атаковал" : "Готов к атаке")),
+        statusBg: !h.alive ? "#c21f2b" : (h.sick ? "#8a8a8a" : (h.usedAttack ? "#8a8a8a" : "#2b8a3e")),
+        buffed: !!h.buffed, debuffed: !!h.debuffed
+      };
+    })();
+    const discardVM = (() => {
+      if (!g || !st.discardView) return null;
+      const side = st.discardView;
+      const list = g[side].discard.slice().reverse().map((h) => ({
+        uid: h.uid, name: h.name, art: h.art,
+        reason: h.discardReason || "Причина не зафиксирована.",
+        open: () => this.setState({ fieldSel: h })
+      }));
+      return { side: side, label: side === "player" ? "Ваш сброс" : "Сброс бота", cards: list, empty: list.length === 0 };
+    })();
+
+    const avatarVM = (side) => {
+      if (!g) return null;
+      const av = g[side].avatar;
+      const prot = avatarProtected(g, side);
+      const fx = g.avatarFx && g.avatarFx.side === side ? g.avatarFx : null;
+      const canTarget = side === "bot" && g.turn === "player" && !!g.selectedUid && !g.pendingBonus && !g.winner;
+      const attackable = canTarget && !prot;
+      return {
+        name: av.name, title: av.title, glyph: av.glyph, image: av.image,
+        hp: av.health, maxHp: av.maxHealth,
+        hpPct: Math.max(0, Math.min(100, Math.round((av.health / av.maxHealth) * 100))),
+        passiveName: av.passiveName, passiveText: av.passiveText,
+        protected: prot, open: !prot,
+        attackable: attackable,
+        ring: attackable ? "0 0 0 4px " + acc + ", 0 0 22px 6px " + acc + "88" : (prot ? "0 0 0 3px #58a6ff66" : "3px 3px 0 " + ink + "30"),
+        onClick: attackable ? doAttackAvatar : (canTarget ? () => this.showToast("Аватар защищён героями — сначала атакуйте героев.") : null),
+        cursor: canTarget ? "pointer" : "default",
+        anim: fx ? "shakeHit .4s ease" : "none",
+        hasFx: !!fx, fxText: fx ? "-" + fx.dmg : "",
+        canPeek: side === "player" && av.passiveAbility === "peekTop" && !av.peekUsed && g.turn === "player" && !g.winner
+      };
+    };
+    const avatarChoices = AVATARS.map((a) => {
+      const on = st.pickedAvatar === a.id;
+      return {
+        id: a.id, name: a.name, title: a.title, glyph: a.glyph, image: a.image,
+        hp: a.maxHealth, passiveName: a.passiveName, passiveText: a.passiveText, statsText: a.statsText,
+        border: on ? "4px solid " + acc : "3px solid " + ink,
+        shadow: on ? "0 0 0 5px " + acc + "44, 6px 6px 0 " + ink + "40" : "5px 5px 0 " + ink + "26",
+        lift: on ? "translateY(-8px)" : "none",
+        onClick: () => { this.blip(430, 0.1, "sine", 0.04); this.buzz(10); this.setState({ pickedAvatar: a.id }); }
+      };
+    });
+
+    const manaPips = (p) => Array.from({ length: 10 }, (_, i) => ({
+      i: i,
+      bg: i < p.mana ? acc : (i < p.manaCap ? acc + "55" : "#17140f22"),
+      glow: i < p.mana ? ("0 0 6px " + acc + "aa") : "none"
+    }));
+    const handVM = () => {
+      if (!g) return [];
+      const canPlay = g.turn === "player" && !g.pendingBonus;
+      const list = g.player.hand;
+      const n = list.length;
+      const mid = (n - 1) / 2;
+      const hoverIdx = st.handHover;
+      return list.map((c, i) => {
+        const affordable = g.player.mana >= c.cost;
+        const playable = canPlay && affordable && (c.type !== "hero" || g.player.field.some((h) => h === null));
+        const angleScale = compact ? 5 : 7, angleMax = compact ? 18 : 24, tyScale = compact ? 4 : 7, tyMax = compact ? 12 : 22;
+        const off = i - mid;
+        const angle = Math.max(-angleMax, Math.min(angleMax, off * angleScale));
+        const ty = Math.min(tyMax, Math.abs(off) * tyScale);
+        const isHover = hoverIdx === i;
+        let spreadX = 0;
+        if (hoverIdx != null && !isHover) {
+          const dist = i - hoverIdx, ad = Math.abs(dist);
+          const push = ad === 1 ? (compact ? 22 : 38) : (ad === 2 ? (compact ? 10 : 18) : 0);
+          spreadX = push * (dist > 0 ? 1 : -1);
+        }
+        const transform = isHover
+          ? "rotate(0deg) translateY(-" + handLiftPx + "px) translateX(0px) scale(" + (compact ? 1.14 : 1.18) + ")"
+          : "rotate(" + angle + "deg) translateY(" + ty + "px) translateX(" + spreadX + "px)";
+        return {
+          uid: c.uid, name: c.name, art: c.art, isHero: c.type === "hero",
+          kwIcons: kwIconsOf(c.keywords), hasKws: !!(c.keywords && c.keywords.length),
+          hp: c.hp, str: c.stats ? c.stats.s : null, cost: c.cost,
+          typeLabel: c.type === "hero" ? "Герой" : "Бонус",
+          typeColor: c.type === "hero" ? "#a9d8ff" : "#7fe9df",
+          border: c.type === "hero" ? "#17140f" : "#14a893",
+          dim: playable ? 1 : 0.5,
+          cursor: playable ? "pointer" : "default",
+          onClick: playable ? () => playHand(c) : null,
+          onEnter: () => this.setState({ handHover: i }),
+          onLeave: () => this.setState((s) => s.handHover === i ? { handHover: null } : null),
+          overlap: i === 0 ? "0px" : (handOverlapPx + "px"),
+          z: isHover ? 100 : i,
+          transform: transform,
+          shadow: isHover ? "0 20px 34px -10px #00000070, 0 0 0 3px " + acc : "2px 2px 0 #17140f30"
+        };
+      });
+    };
+
+    return {
+      playerName: this.props.playerName || "Никита",
+      accent: acc,
+      bg: dark ? "#17140f" : "#f4efe1",
+      ink: ink,
+      paper: paper,
+      dotColor: dark ? "#f4efe114" : "#17140f14",
+      themeLabel: dark ? "Светлая тема" : "Тёмная тема",
+      screen: st.screen,
+      isCollection: isCollection,
+      isPlay: isPlay,
+      isSetup: isSetup,
+      isBattle: isBattle,
+      game: g ? { history: (() => {
+        let hst = (g.logHistory || []).slice().reverse();
+        if (g.pendingBonus) hst = ["Выберите героя для карты «" + g.pendingBonus.name + "» (клик по герою на поле)."].concat(hst);
+        return hst.slice(0, 10).map((t, idx) => ({ text: t, weight: idx === 0 ? 800 : 600, color: idx === 0 ? ink : ink + "88" }));
+      })() } : { history: [] },
+      turnLabel: g ? (g.turn === "player" ? "Ваш ход" : "Ход бота") : "",
+      turnColor: g ? (g.turn === "player" ? acc : ink + "99") : ink,
+      isPlayerTurn: !!g && g.turn === "player",
+      isBotTurn: !!g && g.turn === "bot",
+      isBotAttacking: !!g && g.phase === "botAttacking",
+      isBotThinking: !!g && g.turn === "bot" && g.phase !== "botAttacking",
+      hasCastFx: !!g && !!g.castFx,
+      castName: g && g.castFx ? g.castFx.name : "",
+      castColor: g && g.castFx ? (g.castFx.color || acc) : acc,
+      castAnim: (() => {
+        const map = { gold: "fxGold 1s ease both", electric: "fxElectric 1s steps(2) both", fire: "fxFire 1s ease both", rift: "fxRift 1s ease both", glitch: "fxGlitch 1s steps(3) both" };
+        return (g && g.castFx && map[g.castFx.effect]) || "castFlash 1s ease both";
+      })(),
+      endTurnBg: g && g.turn === "player" && !g.pendingBonus ? acc : paper,
+      endTurnColor: g && g.turn === "player" && !g.pendingBonus ? "#fff" : ink,
+      endTurnAnim: g && g.turn === "player" && !g.pendingBonus ? "ringPulseSoft 1.8s ease infinite" : "none",
+      showRotatePrompt: showRotatePrompt,
+      turnFontSize: turnFontSize, turnPad: turnPad,
+      deckPileW: deckPileW, deckPileH: deckPileH,
+      manaPipSize: manaPipSize,
+      fieldArenaPad: fieldArenaPad, fieldGap: fieldGap, fieldArenaH: fieldArenaH,
+      logPad: logPad, logFont: logFont, logMaxH: logMaxH,
+      handCardW: handCardW, handPad: handPad,
+      handNameFont: handNameFont, handTypeFont: handTypeFont, handCostSize: handCostSize, handCostFont: handCostFont, handStatFont: handStatFont, handNameTop: handNameTop, handBadgeInset: handBadgeInset,
+      endTurnPad: endTurnPad, endTurnFont: endTurnFont, endTurnMinH: endTurnMinH,
+      player: g ? { field: fieldVM("player"), fieldEmpty: liveHeroCount(g, "player") === 0, hand: handVM(), handCount: g.player.hand.length, deckCount: g.player.deck.length, discardCount: g.player.discard.length, mana: g.player.mana, manaCap: g.player.manaCap, manaPips: manaPips(g.player) } : { field: [], fieldEmpty: true, hand: [], handCount: 0, deckCount: 0, discardCount: 0, mana: 0, manaCap: 0, manaPips: [] },
+      bot: g ? { field: fieldVM("bot"), fieldEmpty: liveHeroCount(g, "bot") === 0, deckCount: g.bot.deck.length, discardCount: g.bot.discard.length, mana: g.bot.mana, manaCap: g.bot.manaCap, manaPips: manaPips(g.bot) } : { field: [], fieldEmpty: true, deckCount: 0, discardCount: 0, mana: 0, manaCap: 0, manaPips: [] },
+      playerAvatar: avatarVM("player"),
+      botAvatar: avatarVM("bot"),
+      avatarChoices: avatarChoices,
+      avatarSize: avatarSize, avatarGlyphSize: avatarGlyphSize, avatarNameFont: avatarNameFont, avatarHpFont: avatarHpFont, avatarBarW: avatarBarW,
+      fieldCardMaxW: fieldCardMaxW, fieldNameFont: fieldNameFont, fieldNameRight: fieldNameRight, fieldStatFont: fieldStatFont, fieldStateFont: fieldStateFont, fieldInfoSize: fieldInfoSize,
+      fieldInset: fieldInset, fieldNameClamp: fieldNameClamp, fieldStateBottom: fieldStateBottom,
+      fieldKwTop: fieldKwTop, fieldKwFont: fieldKwFont,
+      handKwBottom: (Math.max(5, Math.round(handH * 0.04)) + Math.round(handH * 0.11)) + "px",
+      handKwFont: Math.max(9, Math.round(handH * 0.066)) + "px",
+      peekCard: st.peekCard || null,
+      burnFx: g && g.burnFx && g.burnFx.side === "player" ? { name: g.burnFx.name } : null,
+      peekTop: peekTop,
+      hasWinner: !!g && !!g.winner,
+      winTitle: g && g.winner === "player" ? "Победа" : "Поражение",
+      winText: g && g.winner === "player"
+        ? "Аватар противника уничтожен. Ваши герои удержали поле."
+        : "Ваш аватар пал. В следующий раз держите защиту из трёх героев дольше.",
+      winColor: g && g.winner === "player" ? "#ffd27a" : "#ff6a6a",
+      playAgain: () => { this.blip(440, 0.12, "triangle", 0.05); this.setState({ game: null, fieldSel: null, discardView: null, peekCard: null }); },
+      startBg: st.pickedAvatar ? acc : paper,
+      startColor: st.pickedAvatar ? "#fff" : ink + "80",
+      startCursor: st.pickedAvatar ? "pointer" : "default",
+      startOpacity: st.pickedAvatar ? 1 : 0.65,
+      startLabel: st.pickedAvatar ? "Начать матч" : "Сначала выберите аватара",
+      startMatch: () => {
+        if (!this.state.pickedAvatar) { this.showToast("Выберите аватара, чтобы начать матч."); return; }
+        const botPick = AVATARS[Math.floor(Math.random() * AVATARS.length)].id;
+        this.blip(440, 0.12, "triangle", 0.05); this.buzz(14);
+        this.setState({ game: this.buildGame({ playerAvatar: this.state.pickedAvatar, botAvatar: botPick }) });
+      },
+      endTurn: () => {
+        const cur = this.state.game;
+        if (!cur || cur.winner || cur.turn !== "player" || cur.pendingBonus) return;
+        this.blip(280, 0.08, "sine", 0.03);
+        this.runBotTurn();
+      },
+      navCollectionBg: isCollection ? acc : paper,
+      navCollectionColor: isCollection ? "#fff" : ink,
+      navPlayBg: isPlay ? acc : paper,
+      navPlayColor: isPlay ? "#fff" : ink,
+      goCollection: () => { this.blip(280, 0.08, "sine", 0.03); this.setState({ screen: "collection" }); },
+      goPlay: () => { this.blip(280, 0.08, "sine", 0.03); this.setState({ screen: "play" }); },
+      backToCollection: () => { this.setState({ screen: "collection", game: null }); },
+      toggleTheme: () => { this.blip(300, 0.1, "sine", 0.04); this.buzz(10); this.setState((s) => ({ dark: !s.dark })); },
+      pickAvatar: () => {
+        this.blip(360, 0.1, "sine", 0.04); this.buzz(10);
+        const el = document.getElementById("mfc-avatar");
+        if (el && el.openFilePicker) el.openFilePicker();
+      },
+      collected: cards.length,
+      cards: cards,
+      bonusCards: bonusCards,
+      filteredCards: filteredCards,
+      filteredBonus: filteredBonus,
+      showHeroSection: showHeroSection,
+      showBonusSection: showBonusSection,
+      noHeroResults: showHeroSection && filteredCards.length === 0,
+      noBonusResults: showBonusSection && filteredBonus.length === 0,
+      search: st.search,
+      onSearch: (e) => this.setState({ search: e.target.value }),
+      filterAllBg: st.filter === "all" ? ink : paper,
+      filterAllColor: st.filter === "all" ? paper : ink,
+      filterHeroBg: st.filter === "hero" ? acc : paper,
+      filterHeroColor: st.filter === "hero" ? "#fff" : ink,
+      filterBonusBg: st.filter === "bonus" ? "#14a893" : paper,
+      filterBonusColor: st.filter === "bonus" ? "#fff" : "#14a893",
+      setFilterAll: () => { this.blip(280, 0.06, "sine", 0.03); this.setState({ filter: "all" }); },
+      setFilterHero: () => { this.blip(280, 0.06, "sine", 0.03); this.setState({ filter: "hero" }); },
+      setFilterBonus: () => { this.blip(280, 0.06, "sine", 0.03); this.setState({ filter: "bonus" }); },
+      bonusPlaceholders: bonusPlaceholders,
+      fieldSel: fieldSelVM,
+      closeFieldCard: closeFieldCard,
+      discardView: discardVM,
+      closeDiscard: closeDiscard,
+      openDiscardPlayer: openDiscard("player"),
+      openDiscardBot: openDiscard("bot"),
+      toast: st.toast || null,
+      tilt: tilt, untilt: untilt,
+      sel: st.sel == null ? null : cards.concat(bonusCards)[st.sel],
+      selFlip: st.flipped ? "rotateY(180deg)" : "rotateY(0deg)",
+      pick: (e) => {
+        const el = e.currentTarget;
+        const i = parseInt(el.getAttribute("data-idx"), 10);
+        el.style.transform = "";
+        this.blip(520, 0.12, "triangle", 0.05); this.buzz(12);
+        this.setState({ sel: i, flipped: false });
+      },
+      flip: () => { this.blip(340, 0.16, "sine", 0.05); this.buzz(18); this.setState((s) => ({ flipped: !s.flipped })); },
+      close: () => { this.blip(240, 0.1, "sine", 0.04); this.setState({ sel: null }); },
+      stop: (e) => e.stopPropagation()
+    };
+  }
+}
+</script>
+</body>
+</html>
