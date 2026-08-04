@@ -437,7 +437,7 @@
           <div style="display: flex; justify-content: center; padding: {{ handPad }}; flex: 0 0 auto; {{ handWrapOverflow }}">
             <div style="display: flex; align-items: flex-end; margin: 0 auto; padding: {{ handEndPad }};">
               <sc-for list="{{ player.hand }}" as="c" hint-placeholder-count="5">
-                <div onClick="{{ c.onClick }}" onPointerEnter="{{ c.onEnter }}" onPointerLeave="{{ c.onLeave }}" style="position: relative; flex: 0 0 auto; width: {{ handCardW }}; aspect-ratio: 2 / 3; margin-left: {{ c.overlap }}; border-radius: 12px; overflow: hidden; cursor: {{ c.cursor }}; touch-action: manipulation; background: #17140f; border: 3px solid {{ c.border }}; box-shadow: {{ c.shadow }}; opacity: {{ c.dim }}; transform: {{ c.transform }}; transition: transform .25s cubic-bezier(.2,.8,.25,1), box-shadow .25s ease; z-index: {{ c.z }}; animation: {{ c.anim }};" style-active="transform: scale(0.97);">
+                <div onClick="{{ c.onClick }}" onPointerEnter="{{ c.onEnter }}" onPointerLeave="{{ c.onLeave }}" onPointerDown="{{ c.onPointerDown }}" onPointerUp="{{ c.onPointerUp }}" onPointerCancel="{{ c.onPointerCancel }}" style="position: relative; flex: 0 0 auto; width: {{ handCardW }}; aspect-ratio: 2 / 3; margin-left: {{ c.overlap }}; border-radius: 12px; overflow: hidden; cursor: {{ c.cursor }}; touch-action: manipulation; background: #17140f; border: 3px solid {{ c.border }}; box-shadow: {{ c.shadow }}; opacity: {{ c.dim }}; transform: {{ c.transform }}; transition: transform .25s cubic-bezier(.2,.8,.25,1), box-shadow .25s ease; z-index: {{ c.z }}; animation: {{ c.anim }};" style-active="transform: scale(0.97);">
                   <div style="position: absolute; inset: 0; background: {{ c.art }};"></div>
                   <div style="position: absolute; inset: 0; background: linear-gradient(180deg, #17140fb3 0%, transparent 44%, #17140fe6 100%);"></div>
                   <div style="position: absolute; top: {{ handBadgeInset }}; left: {{ handBadgeInset }}; right: {{ handBadgeInset }}; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ handTypeFont }}; letter-spacing: 0.05em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; background: {{ c.typeColor }}; color: #17140f; display: inline-block; width: fit-content;">{{ c.typeLabel }}</div>
@@ -803,8 +803,8 @@ class Component extends DCLogic {
       botSrc = pool.slice(half, half * 2);
     }
     const game = {
-      player: { deck: progressionOrder(playerSrc), hand: [], field: [null, null, null, null, null], discard: [], mana: 1, manaCap: 1, heroesPlayedThisTurn: 0, avatar: makeAvatar(o.playerAvatar || AVATARS[0].id) },
-      bot: { deck: progressionOrder(botSrc), hand: [], field: [null, null, null, null, null], discard: [], mana: 0, manaCap: 0, heroesPlayedThisTurn: 0, avatar: makeAvatar(o.botAvatar || AVATARS[0].id) },
+      player: { deck: shuffleArr(playerSrc), hand: [], field: [null, null, null, null, null], discard: [], mana: 1, manaCap: 1, heroesPlayedThisTurn: 0, avatar: makeAvatar(o.playerAvatar || AVATARS[0].id) },
+      bot: { deck: shuffleArr(botSrc), hand: [], field: [null, null, null, null, null], discard: [], mana: 0, manaCap: 0, heroesPlayedThisTurn: 0, avatar: makeAvatar(o.botAvatar || AVATARS[0].id) },
       turn: "player",
       selectedUid: null,
       pendingBonus: null,
@@ -827,7 +827,9 @@ class Component extends DCLogic {
       logEvent(game, (side === "player" ? "Ваш сброс" : "Сброс бота") + " перемешан в новую колоду.");
     }
     if (!p.deck.length) return;
-    const card = p.deck.shift();
+    // Взвешенный добор: чем выше текущий потолок маны, тем вероятнее дорогая
+    // карта, но дешёвые остаются частыми, а дорогие могут выпасть и раньше срока.
+    const card = p.deck.splice(weightedDrawIndex(p.deck, p.manaCap), 1)[0];
     card.justDrawn = true;
     game.deckFx = side;
     // Лимит руки 7: лишняя карта сгорает и уходит в сброс.
@@ -1449,10 +1451,12 @@ class Component extends DCLogic {
       if (!cur || cur.winner || cur.turn !== "player") return;
       const av = cur.player.avatar;
       if (av.passiveAbility !== "peekTop" || av.peekUsed) return;
-      const top = cur.player.deck[0];
+      // Добор взвешенно-случайный (не строго с "верха"), поэтому подглядываем
+      // именно ту карту, которая сейчас вероятнее всего выпадет следующей.
+      const top = cur.player.deck.length ? cur.player.deck[weightedDrawIndex(cur.player.deck, cur.player.manaCap)] : null;
       const next = JSON.parse(JSON.stringify(cur));
       next.player.avatar.peekUsed = true;
-      logEvent(next, top ? "Верхняя карта колоды: " + top.name + " (⚡" + top.cost + ")." : "Колода пуста.");
+      logEvent(next, top ? "Вероятная следующая карта: " + top.name + " (⚡" + top.cost + ")." : "Колода пуста.");
       this.blip(520, 0.12, "sine", 0.04);
       const card = top ? { name: top.name, art: top.art, cost: top.cost, typeLabel: top.type === "hero" ? "Герой" : "Бонус" } : null;
       this.setState({ game: next, peekCard: card });
@@ -1588,7 +1592,12 @@ class Component extends DCLogic {
           else if (h.debuffed) animParts.push("debuffGlow 1.8s ease infinite");
           else if (side === "player" && readyToAttack) animParts.push("readyGlow 2s ease infinite");
         }
-        const nameFontPx = Math.max(6.5, Math.round(fH * 0.066 * (h.name.length > 16 ? 0.72 : h.name.length > 11 ? 0.86 : 1)));
+        // Непрерывное масштабирование вместо ступенек по диапазонам длины: считаем,
+        // сколько строк даёт line-clamp и сколько символов реально влезает в ширину
+        // карты при данном кегле — и берём наибольший читаемый кегль, что укладывается.
+        const nameAvailW = fW - fieldInsetPx - Math.round(fW * 0.22);
+        const nameFitFont = Math.floor((fieldNameClamp * nameAvailW) / (0.66 * Math.max(1, h.name.length)));
+        const nameFontPx = Math.max(7, Math.min(Math.round(fH * 0.078), nameFitFont));
         return {
           filled: true, name: h.name, hp: h.hp, str: h.stats.s, nameFont: nameFontPx + "px",
           art: h.art, onClick: onClick,
@@ -1706,6 +1715,18 @@ class Component extends DCLogic {
         const transform = isHover
           ? "rotate(0deg) translateY(-" + handLiftPx + "px) translateX(0px) scale(" + (mobilePortrait ? 1.12 : (compact ? 1.14 : 1.18)) + ")"
           : "rotate(" + angle + "deg) translateY(" + ty + "px) translateX(" + spreadX + "px)";
+        // Долгое нажатие открывает ту же карточку-подробности, что и кнопка "i" на поле,
+        // не запуская при этом обычное действие (розыгрыш карты).
+        const onPressStart = () => {
+          this._handLongPress = false;
+          clearTimeout(this._handPressTimer);
+          this._handPressTimer = setTimeout(() => {
+            this._handLongPress = true;
+            this.blip(360, 0.08, "sine", 0.03);
+            this.setState({ fieldSel: c });
+          }, 480);
+        };
+        const onPressCancel = () => { clearTimeout(this._handPressTimer); };
         return {
           uid: c.uid, name: c.name, art: c.art, isHero: c.type === "hero",
           kwIcons: kwIconsOf(c.keywords), hasKws: !!(c.keywords && c.keywords.length),
@@ -1715,9 +1736,15 @@ class Component extends DCLogic {
           border: c.type === "hero" ? "#17140f" : "#14a893",
           dim: playable ? 1 : 0.5,
           cursor: playable ? "pointer" : "default",
-          onClick: playable ? () => playHand(c) : null,
-          onEnter: () => this.setState({ handHover: i }),
-          onLeave: () => this.setState((s) => s.handHover === i ? { handHover: null } : null),
+          onClick: () => {
+            if (this._handLongPress) { this._handLongPress = false; return; }
+            if (playable) playHand(c);
+          },
+          onPointerDown: onPressStart,
+          onPointerUp: onPressCancel,
+          onPointerCancel: onPressCancel,
+          onEnter: () => { this.setState({ handHover: i }); },
+          onLeave: () => { onPressCancel(); this.setState((s) => s.handHover === i ? { handHover: null } : null); },
           overlap: i === 0 ? "0px" : (handOverlapPx + "px"),
           z: isHover ? 100 : i,
           transform: transform,

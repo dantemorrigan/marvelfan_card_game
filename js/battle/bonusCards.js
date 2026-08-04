@@ -69,7 +69,9 @@ const BONUS_EFFECTS = {
         const destroyed = p.field.filter((h) => h);
         destroyed.forEach((h) => { h.discardReason = "Поле стёрто Мультивселенским Разломом."; });
         p.discard = p.discard.concat(destroyed);
-        p.field = [];
+        // Поле остаётся массивом из MAX_FIELD пустых слотов (null), а не [] —
+        // иначе playHeroCard.findIndex(h => h === null) не находит места для новой карты.
+        p.field = new Array(MAX_FIELD).fill(null);
         p.deck = shuffleArr(p.deck.concat(p.discard));
         p.discard = [];
       });
