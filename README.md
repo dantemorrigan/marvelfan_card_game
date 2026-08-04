@@ -1,1 +1,1 @@
-# marvelfan_card_game
+# Marvel Fan Card Game
