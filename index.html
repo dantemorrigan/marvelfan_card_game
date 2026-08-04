@@ -234,16 +234,6 @@ a:hover { color: #9c1620; }
 
     <sc-if value="{{ isPlay }}" hint-placeholder-val="{{ false }}">
 
-      <sc-if value="{{ showRotatePrompt }}" hint-placeholder-val="{{ false }}">
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; text-align: center; padding: 70px 24px; animation: fadeUp .4s ease both; min-height: 50vh;">
-          <div style="width: 64px; height: 64px; border: 3px solid {{ ink }}; border-radius: 14px; display: flex; align-items: center; justify-content: center;">
-            <div style="width: 30px; height: 44px; border: 2.5px solid {{ ink }}; border-radius: 4px; animation: rotateHint 1.6s ease infinite;"></div>
-          </div>
-          <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(18px, 5vw, 24px); text-transform: uppercase; color: {{ ink }};">Поверните телефон</div>
-          <div style="font-size: 13px; font-weight: 600; color: {{ ink }}99; max-width: 320px; line-height: 1.5;">Матч удобнее играть в горизонтальной ориентации — переверните устройство, чтобы видеть поле и карты целиком.</div>
-        </div>
-      </sc-if>
-
       <sc-if value="{{ isSetup }}" hint-placeholder-val="{{ true }}">
         <div style="position: fixed; inset: 0; z-index: 15; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: {{ setupGap }}; padding: {{ setupPad }}; background: {{ bg }}; background-image: radial-gradient({{ dotColor }} 1.6px, transparent 1.6px); background-size: 16px 16px; animation: fadeUp .5s ease both; overflow-y: auto; -webkit-overflow-scrolling: touch;">
           <button type="button" onClick="{{ goCollection }}" style="position: absolute; top: max(12px, env(safe-area-inset-top)); left: max(12px, env(safe-area-inset-left)); border: 2px solid {{ ink }}40; background: transparent; color: {{ ink }}80; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 11px; text-transform: uppercase; padding: 9px 14px; border-radius: 999px; z-index: 2;" style-hover="color: {{ ink }}; border-color: {{ ink }}80;">Выйти</button>
@@ -292,10 +282,10 @@ a:hover { color: #9c1620; }
           </div>
 
           <div style="display: flex; align-items: center; gap: 10px; padding: 0 2px 8px; flex: 0 0 auto;">
-            <div onClick="{{ botAvatar.onClick }}" style="position: relative; display: flex; align-items: center; gap: 10px; padding: 6px 14px 6px 6px; border-radius: 999px; background: {{ paper }}; border: 3px solid {{ ink }}; box-shadow: {{ botAvatar.ring }}; cursor: {{ botAvatar.cursor }}; animation: {{ botAvatar.anim }}; transition: box-shadow .25s ease; flex: 0 0 auto;">
+            <div onClick="{{ botAvatar.onClick }}" style="position: relative; display: flex; align-items: center; gap: 10px; padding: 6px 14px 6px 6px; border-radius: 999px; background: {{ paper }}; border: 3px solid {{ ink }}; box-shadow: {{ botAvatar.ring }}; cursor: {{ botAvatar.cursor }}; animation: {{ botAvatar.anim }}; transition: box-shadow .25s ease; flex: 0 1 auto; min-width: 0;">
               <div style="width: {{ avatarSize }}; height: {{ avatarSize }}; flex: 0 0 auto; border-radius: 50%; background: {{ botAvatar.image }}; border: 2.5px solid {{ ink }}; display: flex; align-items: center; justify-content: center; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ avatarGlyphSize }}; color: #ffffffd9;">{{ botAvatar.glyph }}</div>
               <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0;">
-                <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ avatarNameFont }}; text-transform: uppercase; color: {{ ink }}; white-space: nowrap;">{{ botAvatar.name }}</div>
+                <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ avatarNameFont }}; text-transform: uppercase; color: {{ ink }}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">{{ botAvatar.name }}</div>
                 <div style="display: flex; align-items: center; gap: 7px;">
                   <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ avatarHpFont }}; color: #c21f2b; white-space: nowrap;">❤️ {{ botAvatar.hp }}/{{ botAvatar.maxHp }}</div>
                   <div style="width: {{ avatarBarW }}; height: 7px; border-radius: 999px; background: {{ ink }}18; overflow: hidden;">
@@ -337,7 +327,7 @@ a:hover { color: #9c1620; }
                 <div style="font-size: 10px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: #ffffff40; animation: fadeIn .4s ease both;">Поле противника пусто</div>
               </sc-if>
               <sc-for list="{{ bot.field }}" as="h" hint-placeholder-count="3">
-                <div onClick="{{ h.onClick }}" style="position: relative; height: 100%; aspect-ratio: 2 / 3; max-width: {{ fieldCardMaxW }}; flex: 0 1 auto; border-radius: 12px; overflow: hidden; cursor: {{ h.cursor }}; background: #17140f; border: {{ h.border }}; filter: {{ h.cardFilter }}; transform: {{ h.lift }}; z-index: {{ h.z }}; animation: {{ h.anim }}; transition: transform .28s cubic-bezier(.2,.8,.25,1), filter .3s ease, border-color .2s ease, box-shadow .25s ease; box-shadow: 0 6px 16px -6px #00000088;" style-hover="transform: translateY(-8px) scale(1.05); box-shadow: 0 14px 26px -8px #000000aa;">
+                <div onClick="{{ h.onClick }}" style="position: relative; height: {{ botFieldCardH }}; aspect-ratio: 2 / 3; max-width: {{ botFieldCardW }}; flex: 0 1 auto; border-radius: 12px; overflow: hidden; cursor: {{ h.cursor }}; background: #17140f; border: {{ h.border }}; filter: {{ h.cardFilter }}; transform: {{ h.lift }}; z-index: {{ h.z }}; animation: {{ h.anim }}; transition: transform .28s cubic-bezier(.2,.8,.25,1), filter .3s ease, border-color .2s ease, box-shadow .25s ease; box-shadow: 0 6px 16px -6px #00000088;" style-hover="transform: translateY(-8px) scale(1.05); box-shadow: 0 14px 26px -8px #000000aa;">
                   <div style="position: absolute; inset: 0; background: {{ h.art }};"></div>
                   <div style="position: absolute; inset: 0; background: linear-gradient(180deg, #17140fbf 0%, transparent 38%, #17140fe6 100%);"></div>
                   <div style="position: absolute; top: {{ fieldInset }}; left: {{ fieldInset }}; right: {{ fieldNameRight }}; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ fieldNameFont }}; line-height: 1.15; letter-spacing: -0.01em; color: #fff; text-transform: uppercase; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: {{ fieldNameClamp }}; -webkit-box-orient: vertical; overflow: hidden;">{{ h.name }}</div>
@@ -363,8 +353,8 @@ a:hover { color: #9c1620; }
             </div>
           </div>
 
-          <div style="display: flex; justify-content: center; padding: 6px 10px; flex: 0 0 auto;">
-            <div style="width: 100%; max-width: 640px; max-height: {{ logMaxH }}; overflow-y: auto; display: flex; flex-direction: column; gap: 3px; background: {{ paper }}; border: 2px solid {{ ink }}30; border-radius: 12px; padding: 6px 14px; box-shadow: 2px 2px 0 {{ ink }}20;">
+          <div style="display: flex; justify-content: center; padding: 4px 10px; flex: 0 0 auto; min-height: {{ logMaxH }};">
+            <div onClick="{{ toggleLog }}" style="{{ logBoxStyle }} display: flex; flex-direction: column; gap: 3px; background: {{ paper }}; border: 2px solid {{ ink }}30; border-radius: 12px; padding: 5px 14px; box-shadow: 2px 2px 0 {{ ink }}20; cursor: {{ logCursor }};">
               <sc-for list="{{ game.history }}" as="entry" hint-placeholder-count="3">
                 <div style="font-size: {{ logFont }}; font-weight: {{ entry.weight }}; color: {{ entry.color }}; line-height: 1.3;">{{ entry.text }}</div>
               </sc-for>
@@ -377,7 +367,7 @@ a:hover { color: #9c1620; }
                 <div style="font-size: 10px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: {{ ink }}40; animation: fadeIn .4s ease both;">Разыграйте героя из руки</div>
               </sc-if>
               <sc-for list="{{ player.field }}" as="h" hint-placeholder-count="3">
-                <div onClick="{{ h.onClick }}" style="position: relative; height: 100%; aspect-ratio: 2 / 3; max-width: {{ fieldCardMaxW }}; flex: 0 1 auto; border-radius: 12px; overflow: hidden; cursor: {{ h.cursor }}; background: #17140f; border: {{ h.border }}; filter: {{ h.cardFilter }}; transform: {{ h.lift }}; z-index: {{ h.z }}; animation: {{ h.anim }}; transition: transform .28s cubic-bezier(.2,.8,.25,1), filter .3s ease, border-color .2s ease, box-shadow .25s ease; box-shadow: 0 6px 16px -6px #00000088;" style-hover="transform: translateY(-8px) scale(1.05); box-shadow: 0 14px 26px -8px #000000aa;">
+                <div onClick="{{ h.onClick }}" style="position: relative; height: {{ playerFieldCardH }}; aspect-ratio: 2 / 3; max-width: {{ playerFieldCardW }}; flex: 0 1 auto; border-radius: 12px; overflow: hidden; cursor: {{ h.cursor }}; background: #17140f; border: {{ h.border }}; filter: {{ h.cardFilter }}; transform: {{ h.lift }}; z-index: {{ h.z }}; animation: {{ h.anim }}; transition: transform .28s cubic-bezier(.2,.8,.25,1), filter .3s ease, border-color .2s ease, box-shadow .25s ease; box-shadow: 0 6px 16px -6px #00000088;" style-hover="transform: translateY(-8px) scale(1.05); box-shadow: 0 14px 26px -8px #000000aa;">
                   <div style="position: absolute; inset: 0; background: {{ h.art }};"></div>
                   <div style="position: absolute; inset: 0; background: linear-gradient(180deg, #17140fbf 0%, transparent 38%, #17140fe6 100%);"></div>
                   <div style="position: absolute; top: {{ fieldInset }}; left: {{ fieldInset }}; right: {{ fieldNameRight }}; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ fieldNameFont }}; line-height: 1.15; letter-spacing: -0.01em; color: #fff; text-transform: uppercase; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: {{ fieldNameClamp }}; -webkit-box-orient: vertical; overflow: hidden;">{{ h.name }}</div>
@@ -403,11 +393,11 @@ a:hover { color: #9c1620; }
             </div>
           </div>
 
-          <div style="display: flex; align-items: center; gap: 10px; padding: 12px 2px 4px; flex: 0 0 auto;">
-            <div style="position: relative; display: flex; align-items: center; gap: 10px; padding: 6px 14px 6px 6px; border-radius: 999px; background: {{ paper }}; border: 3px solid {{ ink }}; box-shadow: {{ playerAvatar.ring }}; animation: {{ playerAvatar.anim }}; transition: box-shadow .25s ease; flex: 0 0 auto;">
+          <div style="display: flex; align-items: center; gap: 10px; padding: {{ playerRowPad }}; flex: 0 0 auto;">
+            <div style="position: relative; display: flex; align-items: center; gap: 10px; padding: 6px 14px 6px 6px; border-radius: 999px; background: {{ paper }}; border: 3px solid {{ ink }}; box-shadow: {{ playerAvatar.ring }}; animation: {{ playerAvatar.anim }}; transition: box-shadow .25s ease; flex: 0 1 auto; min-width: 0;">
               <div style="width: {{ avatarSize }}; height: {{ avatarSize }}; flex: 0 0 auto; border-radius: 50%; background: {{ playerAvatar.image }}; border: 2.5px solid {{ ink }}; display: flex; align-items: center; justify-content: center; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ avatarGlyphSize }}; color: #ffffffd9;">{{ playerAvatar.glyph }}</div>
               <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0;">
-                <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ avatarNameFont }}; text-transform: uppercase; color: {{ ink }}; white-space: nowrap;">{{ playerAvatar.name }}</div>
+                <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ avatarNameFont }}; text-transform: uppercase; color: {{ ink }}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">{{ playerAvatar.name }}</div>
                 <div style="display: flex; align-items: center; gap: 7px;">
                   <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ avatarHpFont }}; color: #c21f2b; white-space: nowrap;">❤️ {{ playerAvatar.hp }}/{{ playerAvatar.maxHp }}</div>
                   <div style="width: {{ avatarBarW }}; height: 7px; border-radius: 999px; background: {{ ink }}18; overflow: hidden;">
@@ -422,7 +412,7 @@ a:hover { color: #9c1620; }
                     <div style="font-size: 8.5px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #c21f2b; white-space: nowrap; animation: shieldBreak .55s ease both;">⚔ Щит разбит — уязвим</div>
                   </sc-if>
                   <sc-if value="{{ playerAvatar.canPeek }}" hint-placeholder-val="{{ false }}">
-                    <button type="button" onClick="{{ peekTop }}" style="border: 2px solid var(--acc, #e0212f); background: transparent; color: var(--acc, #e0212f); cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 8.5px; text-transform: uppercase; padding: 5px 9px; border-radius: 999px; white-space: nowrap;" style-hover="background: var(--acc, #e0212f); color: #fff;">◉ Заглянуть в колоду</button>
+                    <button type="button" onClick="{{ peekTop }}" style="border: 2px solid var(--acc, #e0212f); background: transparent; color: var(--acc, #e0212f); cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 8.5px; text-transform: uppercase; padding: 5px 9px; border-radius: 999px; white-space: nowrap;" style-hover="background: var(--acc, #e0212f); color: #fff;">{{ peekLabel }}</button>
                   </sc-if>
                 </div>
               </div>
@@ -449,7 +439,7 @@ a:hover { color: #9c1620; }
             <button type="button" onClick="{{ endTurn }}" style="{{ endTurnPosition }} border: 3px solid {{ ink }}; background: {{ endTurnBg }}; color: {{ endTurnColor }}; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: {{ endTurnFont }}; text-transform: uppercase; padding: {{ endTurnPad }}; min-height: {{ endTurnMinH }}; border-radius: 999px; white-space: nowrap; flex: 0 0 auto; animation: {{ endTurnAnim }}; box-shadow: 3px 3px 0 {{ ink }}40;" style-hover="filter: brightness(0.96);" style-active="transform: translate(1px,1px) scale(0.97);">Закончить ход</button>
           </div>
 
-          <div style="display: flex; justify-content: center; padding: {{ handPad }}; flex: 0 0 auto; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch;">
+          <div style="display: flex; justify-content: center; padding: {{ handPad }}; flex: 0 0 auto; {{ handWrapOverflow }}">
             <div style="display: flex; align-items: flex-end; margin: 0 auto; padding: {{ handEndPad }};">
               <sc-for list="{{ player.hand }}" as="c" hint-placeholder-count="5">
                 <div onClick="{{ c.onClick }}" onPointerEnter="{{ c.onEnter }}" onPointerLeave="{{ c.onLeave }}" style="position: relative; flex: 0 0 auto; width: {{ handCardW }}; aspect-ratio: 2 / 3; margin-left: {{ c.overlap }}; border-radius: 12px; overflow: hidden; cursor: {{ c.cursor }}; touch-action: manipulation; background: #17140f; border: 3px solid {{ c.border }}; box-shadow: {{ c.shadow }}; opacity: {{ c.dim }}; transform: {{ c.transform }}; transition: transform .25s cubic-bezier(.2,.8,.25,1), box-shadow .25s ease; z-index: {{ c.z }};" style-active="transform: scale(0.97);">
@@ -1150,12 +1140,12 @@ function bonusFx(key, name) {
 }
 
 function computeViewport() {
-  if (typeof window === "undefined") return { isPortraitMobile: false, isCompact: false, vh: 800 };
+  if (typeof window === "undefined") return { isPortraitMobile: false, isCompact: false, vh: 800, vw: 1200, isMobileDevice: false };
   const w = window.innerWidth, h = window.innerHeight;
   const short = Math.min(w, h);
   const isMobileDevice = short <= 520;
   const isPortrait = h > w;
-  return { isPortraitMobile: isMobileDevice && isPortrait, isCompact: h <= 700, vh: h, isMobileDevice: isMobileDevice };
+  return { isPortraitMobile: isMobileDevice && isPortrait, isCompact: h <= 700, vh: h, vw: w, isMobileDevice: isMobileDevice };
 }
 
 function requestFullscreenSafe() {
@@ -1198,7 +1188,7 @@ class Component extends DCLogic {
     sel: null, flipped: false, dark: false, screen: "collection",
     game: null, search: "", filter: "all",
     handHover: null, fieldSel: null, discardView: null, toast: null,
-    pickedAvatar: null, peekCard: null,
+    pickedAvatar: null, peekCard: null, logOpen: false,
     editingName: false, nameDraft: "", customName: readStoredName(),
     showNameOnboarding: !readNameOnboardingSeen(),
     ...computeViewport()
@@ -1623,11 +1613,17 @@ class Component extends DCLogic {
     const isPlay = st.screen === "play";
     const g = st.game;
     const compact = !!st.isCompact;
-    const showRotatePrompt = isPlay && !!st.isPortraitMobile;
-    const isSetup = isPlay && !g && !showRotatePrompt;
-    const isBattle = isPlay && !!g && !showRotatePrompt;
+    const vh = st.vh || 800;
+    const vwPx = st.vw || 1200;
+    // Мобильная раскладка — всё, что уже 900px. Портрет и ландшафт считаются отдельно;
+    // десктоп (>=900px) использует прежние формулы без изменений.
+    const mobileLayout = vwPx < 900;
+    const mobilePortrait = mobileLayout && vh > vwPx;
+    const mobileLandscape = mobileLayout && !mobilePortrait;
+    const isSetup = isPlay && !g;
+    const isBattle = isPlay && !!g;
 
-    const isMobile = !!st.isMobileDevice;
+    const isMobile = mobileLayout;
     const setupPad = isMobile ? (compact ? "18px max(14px, env(safe-area-inset-right)) 18px max(14px, env(safe-area-inset-left))" : "26px max(20px, env(safe-area-inset-right)) 26px max(20px, env(safe-area-inset-left))") : "40px max(24px, env(safe-area-inset-right)) 40px max(24px, env(safe-area-inset-left))";
     const setupGap = isMobile ? (compact ? "14px" : "20px") : "30px";
     const setupTitleFont = isMobile ? "clamp(20px, 4.6vw, 32px)" : "clamp(30px, 5.4vw, 56px)";
@@ -1638,60 +1634,107 @@ class Component extends DCLogic {
     const setupCardPad = isMobile ? "14px 10px 14px" : "18px 16px 20px";
     const setupCardGap = isMobile ? "10px" : "16px";
 
-    const turnFontSize = compact ? "11px" : "13px";
-    const turnPad = compact ? "6px 14px" : "8px 20px";
+    const turnFontSize = mobilePortrait ? "10px" : (compact ? "11px" : "13px");
+    const turnPad = mobilePortrait ? "5px 12px" : (compact ? "6px 14px" : "8px 20px");
     // --- Вертикальный бюджет боевого экрана -----------------------------------
     // Всё считается от высоты окна: рука + две арены + строки аватаров + журнал
-    // укладываются без скролла. Карта на поле = 88% высоты карты руки.
-    const vh = st.vh || 800;
-    const headerH = compact ? 30 : 42;
-    const logMaxHPx = compact ? 24 : 58; // целое число строк журнала: 1 в compact, 3 на десктопе
-    const handPadPx = compact ? 8 : 16;
-    const avSize = Math.round(Math.max(38, Math.min(64, vh * 0.082)));
-    const avatarRowH = avSize + 16;
-    const arenaChrome = compact ? 18 : 30;
-    const chrome = headerH + (avatarRowH + 8) + (avatarRowH + 14) + (logMaxHPx + 14) + handPadPx + 10;
-    // 34px запас: веер руки наклоняет крайние карты вниз, плюс погрешность строк.
-    const avail = Math.max(180, vh - chrome - arenaChrome * 2 - 34);
-    const handH = Math.max(84, Math.min(avail / 2.76, 268));
-    const fieldH = Math.round(handH * 0.88);
+    // укладываются без скролла.
+    // Портрет (<900px, h>w) имеет собственный бюджет: две арены ~40-45% высоты,
+    // крупная рука внизу, журнал свернут в одну строку.
+    const logOpen = !!st.logOpen;
+    let headerH, logMaxHPx, handPadPx, avSize, arenaChrome, handH, fieldH;
+    if (mobilePortrait) {
+      headerH = 36;
+      logMaxHPx = 24;
+      handPadPx = 8;
+      avSize = Math.round(Math.max(44, Math.min(62, vh * 0.07)));
+      arenaChrome = 14;
+      const chromeP = headerH + 2 * (avSize + 14) + (logMaxHPx + 10) + handPadPx + 46;
+      handH = Math.round(Math.max(108, Math.min(vh * 0.21, 212)));
+      fieldH = Math.floor(Math.max(86, (vh - chromeP - handH) / 2 - arenaChrome));
+    } else {
+      headerH = compact ? 30 : 42;
+      logMaxHPx = compact ? 24 : 58; // целое число строк журнала: 1 в compact, 3 на десктопе
+      handPadPx = compact ? 8 : 16;
+      avSize = Math.round(Math.max(38, Math.min(64, vh * 0.082)));
+      const avatarRowH = avSize + 16;
+      arenaChrome = compact ? 18 : 30;
+      const chrome = headerH + (avatarRowH + 8) + (avatarRowH + 14) + (logMaxHPx + 14) + handPadPx + 10;
+      // 34px запас: веер руки наклоняет крайние карты вниз, плюс погрешность строк.
+      const avail = Math.max(180, vh - chrome - arenaChrome * 2 - 34);
+      handH = Math.max(84, Math.min(avail / 2.76, 268));
+      fieldH = Math.round(handH * 0.88);
+    }
     const handWpx = Math.round(handH * 2 / 3);
 
-    const deckPileW = compact ? "30px" : "46px";
-    const deckPileH = compact ? "42px" : "64px";
-    const manaPipSize = compact ? "7px" : "9px";
-    const fieldArenaPad = compact ? "5px" : "10px";
-    const fieldGap = compact ? "6px" : "12px";
+    const deckPileW = mobilePortrait ? "26px" : (compact ? "30px" : "46px");
+    const deckPileH = mobilePortrait ? "36px" : (compact ? "42px" : "64px");
+    const manaPipSize = mobilePortrait ? "6px" : (compact ? "7px" : "9px");
+    const fieldGapPx = mobilePortrait ? 6 : (compact ? 6 : 12);
+    const fieldArenaPadPx = mobilePortrait ? 6 : (compact ? 5 : 10);
+    const fieldArenaPad = fieldArenaPadPx + "px";
+    const fieldGap = fieldGapPx + "px";
     const fieldArenaH = (fieldH + arenaChrome) + "px"; // + padding и рамка арены, чтобы карта была ровно fieldH
-    // Инсеты и иконки пропорциональны ШИРИНЕ карты, иначе на узких картах текст съедается.
-    const fieldW = Math.round(fieldH * 2 / 3);
-    const tinyCards = fieldW < 74;
-    const fieldCardMaxW = fieldW + "px";
-    const fieldNameFont = Math.max(8, Math.round(fieldH * 0.066)) + "px";
-    const fieldNameRight = Math.round(fieldW * 0.3) + "px";
-    const fieldStatFontPx = Math.max(8.5, Math.round(fieldH * 0.072));
-    const fieldInsetPx = Math.max(3, Math.round(fieldW * 0.07));
-    const fieldInfoPx = Math.max(13, Math.round(fieldW * 0.24));
+    // В портрете ширина карты на поле зависит от числа героев в ряду: при 1-3 крупные,
+    // при 4-5 ужимаются так, чтобы весь ряд помещался в экран без скролла.
+    const rowCardSize = (count) => {
+      const wMax = Math.round(fieldH * 2 / 3);
+      if (!mobilePortrait || !count) return { w: wMax, h: fieldH };
+      const availW = vwPx - 20 - fieldArenaPadPx * 2 - (count - 1) * fieldGapPx - 6;
+      const w = Math.max(44, Math.min(wMax, Math.floor(availW / count)));
+      return { w: w, h: Math.min(fieldH, Math.round(w * 1.5)) };
+    };
+    const botRowSz = rowCardSize(g ? g.bot.field.filter(Boolean).length : 0);
+    const playerRowSz = rowCardSize(g ? g.player.field.filter(Boolean).length : 0);
+    const botFieldCardW = botRowSz.w + "px";
+    const botFieldCardH = mobilePortrait ? (botRowSz.h + "px") : "100%";
+    const playerFieldCardW = playerRowSz.w + "px";
+    const playerFieldCardH = mobilePortrait ? (playerRowSz.h + "px") : "100%";
+    // Шрифты и инсеты считаются от фактически меньшей карты, чтобы текст не съедался.
+    const fH = mobilePortrait ? Math.min(botRowSz.h, playerRowSz.h) : fieldH;
+    const fW = Math.round(fH * 2 / 3);
+    const tinyCards = fW < 74;
+    const fieldNameFont = Math.max(8, Math.round(fH * 0.066)) + "px";
+    const fieldNameRight = Math.round(fW * 0.3) + "px";
+    const fieldStatFontPx = Math.max(8.5, Math.round(fH * 0.072));
+    const fieldInsetPx = Math.max(3, Math.round(fW * 0.07));
+    const fieldInfoPx = Math.max(13, Math.round(fW * 0.24));
     const fieldStatFont = fieldStatFontPx + "px";
-    const fieldStateFont = Math.max(7, Math.round(fieldH * 0.055)) + "px";
+    const fieldStateFont = Math.max(7, Math.round(fH * 0.055)) + "px";
     const fieldInfoSize = fieldInfoPx + "px";
     const fieldInset = fieldInsetPx + "px";
     const fieldNameClamp = tinyCards ? 2 : 3;
     // Метка состояния ставится строго над строкой HP/атаки, а не по проценту высоты.
     const fieldStateBottom = Math.round(fieldInsetPx + fieldStatFontPx * 1.6 + 3) + "px";
     const fieldKwTop = (fieldInsetPx + fieldInfoPx + 3) + "px";
-    const fieldKwFont = Math.max(8, Math.round(fieldH * 0.062)) + "px";
+    const fieldKwFont = Math.max(8, Math.round(fH * 0.062)) + "px";
     const avatarSize = avSize + "px";
     const avatarGlyphSize = Math.round(avSize * 0.42) + "px";
-    const avatarNameFont = (avSize < 50 ? 10 : 12) + "px";
-    const avatarHpFont = (avSize < 50 ? 10 : 12) + "px";
-    const avatarBarW = (avSize < 50 ? 54 : 92) + "px";
+    const avatarNameFont = (mobilePortrait ? 10.5 : (avSize < 50 ? 10 : 12)) + "px";
+    const avatarHpFont = (mobilePortrait ? 11 : (avSize < 50 ? 10 : 12)) + "px";
+    const avatarBarW = (mobilePortrait ? 56 : (avSize < 50 ? 54 : 92)) + "px";
     const logPad = compact ? "3px 10px" : "5px 16px";
-    const logFont = compact ? "10px" : "11.5px";
+    const logFont = mobilePortrait ? "10.5px" : (compact ? "10px" : "11.5px");
     const logMaxH = logMaxHPx + "px";
+    // Журнал: на мобильных свернут в одну строку, по тапу раскрывается поверх поля.
+    const logBoxStyle = mobileLayout
+      ? (logOpen
+        ? "position: fixed; left: max(10px, env(safe-area-inset-left)); right: max(10px, env(safe-area-inset-right)); top: 15%; z-index: 45; max-height: 44vh; overflow-y: auto; box-shadow: 0 18px 40px -12px #00000088;"
+        : "width: 100%; max-width: 640px; max-height: " + logMaxHPx + "px; overflow: hidden;")
+      : "width: 100%; max-width: 640px; max-height: " + logMaxHPx + "px; overflow-y: auto;";
+    const logCursor = mobileLayout ? "pointer" : "default";
     const handCardW = handWpx + "px";
-    const handOverlapPx = -Math.round(handWpx * 0.42);
-    const handLiftPx = Math.round(handH * 0.3);
+    // Портрет: перекрытие карт руки подбирается так, чтобы веер целиком влезал в ширину
+    // экрана при любом числе карт (последняя карта не выходит за край).
+    let handOverlapPx;
+    if (mobilePortrait) {
+      const nHand = g ? g.player.hand.length : 0;
+      const step = nHand > 1 ? Math.min(Math.round(handWpx * 0.58), Math.floor((vwPx - 20 - handWpx) / (nHand - 1))) : 0;
+      handOverlapPx = nHand > 1 ? (step - handWpx) : 0;
+    } else {
+      handOverlapPx = -Math.round(handWpx * 0.42);
+    }
+    const handLiftPx = Math.round(handH * (mobilePortrait ? 0.34 : 0.3));
     const handNameFont = Math.max(10, Math.round(handH * 0.082)) + "px";
     const handTypeFont = Math.max(7.5, Math.round(handH * 0.055)) + "px";
     const handCostSize = Math.max(20, Math.round(handH * 0.16)) + "px";
@@ -1699,16 +1742,25 @@ class Component extends DCLogic {
     const handStatFont = Math.max(10, Math.round(handH * 0.075)) + "px";
     const handNameTop = Math.round(handH * 0.2) + "px";
     const handBadgeInset = Math.max(5, Math.round(handH * 0.04)) + "px";
-    const handPad = (compact ? "5px" : "10px") + " 4px 2px";
+    const handPad = (mobilePortrait ? "8px" : (compact ? "5px" : "10px")) + " 4px 2px";
     const endTurnPad = isMobile ? "0" : (compact ? "7px 12px" : "10px 16px");
-    const endTurnFont = compact ? "9px" : "10.5px";
+    const endTurnFont = mobilePortrait ? "8.5px" : (compact ? "9px" : "10.5px");
     const endTurnMinH = compact ? "32px" : "42px";
-    const endTurnSizePx = Math.round(Math.max(52, Math.min(74, vh * 0.11)));
+    const endTurnSizePx = mobilePortrait
+      ? Math.round(Math.max(48, Math.min(60, vh * 0.075)))
+      : Math.round(Math.max(52, Math.min(74, vh * 0.11)));
     const endTurnSize = endTurnSizePx + "px";
-    const endTurnPosition = isMobile
-      ? "position: fixed; right: max(8px, env(safe-area-inset-right)); top: 50%; margin-top: -" + Math.round(endTurnSizePx / 2) + "px; z-index: 25; width: " + endTurnSize + "; height: " + endTurnSize + "; padding: 0; white-space: normal; line-height: 1.15;"
-      : "position: static;";
-    const handEndPad = isMobile ? "0 " + (parseInt(endTurnSize, 10) + 20) + "px 0 4px" : "0 4px";
+    const endTurnPosition = mobilePortrait
+      ? "position: fixed; right: max(10px, env(safe-area-inset-right)); bottom: " + (handH + handPadPx + 16) + "px; z-index: 30; width: " + endTurnSize + "; height: " + endTurnSize + "; padding: 0; white-space: normal; line-height: 1.15;"
+      : mobileLandscape
+        ? "position: fixed; right: max(8px, env(safe-area-inset-right)); top: 50%; margin-top: -" + Math.round(endTurnSizePx / 2) + "px; z-index: 25; width: " + endTurnSize + "; height: " + endTurnSize + "; padding: 0; white-space: normal; line-height: 1.15;"
+        : "position: static;";
+    const handEndPad = mobileLandscape ? "0 " + (endTurnSizePx + 20) + "px 0 4px" : "0 4px";
+    // Портрет и десктоп укладывают веер в экран расчётом — контейнер не должен
+    // обрезать поднятую карту; в ландшафте узких экранов остаётся скролл-страховка.
+    const handWrapOverflow = mobileLandscape ? "overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch;" : "overflow: visible;";
+    // Нижняя строка аватара игрока резервирует место справа под фикс-кнопку хода.
+    const playerRowPad = mobilePortrait ? ("10px " + (endTurnSizePx + 16) + "px 4px 2px") : "12px 2px 4px";
 
     const selectAttacker = (uid) => {
       const cur = this.state.game;
@@ -1953,7 +2005,7 @@ class Component extends DCLogic {
       return list.map((c, i) => {
         const affordable = g.player.mana >= c.cost;
         const playable = canPlay && affordable && (c.type !== "hero" || g.player.field.some((h) => h === null));
-        const angleScale = compact ? 5 : 7, angleMax = compact ? 18 : 24, tyScale = compact ? 4 : 7, tyMax = compact ? 12 : 22;
+        const angleScale = mobilePortrait ? 4 : (compact ? 5 : 7), angleMax = mobilePortrait ? 14 : (compact ? 18 : 24), tyScale = mobilePortrait ? 3 : (compact ? 4 : 7), tyMax = mobilePortrait ? 10 : (compact ? 12 : 22);
         const off = i - mid;
         const angle = Math.max(-angleMax, Math.min(angleMax, off * angleScale));
         const ty = Math.min(tyMax, Math.abs(off) * tyScale);
@@ -1961,11 +2013,11 @@ class Component extends DCLogic {
         let spreadX = 0;
         if (hoverIdx != null && !isHover) {
           const dist = i - hoverIdx, ad = Math.abs(dist);
-          const push = ad === 1 ? (compact ? 22 : 38) : (ad === 2 ? (compact ? 10 : 18) : 0);
+          const push = ad === 1 ? (mobilePortrait ? 14 : (compact ? 22 : 38)) : (ad === 2 ? (mobilePortrait ? 6 : (compact ? 10 : 18)) : 0);
           spreadX = push * (dist > 0 ? 1 : -1);
         }
         const transform = isHover
-          ? "rotate(0deg) translateY(-" + handLiftPx + "px) translateX(0px) scale(" + (compact ? 1.14 : 1.18) + ")"
+          ? "rotate(0deg) translateY(-" + handLiftPx + "px) translateX(0px) scale(" + (mobilePortrait ? 1.12 : (compact ? 1.14 : 1.18)) + ")"
           : "rotate(" + angle + "deg) translateY(" + ty + "px) translateX(" + spreadX + "px)";
         return {
           uid: c.uid, name: c.name, art: c.art, isHero: c.type === "hero",
@@ -2055,7 +2107,6 @@ class Component extends DCLogic {
       endTurnBg: g && g.turn === "player" && !g.pendingBonus ? acc : paper,
       endTurnColor: g && g.turn === "player" && !g.pendingBonus ? "#fff" : ink,
       endTurnAnim: g && g.turn === "player" && !g.pendingBonus ? "ringPulseSoft 1.8s ease infinite" : "none",
-      showRotatePrompt: showRotatePrompt,
       setupPad: setupPad, setupGap: setupGap, setupTitleFont: setupTitleFont,
       setupShowDesc: setupShowDesc, setupCardW: setupCardW, setupAvatarSize: setupAvatarSize,
       setupAvatarFont: setupAvatarFont, setupCardPad: setupCardPad, setupCardGap: setupCardGap,
@@ -2068,18 +2119,24 @@ class Component extends DCLogic {
       handNameFont: handNameFont, handTypeFont: handTypeFont, handCostSize: handCostSize, handCostFont: handCostFont, handStatFont: handStatFont, handNameTop: handNameTop, handBadgeInset: handBadgeInset,
       endTurnPad: endTurnPad, endTurnFont: endTurnFont, endTurnMinH: endTurnMinH,
       endTurnPosition: endTurnPosition, handEndPad: handEndPad,
+      playerRowPad: playerRowPad,
+      botFieldCardW: botFieldCardW, botFieldCardH: botFieldCardH,
+      playerFieldCardW: playerFieldCardW, playerFieldCardH: playerFieldCardH,
+      logBoxStyle: logBoxStyle, logCursor: logCursor, handWrapOverflow: handWrapOverflow,
+      toggleLog: () => { if (mobileLayout) this.setState((s) => ({ logOpen: !s.logOpen })); },
       player: g ? { field: fieldVM("player"), fieldEmpty: liveHeroCount(g, "player") === 0, hand: handVM(), handCount: g.player.hand.length, deckCount: g.player.deck.length, discardCount: g.player.discard.length, mana: g.player.mana, manaCap: g.player.manaCap, manaPips: manaPips(g.player) } : { field: [], fieldEmpty: true, hand: [], handCount: 0, deckCount: 0, discardCount: 0, mana: 0, manaCap: 0, manaPips: [] },
       bot: g ? { field: fieldVM("bot"), fieldEmpty: liveHeroCount(g, "bot") === 0, deckCount: g.bot.deck.length, discardCount: g.bot.discard.length, mana: g.bot.mana, manaCap: g.bot.manaCap, manaPips: manaPips(g.bot) } : { field: [], fieldEmpty: true, deckCount: 0, discardCount: 0, mana: 0, manaCap: 0, manaPips: [] },
       playerAvatar: avatarVM("player"),
       botAvatar: avatarVM("bot"),
       avatarChoices: avatarChoices,
       avatarSize: avatarSize, avatarGlyphSize: avatarGlyphSize, avatarNameFont: avatarNameFont, avatarHpFont: avatarHpFont, avatarBarW: avatarBarW,
-      fieldCardMaxW: fieldCardMaxW, fieldNameFont: fieldNameFont, fieldNameRight: fieldNameRight, fieldStatFont: fieldStatFont, fieldStateFont: fieldStateFont, fieldInfoSize: fieldInfoSize,
+      fieldNameFont: fieldNameFont, fieldNameRight: fieldNameRight, fieldStatFont: fieldStatFont, fieldStateFont: fieldStateFont, fieldInfoSize: fieldInfoSize,
       fieldInset: fieldInset, fieldNameClamp: fieldNameClamp, fieldStateBottom: fieldStateBottom,
       fieldKwTop: fieldKwTop, fieldKwFont: fieldKwFont,
       handKwBottom: (Math.max(5, Math.round(handH * 0.04)) + Math.round(handH * 0.11)) + "px",
       handKwFont: Math.max(9, Math.round(handH * 0.066)) + "px",
       peekCard: st.peekCard || null,
+      peekLabel: mobilePortrait ? "◉ Колода" : "◉ Заглянуть в колоду",
       burnFx: g && g.burnFx && g.burnFx.side === "player" ? { name: g.burnFx.name } : null,
       peekTop: peekTop,
       hasWinner: !!g && !!g.winner,
@@ -2111,7 +2168,7 @@ class Component extends DCLogic {
       navPlayBg: isPlay ? acc : paper,
       navPlayColor: isPlay ? "#fff" : ink,
       goCollection: () => { this.blip(280, 0.08, "sine", 0.03); exitFullscreenSafe(); this.setState({ screen: "collection" }); },
-      goPlay: () => { this.blip(280, 0.08, "sine", 0.03); if (st.isMobileDevice) requestFullscreenSafe(); this.setState({ screen: "play" }); },
+      goPlay: () => { this.blip(280, 0.08, "sine", 0.03); if (mobileLayout) requestFullscreenSafe(); this.setState({ screen: "play" }); },
       backToCollection: () => { exitFullscreenSafe(); this.setState({ screen: "collection", game: null }); },
       toggleTheme: () => { this.blip(300, 0.1, "sine", 0.04); this.buzz(10); this.setState((s) => ({ dark: !s.dark })); },
       pickAvatar: () => {
