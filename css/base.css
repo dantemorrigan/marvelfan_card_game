@@ -1,0 +1,13 @@
+/*
+base.css
+
+Глобальный сброс, типографика по умолчанию и мелкие общие правила
+(ссылки, выделение текста, ховер бейджа стоимости карты).
+*/
+* { box-sizing: border-box; }
+body { margin: 0; background: #f4efe1; color: #17140f; font-family: 'Inter', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
+a { color: #c21f2b; text-decoration: none; }
+a:hover { color: #9c1620; }
+.mfc-cost-ribbon { opacity: 0; transition: opacity .22s ease; }
+.mfc-card:hover .mfc-cost-ribbon { opacity: 1; }
+::selection { background: #e0212f55; }

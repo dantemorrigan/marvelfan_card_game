@@ -1,0 +1,36 @@
+/*
+animations.css
+
+Все @keyframes анимации игры: появление карт, урон, смерть,
+эффекты бонусных карт, победа/поражение и т.п. Используются через
+inline style="animation: ..." в index.html.
+*/
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes turnPop { 0% { opacity: 0; transform: translateY(-10px) scale(0.9); } 60% { opacity: 1; transform: translateY(0) scale(1.04); } 100% { opacity: 1; transform: none; } }
+@keyframes shakeHit { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); } }
+@keyframes floatFade { 0% { opacity: 0; transform: translateY(4px) scale(0.8); } 25% { opacity: 1; transform: translateY(-6px) scale(1.1); } 100% { opacity: 0; transform: translateY(-30px) scale(1); } }
+@keyframes cardIn { 0% { opacity: 0; transform: scale(0.5) translateY(24px) rotate(-6deg); } 60% { opacity: 1; transform: scale(1.06) translateY(-3px) rotate(2deg); } 100% { opacity: 1; transform: none; } }
+@keyframes drawIn { 0% { opacity: 0; filter: brightness(2) saturate(1.4); box-shadow: 0 0 0 3px var(--acc, #e0212f), 0 0 24px 6px var(--acc, #e0212f)99; } 70% { opacity: 1; } 100% { opacity: 1; filter: none; box-shadow: none; } }
+@keyframes deckPulse { 0% { transform: scale(1); } 35% { transform: scale(0.8) translateY(10px); } 100% { transform: scale(1); } }
+@keyframes atkGlow { 0%, 100% { box-shadow: 0 0 0 2px #ffd27a, 0 0 14px 3px #ffd27a99; } 50% { box-shadow: 0 0 0 4px #ffd27a, 0 0 22px 6px #ffd27acc; } }
+@keyframes castFlash { 0% { opacity: 0; } 12% { opacity: 1; } 78% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes dotBounce { 0%, 80%, 100% { transform: translateY(0); opacity: .4; } 40% { transform: translateY(-4px); opacity: 1; } }
+@keyframes ringPulseSoft { 0%, 100% { box-shadow: 3px 3px 0 #17140f40; } 50% { box-shadow: 3px 3px 0 #17140f40, 0 0 0 6px var(--acc, #e0212f)40; } }
+@keyframes rotateHint { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-90deg); } }
+@keyframes hitFlash { 0% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes buffGlow { 0%, 100% { box-shadow: 0 0 0 2px #2ecc71, 0 0 14px 3px #2ecc7199; } 50% { box-shadow: 0 0 0 4px #2ecc71, 0 0 22px 6px #2ecc71cc; } }
+@keyframes readyGlow { 0%, 100% { box-shadow: 0 0 0 2px #58a6ff, 0 0 10px 2px #58a6ff88; } 50% { box-shadow: 0 0 0 3px #58a6ff, 0 0 16px 4px #58a6ffbb; } }
+@keyframes debuffGlow { 0%, 100% { box-shadow: 0 0 0 2px #8a6fd6, 0 0 14px 3px #8a6fd699; } 50% { box-shadow: 0 0 0 4px #8a6fd6, 0 0 22px 6px #8a6fd6cc; } }
+@keyframes dieFade { 0% { opacity: 1; transform: scale(1) translateY(0); } 60% { opacity: 0.4; transform: scale(0.82) translateY(6px); } 100% { opacity: 0; transform: scale(0.5) translateY(20px); } }
+@keyframes lungeUp { 0%, 100% { transform: translateY(0); } 45% { transform: translateY(-16px); } }
+@keyframes lungeDown { 0%, 100% { transform: translateY(0); } 45% { transform: translateY(16px); } }
+@keyframes fxGold { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+@keyframes fxElectric { 0%, 100% { opacity: 0; } 10%, 30%, 50%, 70% { opacity: 1; } 20%, 40%, 60%, 80% { opacity: 0.25; } }
+@keyframes fxFire { 0% { transform: scale(0.6); opacity: 0; } 40% { opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }
+@keyframes fxRift { 0%, 100% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(2.5deg) scale(1.02); } }
+@keyframes fxGlitch { 0%, 100% { opacity: 0; } 15% { opacity: .9; } 25% { opacity: 0; } 35% { opacity: .7; } 45% { opacity: 0; } 60% { opacity: .5; } }
+@keyframes shieldBreak { 0% { opacity: 0; transform: scale(1.5) rotate(-6deg); filter: blur(2px); } 45% { opacity: 1; transform: scale(0.94) rotate(2deg); filter: none; } 100% { opacity: 1; transform: none; } }
+@keyframes winPop { 0% { opacity: 0; transform: scale(0.6) translateY(20px); } 55% { opacity: 1; transform: scale(1.08); } 100% { opacity: 1; transform: none; } }
+@keyframes winRays { 0% { opacity: 0.25; transform: rotate(0deg) scale(1); } 100% { opacity: 0.45; transform: rotate(360deg) scale(1.1); } }
+@keyframes burnAway { 0% { opacity: 0; transform: translateX(-50%) translateY(12px) scale(0.9); } 18% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); } 72% { opacity: 1; transform: translateX(-50%) translateY(-4px) scale(1); } 100% { opacity: 0; transform: translateX(-50%) translateY(-26px) scale(0.95); } }

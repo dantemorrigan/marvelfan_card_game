@@ -1,0 +1,11 @@
+/*
+avatars.css
+
+Стилизация пустого состояния image-slot (силуэт-заглушка фото
+профиля игрока).
+*/
+#mfc-avatar::part(frame) { background: #17140f14; }
+#mfc-avatar::part(frame) { background: var(--acc, #c67139); }
+#mfc-avatar::part(empty) { visibility: hidden; background: var(--acc, #c67139); }
+#mfc-avatar::part(empty)::before { content: ""; visibility: visible; position: absolute; inset: 0; background-color: #ffffff; opacity: .85; -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2236%22 r=%2218%22/><path d=%22M14 92c0-24 16-38 36-38s36 14 36 38%22/></svg>'); mask-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2236%22 r=%2218%22/><path d=%22M14 92c0-24 16-38 36-38s36 14 36 38%22/></svg>'); -webkit-mask-size: 56% 56%; mask-size: 56% 56%; -webkit-mask-position: center 62%; mask-position: center 62%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+#mfc-avatar::part(empty) svg { display: none; }
