@@ -7,9 +7,12 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <script src="./support.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;800;900&amp;family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./css/base.css">
 <link rel="stylesheet" href="./css/animations.css">
 <link rel="stylesheet" href="./css/avatars.css">
+<link rel="stylesheet" href="./css/preloader.css">
 <script src="./js/core/constants.js" defer></script>
 <script src="./js/core/gameHelpers.js" defer></script>
 <script src="./js/core/viewport.js" defer></script>
@@ -22,8 +25,16 @@
 <script src="./js/battle/keywords.js" defer></script>
 <script src="./js/battle/avatars.js" defer></script>
 <script src="./js/battle/bonusCards.js" defer></script>
+<script src="./js/core/preloader.js" defer></script>
 </head>
 <body>
+<div id="mfc-preloader">
+  <div id="mfc-preloader-badge">MFC</div>
+  <div id="mfc-preloader-title">Marvel Fan Cards</div>
+  <div id="mfc-preloader-sub">Загружаем карты и артворк — секунду...</div>
+  <div id="mfc-preloader-track"><div id="mfc-preloader-bar"></div></div>
+  <div id="mfc-preloader-pct">0%</div>
+</div>
 <x-dc>
 <helmet>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">

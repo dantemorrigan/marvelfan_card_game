@@ -1,0 +1,87 @@
+/*
+preloader.css
+
+Стартовый экран загрузки: показывается поверх всего, пока грузятся
+модули игры и артворк карт. Живёт вне <x-dc> (тот полностью
+заменяется React-рантаймом при старте), поэтому управляется чистым
+CSS/JS и убирается собственным скриптом (core/preloader.js), а не
+шаблонизатором игры.
+*/
+#mfc-preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  background-color: #f4efe1;
+  background-image: radial-gradient(#17140f14 1.6px, transparent 1.6px);
+  background-size: 16px 16px;
+  transition: opacity .4s ease;
+  padding: 24px;
+  text-align: center;
+}
+#mfc-preloader-badge {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  background: #e0212f;
+  border: 4px solid #17140f;
+  box-shadow: 6px 6px 0 #17140f40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 800;
+  font-size: 34px;
+  color: #fff;
+  animation: mfc-preloader-pop .6s cubic-bezier(.2,.8,.25,1) both, mfc-preloader-bob 2.2s ease-in-out .6s infinite;
+}
+#mfc-preloader-title {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 800;
+  font-size: clamp(18px, 4.4vw, 28px);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: #17140f;
+}
+#mfc-preloader-sub {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #17140f99;
+  max-width: 320px;
+  line-height: 1.5;
+}
+#mfc-preloader-track {
+  width: min(260px, 70vw);
+  height: 14px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 3px solid #17140f;
+  box-shadow: 3px 3px 0 #17140f30;
+  overflow: hidden;
+}
+#mfc-preloader-bar {
+  height: 100%;
+  width: 0%;
+  background: #e0212f;
+  border-radius: 999px;
+  transition: width .25s ease;
+}
+#mfc-preloader-pct {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 800;
+  font-size: 12px;
+  color: #17140f99;
+}
+@keyframes mfc-preloader-pop {
+  0% { opacity: 0; transform: scale(0.6) translateY(14px); }
+  60% { opacity: 1; transform: scale(1.06); }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes mfc-preloader-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
