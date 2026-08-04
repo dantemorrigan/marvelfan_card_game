@@ -876,6 +876,11 @@ class Component extends DCLogic {
     const dmgToDefender = attacker.stats.s;
     const dmgToAttacker = defender.stats.s;
     attacker.usedAttack = true;
+    // Помечаем смертельный исход сразу (до отображения цифр урона), чтобы защита
+    // аватара от количества героев на поле обновлялась в момент удара, а не
+    // ждала конца анимации — сама анимация угасания карты (h.dying) не трогается.
+    if (dmgToDefender >= defender.hp) defender.willDie = true;
+    if (dmgToAttacker >= attacker.hp) attacker.willDie = true;
     game.fx = [
       { side: defenderSide, uid: defenderUid, dmg: dmgToDefender, dead: false, key: "fx" + (uidCounter++) },
       { side: attackerSide, uid: attackerUid, dmg: dmgToAttacker, dead: false, key: "fx" + (uidCounter++) }

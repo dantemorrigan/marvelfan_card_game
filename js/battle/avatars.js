@@ -61,11 +61,14 @@ function firePassive(game, hook, args) {
   return msgs;
 }
 // Роль «Защитник» живёт в tags героя: пока ни у одной карты её нет, но движок уже её учитывает.
+// willDie — герой ещё жив и на поле, но входящий урон уже посчитан как смертельный
+// (см. attack() в battle/combat.js): позволяет щиту аватара упасть в момент удара,
+// не дожидаясь конца анимации урона; на анимацию угасания карты (h.dying) не влияет.
 function hasDefender(game, side) {
-  return game[side].field.some((h) => h && h.alive && !h.dying && hasKw(h, "defender"));
+  return game[side].field.some((h) => h && h.alive && !h.dying && !h.willDie && hasKw(h, "defender"));
 }
 function liveHeroCount(game, side) {
-  return game[side].field.filter((h) => h && h.alive && !h.dying).length;
+  return game[side].field.filter((h) => h && h.alive && !h.dying && !h.willDie).length;
 }
 function avatarProtected(game, side) {
   return liveHeroCount(game, side) >= 3 || hasDefender(game, side);
