@@ -1,0 +1,176 @@
+/*
+cards.css
+
+Карточка героя на поле боя (.mfc-field-card): полностью адаптивный
+компонент на CSS Container Queries. Сама карточка — контейнер
+(container-type: inline-size); всё её содержимое — портрет, имя,
+кнопка информации, иконки ключевых слов/способности, статус-метка,
+HP/атака — масштабируется от ширины ЭТОЙ карточки через cqw и clamp(),
+а не от вьюпорта и не через отдельные mobile/desktop версии.
+
+JS по-прежнему задаёт только сам размер карточки (сколько героев
+помещается в ряд на конкретном экране — это геометрия ряда, не
+дизайн карточки) и чисто игровые, зависящие от состояния вещи:
+рамку выделения, свечение, фильтр (усталость/использована атака),
+анимацию, z-index. Всё остальное — здесь.
+
+Верхняя и нижняя полосы карточки — flex-контейнеры, а не набор
+независимо позиционированных элементов с угаданными отступами: имя
+само уступает место кнопке информации и иконкам (flex, а не
+абсолютные вычисленные проценты), а статус-метка и статы стоят друг
+над другом в обычном потоке (flex-column, а не два absolute-блока
+с ручной арифметикой отступов) — поэтому наложение текста друг на
+друга исключено самой вёрсткой, а не подбором чисел.
+*/
+.mfc-field-card {
+  position: relative;
+  container-type: inline-size;
+  container-name: mfc-card;
+  border-radius: clamp(6px, 6cqw, 14px);
+  overflow: hidden; /* только чтобы скруглить портрет и градиент по углам карты */
+  background: #17140f;
+}
+.mfc-field-card .mfc-card-art {
+  position: absolute;
+  inset: 0;
+}
+.mfc-field-card .mfc-card-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #17140fbf 0%, transparent 38%, #17140fe6 100%);
+}
+.mfc-field-card .mfc-card-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: clamp(3px, 5cqw, 10px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: clamp(2px, 3cqw, 6px);
+}
+.mfc-field-card .mfc-card-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 800;
+  font-size: clamp(7px, 11cqw, 20px);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: #fff;
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mfc-field-card .mfc-card-topright {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: clamp(2px, 3cqw, 5px);
+}
+.mfc-field-card .mfc-card-info {
+  width: clamp(14px, 20cqw, 28px);
+  height: clamp(14px, 20cqw, 28px);
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #00000099;
+  border: 1px solid #ffffff66;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 800;
+  font-size: clamp(7px, 9cqw, 13px);
+  color: #fff;
+}
+.mfc-field-card .mfc-card-kw {
+  font-size: clamp(6px, 8cqw, 12px);
+  line-height: 1.2;
+  text-align: right;
+  letter-spacing: 0.04em;
+  text-shadow: 0 1px 3px #000;
+  max-width: 100%;
+}
+.mfc-field-card .mfc-card-ability-badge {
+  width: clamp(12px, 16cqw, 22px);
+  height: clamp(12px, 16cqw, 22px);
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--acc, #e0212f)cc;
+  border: 1px solid #ffffff88;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(6px, 9cqw, 13px);
+  color: #fff;
+  line-height: 1;
+}
+.mfc-field-card .mfc-card-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: clamp(3px, 5cqw, 10px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1px, 2cqw, 4px);
+}
+.mfc-field-card .mfc-card-state {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  font-size: clamp(6px, 8cqw, 11px);
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #ffd27a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mfc-field-card .mfc-card-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: clamp(2px, 3cqw, 6px);
+}
+.mfc-field-card .mfc-card-stat {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 800;
+  line-height: 1;
+  font-size: clamp(8px, 11cqw, 17px);
+  white-space: nowrap;
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mfc-field-card .mfc-card-stat.mfc-hp { color: #ff8a8a; }
+.mfc-field-card .mfc-card-stat.mfc-atk { color: var(--acc, #e0212f); }
+.mfc-field-card .mfc-card-fx-flash {
+  position: absolute;
+  inset: 0;
+  background: #ff2d2d55;
+  animation: hitFlash .5s ease;
+  pointer-events: none;
+}
+.mfc-field-card .mfc-card-fx-text {
+  position: absolute;
+  top: -8px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  pointer-events: none;
+  animation: floatFade .9s ease both;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 800;
+  font-size: clamp(10px, 14cqw, 22px);
+  color: #ff4d4d;
+  text-shadow: 0 0 6px #000, 0 0 2px #000;
+}

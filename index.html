@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="./css/base.css">
 <link rel="stylesheet" href="./css/animations.css">
 <link rel="stylesheet" href="./css/avatars.css">
+<link rel="stylesheet" href="./css/cards.css">
 <link rel="stylesheet" href="./css/preloader.css">
 <script src="./js/core/constants.js" defer></script>
 <script src="./js/core/gameHelpers.js" defer></script>
@@ -321,26 +322,33 @@
                 <div style="font-size: 10px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: #ffffff40; animation: fadeIn .4s ease both;">Поле противника пусто</div>
               </sc-if>
               <sc-for list="{{ bot.field }}" as="h" hint-placeholder-count="3">
-                <div onClick="{{ h.onClick }}" style="position: relative; height: {{ botFieldCardH }}; aspect-ratio: 2 / 3; max-width: {{ botFieldCardW }}; flex: 0 1 auto; border-radius: 12px; overflow: hidden; cursor: {{ h.cursor }}; background: #17140f; border: {{ h.border }}; filter: {{ h.cardFilter }}; transform: {{ h.lift }}; z-index: {{ h.z }}; animation: {{ h.anim }}; transition: transform .28s cubic-bezier(.2,.8,.25,1), filter .3s ease, border-color .2s ease, box-shadow .25s ease; box-shadow: 0 6px 16px -6px #00000088;" style-hover="transform: translateY(-8px) scale(1.05); box-shadow: 0 14px 26px -8px #000000aa;">
-                  <div style="position: absolute; inset: 0; background: {{ h.art }};"></div>
-                  <div style="position: absolute; inset: 0; background: linear-gradient(180deg, #17140fbf 0%, transparent 38%, #17140fe6 100%);"></div>
-                  <div style="position: absolute; top: {{ fieldInset }}; left: {{ fieldInset }}; right: {{ fieldNameRight }}; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ h.nameFont }}; line-height: 1.15; letter-spacing: -0.01em; color: #fff; text-transform: uppercase; overflow-wrap: normal; word-break: keep-all; hyphens: none; display: -webkit-box; -webkit-line-clamp: {{ fieldNameClamp }}; -webkit-box-orient: vertical; overflow: hidden;">{{ h.name }}</div>
-                  <div onClick="{{ h.openInfo }}" style="position: absolute; top: {{ fieldInset }}; right: {{ fieldInset }}; width: {{ fieldInfoSize }}; height: {{ fieldInfoSize }}; border-radius: 50%; background: #00000099; border: 1px solid #ffffff66; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 3;">
-                    <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ fieldStateFont }}; color: #fff;">i</div>
+                <div class="mfc-field-card" onClick="{{ h.onClick }}" style="height: {{ botFieldCardH }}; aspect-ratio: 2 / 3; max-width: {{ botFieldCardW }}; flex: 0 1 auto; cursor: {{ h.cursor }}; border: {{ h.border }}; filter: {{ h.cardFilter }}; transform: {{ h.lift }}; z-index: {{ h.z }}; animation: {{ h.anim }}; transition: transform .28s cubic-bezier(.2,.8,.25,1), filter .3s ease, border-color .2s ease, box-shadow .25s ease; box-shadow: 0 6px 16px -6px #00000088;" style-hover="transform: translateY(-8px) scale(1.05); box-shadow: 0 14px 26px -8px #000000aa;">
+                  <div class="mfc-card-art" style="background: {{ h.art }};"></div>
+                  <div class="mfc-card-scrim"></div>
+                  <div class="mfc-card-top">
+                    <div class="mfc-card-name">{{ h.name }}</div>
+                    <div class="mfc-card-topright">
+                      <div class="mfc-card-info" onClick="{{ h.openInfo }}">i</div>
+                      <sc-if value="{{ h.hasAbility }}" hint-placeholder-val="{{ false }}">
+                        <div class="mfc-card-ability-badge">✦</div>
+                      </sc-if>
+                      <sc-if value="{{ h.hasKws }}" hint-placeholder-val="{{ false }}">
+                        <div class="mfc-card-kw">{{ h.kwIcons }}</div>
+                      </sc-if>
+                    </div>
                   </div>
-                  <sc-if value="{{ h.hasKws }}" hint-placeholder-val="{{ false }}">
-                    <div style="position: absolute; top: {{ fieldKwTop }}; right: {{ fieldInset }}; font-size: {{ fieldKwFont }}; line-height: 1.2; text-align: right; letter-spacing: 0.04em; text-shadow: 0 1px 3px #000;">{{ h.kwIcons }}</div>
-                  </sc-if>
-                  <sc-if value="{{ h.hasState }}" hint-placeholder-val="{{ false }}">
-                    <div style="position: absolute; bottom: {{ fieldStateBottom }}; left: {{ fieldInset }}; right: {{ fieldInset }}; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: {{ fieldStateFont }}; line-height: 1.15; letter-spacing: 0.02em; text-transform: uppercase; color: #ffd27a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ h.stateLabel }}</div>
-                  </sc-if>
                   <sc-if value="{{ h.hasFx }}" hint-placeholder-val="{{ false }}">
-                    <div style="position: absolute; inset: 0; background: #ff2d2d55; animation: hitFlash .5s ease; pointer-events: none;"></div>
-                    <div style="position: absolute; top: -8px; left: 0; right: 0; text-align: center; pointer-events: none; animation: floatFade .9s ease both; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 20px; color: #ff4d4d; text-shadow: 0 0 6px #000, 0 0 2px #000;">{{ h.fxText }}</div>
+                    <div class="mfc-card-fx-flash"></div>
+                    <div class="mfc-card-fx-text">{{ h.fxText }}</div>
                   </sc-if>
-                  <div style="position: absolute; bottom: {{ fieldInset }}; left: {{ fieldInset }}; right: {{ fieldInset }}; display: flex; justify-content: space-between; align-items: center; gap: 3px;">
-                    <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ fieldStatFont }}; line-height: 1; color: #ff8a8a; white-space: nowrap;">❤️{{ h.hp }}</div>
-                    <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ fieldStatFont }}; line-height: 1; color: var(--acc, #e0212f); white-space: nowrap;">{{ h.str }}⚔</div>
+                  <div class="mfc-card-bottom">
+                    <sc-if value="{{ h.hasState }}" hint-placeholder-val="{{ false }}">
+                      <div class="mfc-card-state">{{ h.stateLabel }}</div>
+                    </sc-if>
+                    <div class="mfc-card-stats">
+                      <div class="mfc-card-stat mfc-hp">❤️{{ h.hp }}</div>
+                      <div class="mfc-card-stat mfc-atk">{{ h.str }}⚔</div>
+                    </div>
                   </div>
                 </div>
               </sc-for>
@@ -361,26 +369,33 @@
                 <div style="font-size: 10px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: {{ ink }}40; animation: fadeIn .4s ease both;">Разыграйте героя из руки</div>
               </sc-if>
               <sc-for list="{{ player.field }}" as="h" hint-placeholder-count="3">
-                <div onClick="{{ h.onClick }}" style="position: relative; height: {{ playerFieldCardH }}; aspect-ratio: 2 / 3; max-width: {{ playerFieldCardW }}; flex: 0 1 auto; border-radius: 12px; overflow: hidden; cursor: {{ h.cursor }}; background: #17140f; border: {{ h.border }}; filter: {{ h.cardFilter }}; transform: {{ h.lift }}; z-index: {{ h.z }}; animation: {{ h.anim }}; transition: transform .28s cubic-bezier(.2,.8,.25,1), filter .3s ease, border-color .2s ease, box-shadow .25s ease; box-shadow: 0 6px 16px -6px #00000088;" style-hover="transform: translateY(-8px) scale(1.05); box-shadow: 0 14px 26px -8px #000000aa;">
-                  <div style="position: absolute; inset: 0; background: {{ h.art }};"></div>
-                  <div style="position: absolute; inset: 0; background: linear-gradient(180deg, #17140fbf 0%, transparent 38%, #17140fe6 100%);"></div>
-                  <div style="position: absolute; top: {{ fieldInset }}; left: {{ fieldInset }}; right: {{ fieldNameRight }}; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ h.nameFont }}; line-height: 1.15; letter-spacing: -0.01em; color: #fff; text-transform: uppercase; overflow-wrap: normal; word-break: keep-all; hyphens: none; display: -webkit-box; -webkit-line-clamp: {{ fieldNameClamp }}; -webkit-box-orient: vertical; overflow: hidden;">{{ h.name }}</div>
-                  <div onClick="{{ h.openInfo }}" style="position: absolute; top: {{ fieldInset }}; right: {{ fieldInset }}; width: {{ fieldInfoSize }}; height: {{ fieldInfoSize }}; border-radius: 50%; background: #00000099; border: 1px solid #ffffff66; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 3;">
-                    <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ fieldStateFont }}; color: #fff;">i</div>
+                <div class="mfc-field-card" onClick="{{ h.onClick }}" style="height: {{ playerFieldCardH }}; aspect-ratio: 2 / 3; max-width: {{ playerFieldCardW }}; flex: 0 1 auto; cursor: {{ h.cursor }}; border: {{ h.border }}; filter: {{ h.cardFilter }}; transform: {{ h.lift }}; z-index: {{ h.z }}; animation: {{ h.anim }}; transition: transform .28s cubic-bezier(.2,.8,.25,1), filter .3s ease, border-color .2s ease, box-shadow .25s ease; box-shadow: 0 6px 16px -6px #00000088;" style-hover="transform: translateY(-8px) scale(1.05); box-shadow: 0 14px 26px -8px #000000aa;">
+                  <div class="mfc-card-art" style="background: {{ h.art }};"></div>
+                  <div class="mfc-card-scrim"></div>
+                  <div class="mfc-card-top">
+                    <div class="mfc-card-name">{{ h.name }}</div>
+                    <div class="mfc-card-topright">
+                      <div class="mfc-card-info" onClick="{{ h.openInfo }}">i</div>
+                      <sc-if value="{{ h.hasAbility }}" hint-placeholder-val="{{ false }}">
+                        <div class="mfc-card-ability-badge">✦</div>
+                      </sc-if>
+                      <sc-if value="{{ h.hasKws }}" hint-placeholder-val="{{ false }}">
+                        <div class="mfc-card-kw">{{ h.kwIcons }}</div>
+                      </sc-if>
+                    </div>
                   </div>
-                  <sc-if value="{{ h.hasKws }}" hint-placeholder-val="{{ false }}">
-                    <div style="position: absolute; top: {{ fieldKwTop }}; right: {{ fieldInset }}; font-size: {{ fieldKwFont }}; line-height: 1.2; text-align: right; letter-spacing: 0.04em; text-shadow: 0 1px 3px #000;">{{ h.kwIcons }}</div>
-                  </sc-if>
-                  <sc-if value="{{ h.hasState }}" hint-placeholder-val="{{ false }}">
-                    <div style="position: absolute; bottom: {{ fieldStateBottom }}; left: {{ fieldInset }}; right: {{ fieldInset }}; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: {{ fieldStateFont }}; line-height: 1.15; letter-spacing: 0.02em; text-transform: uppercase; color: #ffd27a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ h.stateLabel }}</div>
-                  </sc-if>
                   <sc-if value="{{ h.hasFx }}" hint-placeholder-val="{{ false }}">
-                    <div style="position: absolute; inset: 0; background: #ff2d2d55; animation: hitFlash .5s ease; pointer-events: none;"></div>
-                    <div style="position: absolute; top: -8px; left: 0; right: 0; text-align: center; pointer-events: none; animation: floatFade .9s ease both; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 20px; color: #ff4d4d; text-shadow: 0 0 6px #000, 0 0 2px #000;">{{ h.fxText }}</div>
+                    <div class="mfc-card-fx-flash"></div>
+                    <div class="mfc-card-fx-text">{{ h.fxText }}</div>
                   </sc-if>
-                  <div style="position: absolute; bottom: {{ fieldInset }}; left: {{ fieldInset }}; right: {{ fieldInset }}; display: flex; justify-content: space-between; align-items: center; gap: 3px;">
-                    <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ fieldStatFont }}; line-height: 1; color: #ff8a8a; white-space: nowrap;">❤️{{ h.hp }}</div>
-                    <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ fieldStatFont }}; line-height: 1; color: var(--acc, #e0212f); white-space: nowrap;">{{ h.str }}⚔</div>
+                  <div class="mfc-card-bottom">
+                    <sc-if value="{{ h.hasState }}" hint-placeholder-val="{{ false }}">
+                      <div class="mfc-card-state">{{ h.stateLabel }}</div>
+                    </sc-if>
+                    <div class="mfc-card-stats">
+                      <div class="mfc-card-stat mfc-hp">❤️{{ h.hp }}</div>
+                      <div class="mfc-card-stat mfc-atk">{{ h.str }}⚔</div>
+                    </div>
                   </div>
                 </div>
               </sc-for>
@@ -1309,32 +1324,12 @@ class Component extends DCLogic {
     const botFieldCardH = mobilePortrait ? (botRowSz.h + "px") : "100%";
     const playerFieldCardW = playerRowSz.w + "px";
     const playerFieldCardH = mobilePortrait ? (playerRowSz.h + "px") : "100%";
-    // Шрифты и инсеты считаются от фактически меньшей карты, чтобы текст не съедался.
+    // Карточка на поле (.mfc-field-card, css/cards.css) — контейнер CSS Container
+    // Queries: имя, шрифты, отступы, кнопка информации, иконки способности/ключевых
+    // слов и статы масштабируются от ширины САМОЙ карточки через cqw/clamp(). JS ниже
+    // определяет только геометрию РЯДА — сколько карт помещается и какого они размера —
+    // это вопрос раскладки поля, а не дизайна самой карточки.
     const fH = mobilePortrait ? Math.min(botRowSz.h, playerRowSz.h) : fieldH;
-    const fW = Math.round(fH * 2 / 3);
-    const tinyCards = fW < 74;
-    const fieldNameFont = Math.max(8, Math.round(fH * 0.066)) + "px";
-    const fieldNameRight = Math.round(fW * 0.22) + "px";
-    const fieldStatFontPx = Math.max(8.5, Math.round(fH * 0.072));
-    const fieldInsetPx = Math.max(3, Math.round(fW * 0.07));
-    const fieldInfoPx = Math.max(12, Math.round(fW * 0.16));
-    const fieldStatFont = fieldStatFontPx + "px";
-    const fieldStateFontPx = Math.max(7, Math.round(fH * 0.055));
-    const fieldStateFont = fieldStateFontPx + "px";
-    const fieldInfoSize = fieldInfoPx + "px";
-    const fieldInset = fieldInsetPx + "px";
-    // Метка состояния (⏳ Усталость / Атаковал) не должна вылезать за карту: если
-    // полный текст в текущем шрифте шире доступного места — используем короткую форму.
-    const fieldStateAvailW = fW - 2 * fieldInsetPx;
-    const stateLabelFits = (text) => fieldStateFontPx * 0.78 * text.length <= fieldStateAvailW;
-    const fieldNameClamp = tinyCards ? 2 : 3;
-    // Метка состояния ставится строго над строкой HP/атаки, а не по проценту высоты.
-    // Явный line-height на обеих строках убирает неопределённость реальной высоты
-    // текста в шрифте Unbounded — зазор здесь чуть больше видимой высоты цифр HP/ATK,
-    // чтобы метка состояния никогда не наезжала на них.
-    const fieldStateBottom = Math.round(fieldInsetPx + fieldStatFontPx * 1.35 + 6) + "px";
-    const fieldKwTop = (fieldInsetPx + fieldInfoPx + 3) + "px";
-    const fieldKwFont = Math.max(8, Math.round(fH * 0.062)) + "px";
     const avatarSize = avSize + "px";
     const avatarGlyphSize = Math.round(avSize * 0.42) + "px";
     const avatarNameFont = (mobilePortrait ? 10.5 : (avSize < 50 ? 10 : 12)) + "px";
@@ -1575,9 +1570,9 @@ class Component extends DCLogic {
           else if (h.usedAttack) onClick = () => this.showToast("Эта карта уже атаковала.");
         }
         const isSel = g.selectedUid === h.uid;
-        const stateLabel = h.sick
-          ? (stateLabelFits("⏳ Усталость") ? "⏳ Усталость" : "⏳")
-          : (h.usedAttack ? (stateLabelFits("Атаковал") ? "Атаковал" : "✓") : "");
+        // Полный текст всегда: .mfc-card-state сам подбирает читаемый размер (clamp())
+        // и аккуратно обрезает многоточием в клетке, если совсем не влезает.
+        const stateLabel = h.sick ? "⏳ Усталость" : (h.usedAttack ? "Атаковал" : "");
         const fx = Array.isArray(g.fx) ? g.fx.find((f) => f.side === side && f.uid === h.uid) : null;
         const isAttacking = !!g.atkFx && g.atkFx.side === side && g.atkFx.uid === h.uid;
         const animParts = [];
@@ -1592,14 +1587,8 @@ class Component extends DCLogic {
           else if (h.debuffed) animParts.push("debuffGlow 1.8s ease infinite");
           else if (side === "player" && readyToAttack) animParts.push("readyGlow 2s ease infinite");
         }
-        // Непрерывное масштабирование вместо ступенек по диапазонам длины: считаем,
-        // сколько строк даёт line-clamp и сколько символов реально влезает в ширину
-        // карты при данном кегле — и берём наибольший читаемый кегль, что укладывается.
-        const nameAvailW = fW - fieldInsetPx - Math.round(fW * 0.22);
-        const nameFitFont = Math.floor((fieldNameClamp * nameAvailW) / (0.66 * Math.max(1, h.name.length)));
-        const nameFontPx = Math.max(7, Math.min(Math.round(fH * 0.078), nameFitFont));
         return {
-          filled: true, name: h.name, hp: h.hp, str: h.stats.s, nameFont: nameFontPx + "px",
+          filled: true, name: h.name, hp: h.hp, str: h.stats.s,
           art: h.art, onClick: onClick,
           lift: isSel ? "translateY(-12px) scale(1.06)" : arcTransform,
           z: isSel ? 6 : 1,
@@ -1609,6 +1598,7 @@ class Component extends DCLogic {
             : (targetableForPlayer ? "none" : "grayscale(0.4) brightness(0.75)"),
           hasState: !!stateLabel, stateLabel: stateLabel,
           kwIcons: kwIconsOf(h.keywords), hasKws: !!(h.keywords && h.keywords.length),
+          hasAbility: !!h.ability,
           hasFx: !!fx, fxText: fx ? (fx.dead ? "☠" : "-" + fx.dmg) : "",
           anim: animParts.length ? animParts.join(", ") : "none",
           openInfo: openFieldCard(h),
@@ -1847,9 +1837,6 @@ class Component extends DCLogic {
       botAvatar: avatarVM("bot"),
       avatarChoices: avatarChoices,
       avatarSize: avatarSize, avatarGlyphSize: avatarGlyphSize, avatarNameFont: avatarNameFont, avatarHpFont: avatarHpFont, avatarBarW: avatarBarW,
-      fieldNameFont: fieldNameFont, fieldNameRight: fieldNameRight, fieldStatFont: fieldStatFont, fieldStateFont: fieldStateFont, fieldInfoSize: fieldInfoSize,
-      fieldInset: fieldInset, fieldNameClamp: fieldNameClamp, fieldStateBottom: fieldStateBottom,
-      fieldKwTop: fieldKwTop, fieldKwFont: fieldKwFont,
       handKwBottom: (Math.max(5, Math.round(handH * 0.04)) + Math.round(handH * 0.11)) + "px",
       handKwFont: Math.max(9, Math.round(handH * 0.066)) + "px",
       peekCard: st.peekCard || null,
