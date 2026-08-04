@@ -2,7 +2,10 @@
 <html>
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <script src="./support.js"></script>
 </head>
 <body>
@@ -1150,7 +1153,26 @@ function computeViewport() {
   const short = Math.min(w, h);
   const isMobileDevice = short <= 520;
   const isPortrait = h > w;
-  return { isPortraitMobile: isMobileDevice && isPortrait, isCompact: h <= 700, vh: h };
+  return { isPortraitMobile: isMobileDevice && isPortrait, isCompact: h <= 700, vh: h, isMobileDevice: isMobileDevice };
+}
+
+function requestFullscreenSafe() {
+  try {
+    const el = document.documentElement;
+    const req = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+    if (req && !document.fullscreenElement && !document.webkitFullscreenElement) {
+      req.call(el).catch ? req.call(el).catch(() => {}) : req.call(el);
+    }
+  } catch (e) {}
+}
+function exitFullscreenSafe() {
+  try {
+    const isFs = document.fullscreenElement || document.webkitFullscreenElement;
+    const exit = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
+    if (isFs && exit) {
+      exit.call(document).catch ? exit.call(document).catch(() => {}) : exit.call(document);
+    }
+  } catch (e) {}
 }
 
 function readStoredName() {
@@ -2065,9 +2087,9 @@ class Component extends DCLogic {
       navCollectionColor: isCollection ? "#fff" : ink,
       navPlayBg: isPlay ? acc : paper,
       navPlayColor: isPlay ? "#fff" : ink,
-      goCollection: () => { this.blip(280, 0.08, "sine", 0.03); this.setState({ screen: "collection" }); },
-      goPlay: () => { this.blip(280, 0.08, "sine", 0.03); this.setState({ screen: "play" }); },
-      backToCollection: () => { this.setState({ screen: "collection", game: null }); },
+      goCollection: () => { this.blip(280, 0.08, "sine", 0.03); exitFullscreenSafe(); this.setState({ screen: "collection" }); },
+      goPlay: () => { this.blip(280, 0.08, "sine", 0.03); if (st.isMobileDevice) requestFullscreenSafe(); this.setState({ screen: "play" }); },
+      backToCollection: () => { exitFullscreenSafe(); this.setState({ screen: "collection", game: null }); },
       toggleTheme: () => { this.blip(300, 0.1, "sine", 0.04); this.buzz(10); this.setState((s) => ({ dark: !s.dark })); },
       pickAvatar: () => {
         this.blip(360, 0.1, "sine", 0.04); this.buzz(10);
