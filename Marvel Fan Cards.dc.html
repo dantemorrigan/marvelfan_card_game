@@ -245,14 +245,16 @@ a:hover { color: #9c1620; }
       </sc-if>
 
       <sc-if value="{{ isSetup }}" hint-placeholder-val="{{ true }}">
-        <div style="position: fixed; inset: 0; z-index: 15; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 30px; padding: 40px max(24px, env(safe-area-inset-right)) 40px max(24px, env(safe-area-inset-left)); background: {{ bg }}; background-image: radial-gradient({{ dotColor }} 1.6px, transparent 1.6px); background-size: 16px 16px; animation: fadeUp .5s ease both; overflow-y: auto; -webkit-overflow-scrolling: touch;">
-          <button type="button" onClick="{{ goCollection }}" style="position: absolute; top: max(16px, env(safe-area-inset-top)); left: max(16px, env(safe-area-inset-left)); border: 2px solid {{ ink }}40; background: transparent; color: {{ ink }}80; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 11px; text-transform: uppercase; padding: 9px 14px; border-radius: 999px;" style-hover="color: {{ ink }}; border-color: {{ ink }}80;">Выйти</button>
-          <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(30px, 5.4vw, 56px); line-height: 1; text-transform: uppercase; color: {{ ink }};">Выберите аватара</div>
-          <div style="font-size: clamp(13px, 1.7vw, 17px); font-weight: 500; color: {{ ink }}99; max-width: 660px; line-height: 1.55;">Цель матча — уничтожить аватара противника. Пока на его поле три героя или больше, аватар защищён — сначала придётся разобраться с героями. Аватар бота выбирается случайно.</div>
-          <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;">
+        <div style="position: fixed; inset: 0; z-index: 15; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: {{ setupGap }}; padding: {{ setupPad }}; background: {{ bg }}; background-image: radial-gradient({{ dotColor }} 1.6px, transparent 1.6px); background-size: 16px 16px; animation: fadeUp .5s ease both; overflow-y: auto; -webkit-overflow-scrolling: touch;">
+          <button type="button" onClick="{{ goCollection }}" style="position: absolute; top: max(12px, env(safe-area-inset-top)); left: max(12px, env(safe-area-inset-left)); border: 2px solid {{ ink }}40; background: transparent; color: {{ ink }}80; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 11px; text-transform: uppercase; padding: 9px 14px; border-radius: 999px; z-index: 2;" style-hover="color: {{ ink }}; border-color: {{ ink }}80;">Выйти</button>
+          <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ setupTitleFont }}; line-height: 1.05; text-transform: uppercase; color: {{ ink }}; margin-top: 30px;">Выберите аватара</div>
+          <sc-if value="{{ setupShowDesc }}" hint-placeholder-val="{{ true }}">
+            <div style="font-size: clamp(11px, 1.7vw, 17px); font-weight: 500; color: {{ ink }}99; max-width: 660px; line-height: 1.5;">Цель матча — уничтожить аватара противника. Пока на его поле три героя или больше, аватар защищён — сначала придётся разобраться с героями. Аватар бота выбирается случайно.</div>
+          </sc-if>
+          <div style="display: flex; gap: {{ setupCardGap }}; flex-wrap: wrap; justify-content: center;">
             <sc-for list="{{ avatarChoices }}" as="a" hint-placeholder-count="3">
-              <div onClick="{{ a.onClick }}" style="width: 226px; display: flex; flex-direction: column; align-items: center; gap: 9px; padding: 18px 16px 20px; border-radius: 20px; background: {{ paper }}; border: {{ a.border }}; box-shadow: {{ a.shadow }}; transform: {{ a.lift }}; cursor: pointer; transition: transform .25s cubic-bezier(.2,.8,.25,1), box-shadow .25s ease, border-color .2s ease; text-align: center;" style-hover="transform: translateY(-6px);">
-                <div style="width: 92px; height: 92px; border-radius: 50%; background: {{ a.image }}; border: 3px solid {{ ink }}; display: flex; align-items: center; justify-content: center; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 38px; color: #ffffffd9;">{{ a.glyph }}</div>
+              <div onClick="{{ a.onClick }}" style="width: {{ setupCardW }}; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: {{ setupCardPad }}; border-radius: 20px; background: {{ paper }}; border: {{ a.border }}; box-shadow: {{ a.shadow }}; transform: {{ a.lift }}; cursor: pointer; transition: transform .25s cubic-bezier(.2,.8,.25,1), box-shadow .25s ease, border-color .2s ease; text-align: center;" style-hover="transform: translateY(-6px);">
+                <div style="width: {{ setupAvatarSize }}; height: {{ setupAvatarSize }}; border-radius: 50%; background: {{ a.image }}; border: 3px solid {{ ink }}; display: flex; align-items: center; justify-content: center; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: {{ setupAvatarFont }}; color: #ffffffd9;">{{ a.glyph }}</div>
                 <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 17px; text-transform: uppercase; color: {{ ink }}; line-height: 1.1;">{{ a.name }}</div>
                 <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 14px; color: #c21f2b; white-space: nowrap;">❤️ {{ a.hp }} HP</div>
                 <div style="font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: {{ ink }}80; line-height: 1.4;">{{ a.statsText }}</div>
@@ -444,11 +446,11 @@ a:hover { color: #9c1620; }
                 <div style="font-size: 10px; font-weight: 800; color: var(--acc, #e0212f); margin-left: 4px; white-space: nowrap;">{{ player.mana }}/{{ player.manaCap }}⚡</div>
               </div>
             </div>
-            <button type="button" onClick="{{ endTurn }}" style="border: 3px solid {{ ink }}; background: {{ endTurnBg }}; color: {{ endTurnColor }}; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: {{ endTurnFont }}; text-transform: uppercase; padding: {{ endTurnPad }}; min-height: {{ endTurnMinH }}; border-radius: 999px; white-space: nowrap; flex: 0 0 auto; animation: {{ endTurnAnim }};" style-hover="filter: brightness(0.96);" style-active="transform: translate(1px,1px) scale(0.97);">Закончить ход</button>
+            <button type="button" onClick="{{ endTurn }}" style="{{ endTurnPosition }} border: 3px solid {{ ink }}; background: {{ endTurnBg }}; color: {{ endTurnColor }}; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: {{ endTurnFont }}; text-transform: uppercase; padding: {{ endTurnPad }}; min-height: {{ endTurnMinH }}; border-radius: 999px; white-space: nowrap; flex: 0 0 auto; animation: {{ endTurnAnim }}; box-shadow: 3px 3px 0 {{ ink }}40;" style-hover="filter: brightness(0.96);" style-active="transform: translate(1px,1px) scale(0.97);">Закончить ход</button>
           </div>
 
           <div style="display: flex; justify-content: center; padding: {{ handPad }}; flex: 0 0 auto; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch;">
-            <div style="display: flex; align-items: flex-end; margin: 0 auto; padding: 0 4px;">
+            <div style="display: flex; align-items: flex-end; margin: 0 auto; padding: {{ handEndPad }};">
               <sc-for list="{{ player.hand }}" as="c" hint-placeholder-count="5">
                 <div onClick="{{ c.onClick }}" onPointerEnter="{{ c.onEnter }}" onPointerLeave="{{ c.onLeave }}" style="position: relative; flex: 0 0 auto; width: {{ handCardW }}; aspect-ratio: 2 / 3; margin-left: {{ c.overlap }}; border-radius: 12px; overflow: hidden; cursor: {{ c.cursor }}; touch-action: manipulation; background: #17140f; border: 3px solid {{ c.border }}; box-shadow: {{ c.shadow }}; opacity: {{ c.dim }}; transform: {{ c.transform }}; transition: transform .25s cubic-bezier(.2,.8,.25,1), box-shadow .25s ease; z-index: {{ c.z }};" style-active="transform: scale(0.97);">
                   <div style="position: absolute; inset: 0; background: {{ c.art }};"></div>
@@ -1625,6 +1627,17 @@ class Component extends DCLogic {
     const isSetup = isPlay && !g && !showRotatePrompt;
     const isBattle = isPlay && !!g && !showRotatePrompt;
 
+    const isMobile = !!st.isMobileDevice;
+    const setupPad = isMobile ? (compact ? "18px max(14px, env(safe-area-inset-right)) 18px max(14px, env(safe-area-inset-left))" : "26px max(20px, env(safe-area-inset-right)) 26px max(20px, env(safe-area-inset-left))") : "40px max(24px, env(safe-area-inset-right)) 40px max(24px, env(safe-area-inset-left))";
+    const setupGap = isMobile ? (compact ? "14px" : "20px") : "30px";
+    const setupTitleFont = isMobile ? "clamp(20px, 4.6vw, 32px)" : "clamp(30px, 5.4vw, 56px)";
+    const setupShowDesc = !isMobile || !compact;
+    const setupCardW = isMobile ? "clamp(132px, 27vw, 208px)" : "226px";
+    const setupAvatarSize = isMobile ? "clamp(52px, 10vw, 84px)" : "92px";
+    const setupAvatarFont = isMobile ? "clamp(20px, 4vw, 34px)" : "38px";
+    const setupCardPad = isMobile ? "14px 10px 14px" : "18px 16px 20px";
+    const setupCardGap = isMobile ? "10px" : "16px";
+
     const turnFontSize = compact ? "11px" : "13px";
     const turnPad = compact ? "6px 14px" : "8px 20px";
     // --- Вертикальный бюджет боевого экрана -----------------------------------
@@ -1687,9 +1700,15 @@ class Component extends DCLogic {
     const handNameTop = Math.round(handH * 0.2) + "px";
     const handBadgeInset = Math.max(5, Math.round(handH * 0.04)) + "px";
     const handPad = (compact ? "5px" : "10px") + " 4px 2px";
-    const endTurnPad = compact ? "7px 12px" : "10px 16px";
+    const endTurnPad = isMobile ? "0" : (compact ? "7px 12px" : "10px 16px");
     const endTurnFont = compact ? "9px" : "10.5px";
     const endTurnMinH = compact ? "32px" : "42px";
+    const endTurnSizePx = Math.round(Math.max(52, Math.min(74, vh * 0.11)));
+    const endTurnSize = endTurnSizePx + "px";
+    const endTurnPosition = isMobile
+      ? "position: fixed; right: max(8px, env(safe-area-inset-right)); top: 50%; margin-top: -" + Math.round(endTurnSizePx / 2) + "px; z-index: 25; width: " + endTurnSize + "; height: " + endTurnSize + "; padding: 0; white-space: normal; line-height: 1.15;"
+      : "position: static;";
+    const handEndPad = isMobile ? "0 " + (parseInt(endTurnSize, 10) + 20) + "px 0 4px" : "0 4px";
 
     const selectAttacker = (uid) => {
       const cur = this.state.game;
@@ -2037,6 +2056,9 @@ class Component extends DCLogic {
       endTurnColor: g && g.turn === "player" && !g.pendingBonus ? "#fff" : ink,
       endTurnAnim: g && g.turn === "player" && !g.pendingBonus ? "ringPulseSoft 1.8s ease infinite" : "none",
       showRotatePrompt: showRotatePrompt,
+      setupPad: setupPad, setupGap: setupGap, setupTitleFont: setupTitleFont,
+      setupShowDesc: setupShowDesc, setupCardW: setupCardW, setupAvatarSize: setupAvatarSize,
+      setupAvatarFont: setupAvatarFont, setupCardPad: setupCardPad, setupCardGap: setupCardGap,
       turnFontSize: turnFontSize, turnPad: turnPad,
       deckPileW: deckPileW, deckPileH: deckPileH,
       manaPipSize: manaPipSize,
@@ -2045,6 +2067,7 @@ class Component extends DCLogic {
       handCardW: handCardW, handPad: handPad,
       handNameFont: handNameFont, handTypeFont: handTypeFont, handCostSize: handCostSize, handCostFont: handCostFont, handStatFont: handStatFont, handNameTop: handNameTop, handBadgeInset: handBadgeInset,
       endTurnPad: endTurnPad, endTurnFont: endTurnFont, endTurnMinH: endTurnMinH,
+      endTurnPosition: endTurnPosition, handEndPad: handEndPad,
       player: g ? { field: fieldVM("player"), fieldEmpty: liveHeroCount(g, "player") === 0, hand: handVM(), handCount: g.player.hand.length, deckCount: g.player.deck.length, discardCount: g.player.discard.length, mana: g.player.mana, manaCap: g.player.manaCap, manaPips: manaPips(g.player) } : { field: [], fieldEmpty: true, hand: [], handCount: 0, deckCount: 0, discardCount: 0, mana: 0, manaCap: 0, manaPips: [] },
       bot: g ? { field: fieldVM("bot"), fieldEmpty: liveHeroCount(g, "bot") === 0, deckCount: g.bot.deck.length, discardCount: g.bot.discard.length, mana: g.bot.mana, manaCap: g.bot.manaCap, manaPips: manaPips(g.bot) } : { field: [], fieldEmpty: true, deckCount: 0, discardCount: 0, mana: 0, manaCap: 0, manaPips: [] },
       playerAvatar: avatarVM("player"),
