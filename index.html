@@ -257,7 +257,7 @@
         <div style="position: fixed; inset: 0; z-index: 20; display: flex; flex-direction: column; overflow: hidden; background: {{ bg }}; background-image: radial-gradient({{ dotColor }} 1.6px, transparent 1.6px); background-size: 16px 16px; padding: max(6px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(6px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left)); animation: fadeIn .35s ease both;">
 
           <sc-if value="{{ sandboxActive }}" hint-placeholder-val="{{ false }}">
-            <div style="position: fixed; top: max(8px, env(safe-area-inset-top)); right: max(8px, env(safe-area-inset-right)); z-index: 90; width: min(320px, 92vw); max-height: 90vh; display: flex; flex-direction: column; background: #1b1730; border: 3px solid #6c2bd9; border-radius: 14px; box-shadow: 0 10px 30px #00000066; overflow: hidden; font-family: 'Inter', sans-serif;">
+            <div style="position: fixed; top: max(8px, env(safe-area-inset-top)); right: max(8px, env(safe-area-inset-right)); z-index: 22; width: min(320px, 92vw); max-height: 90vh; display: flex; flex-direction: column; background: #1b1730; border: 3px solid #6c2bd9; border-radius: 14px; box-shadow: 0 10px 30px #00000066; overflow: hidden; font-family: 'Inter', sans-serif;">
               <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 12px; background: #6c2bd9; cursor: pointer;" onClick="{{ sb.toggleOpen }}">
                 <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 12px; text-transform: uppercase; color: #fff;">🛠 Sandbox</div>
                 <div onClick="{{ stop }}" style="display: flex; gap: 6px; align-items: center;">
@@ -332,29 +332,31 @@
                 </div>
 
                 <div>
-                  <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #b9a8f2; margin-bottom: 6px;">Спавн героя ({{ sb.side }})</div>
-                  <input type="text" placeholder="Поиск героя..." value="{{ sb.heroQuery }}" onChange="{{ sb.onHeroQuery }}" style="width: 100%; box-sizing: border-box; border-radius: 6px; border: 1px solid #6c2bd9; background: #241d40; color: #fff; padding: 6px 8px; font-size: 11px; margin-bottom: 6px;" />
-                  <div style="max-height: 160px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px;">
-                    <sc-for list="{{ sb.heroResults }}" as="h" hint-placeholder-count="6">
+                  <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #b9a8f2; margin-bottom: 6px;">Найти карту ({{ sb.side }})</div>
+                  <input type="text" placeholder="Spider-Man…" value="{{ sb.cardQuery }}" onChange="{{ sb.onCardQuery }}" style="width: 100%; box-sizing: border-box; border-radius: 6px; border: 1px solid #6c2bd9; background: #241d40; color: #fff; padding: 6px 8px; font-size: 11px; margin-bottom: 6px;" />
+                  <div style="max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px;">
+                    <sc-for list="{{ sb.cardResults }}" as="c" hint-placeholder-count="6">
                       <div style="display: flex; align-items: center; gap: 6px; background: #241d40; border-radius: 6px; padding: 5px 7px;">
-                        <span style="flex: 1; font-size: 10.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ h.name }}</span>
-                        <button type="button" onClick="{{ h.spawnField }}" title="На поле" style="border: none; background: #6c2bd9; color: #fff; font-size: 9px; font-weight: 700; padding: 4px 6px; border-radius: 5px; cursor: pointer; white-space: nowrap;">Поле</button>
-                        <button type="button" onClick="{{ h.spawnHand }}" title="В руку" style="border: none; background: #4a3a80; color: #fff; font-size: 9px; font-weight: 700; padding: 4px 6px; border-radius: 5px; cursor: pointer; white-space: nowrap;">Рука</button>
+                        <span style="flex: 1; font-size: 10.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ c.name }}<sc-if value="{{ c.isBonus }}" hint-placeholder-val="{{ false }}"> <span style="color: #7fe9df;">(бонус)</span></sc-if></span>
+                        <sc-if value="{{ c.canField }}" hint-placeholder-val="{{ true }}">
+                          <button type="button" onClick="{{ c.spawnField }}" title="На поле" style="border: none; background: #6c2bd9; color: #fff; font-size: 9px; font-weight: 700; padding: 4px 6px; border-radius: 5px; cursor: pointer; white-space: nowrap;">Поле</button>
+                        </sc-if>
+                        <button type="button" onClick="{{ c.spawnHand }}" title="В руку" style="border: none; background: #4a3a80; color: #fff; font-size: 9px; font-weight: 700; padding: 4px 6px; border-radius: 5px; cursor: pointer; white-space: nowrap;">Рука</button>
                       </div>
                     </sc-for>
                   </div>
                 </div>
 
                 <div>
-                  <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #b9a8f2; margin-bottom: 6px;">Бонус-карты ({{ sb.side }})</div>
-                  <input type="text" placeholder="Поиск бонуса..." value="{{ sb.bonusQuery }}" onChange="{{ sb.onBonusQuery }}" style="width: 100%; box-sizing: border-box; border-radius: 6px; border: 1px solid #6c2bd9; background: #241d40; color: #fff; padding: 6px 8px; font-size: 11px; margin-bottom: 6px;" />
-                  <div style="max-height: 120px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px;">
-                    <sc-for list="{{ sb.bonusResults }}" as="b" hint-placeholder-count="4">
-                      <div style="display: flex; align-items: center; gap: 6px; background: #241d40; border-radius: 6px; padding: 5px 7px;">
-                        <span style="flex: 1; font-size: 10.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ b.name }}</span>
-                        <button type="button" onClick="{{ b.spawnHand }}" title="В руку" style="border: none; background: #4a3a80; color: #fff; font-size: 9px; font-weight: 700; padding: 4px 6px; border-radius: 5px; cursor: pointer; white-space: nowrap;">Рука</button>
-                      </div>
-                    </sc-for>
+                  <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #b9a8f2; margin-bottom: 6px;">AI бота</div>
+                  <button type="button" onClick="{{ sb.toggleAi }}" style="width: 100%; border: none; background: {{ sb.aiBtnBg }}; color: #fff; font-size: 11px; font-weight: 800; text-transform: uppercase; padding: 8px; border-radius: 6px; cursor: pointer;">AI: {{ sb.aiLabel }}</button>
+                </div>
+
+                <div>
+                  <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #b9a8f2; margin-bottom: 6px;">Копировать поле</div>
+                  <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <button type="button" onClick="{{ sb.copyBotToPlayer }}" style="border: 1px solid #6c2bd9; background: transparent; color: #fff; font-size: 10px; font-weight: 700; padding: 6px; border-radius: 6px; cursor: pointer;">Поле бота → игроку</button>
+                    <button type="button" onClick="{{ sb.copyPlayerToBot }}" style="border: 1px solid #6c2bd9; background: transparent; color: #fff; font-size: 10px; font-weight: 700; padding: 6px; border-radius: 6px; cursor: pointer;">Поле игрока → боту</button>
                   </div>
                 </div>
 
@@ -863,7 +865,7 @@ class Component extends DCLogic {
     editingName: false, nameDraft: "", customName: readStoredName(),
     showNameOnboarding: !readNameOnboardingSeen(),
     // --- Developer Sandbox (изолированное состояние, не влияет на обычный режим) ---
-    sbOpen: true, sbSide: "player", sbHeroQuery: "", sbBonusQuery: "",
+    sbOpen: true, sbSide: "player", sbCardQuery: "", sbAiOn: true,
     sbEditTarget: "", sbHpDraft: "", sbEnergyPlayerDraft: "10", sbEnergyBotDraft: "10",
     ...computeViewport()
   };
@@ -1116,6 +1118,19 @@ class Component extends DCLogic {
       g.winner = winner;
       logEvent(g, "[Sandbox] Результат матча установлен вручную: " + winner + ".");
     });
+  }
+  sbCopyBoard(fromSide, toSide) {
+    this.sbUpdateGame((g) => {
+      const from = g[fromSide], to = g[toSide];
+      to.field = from.field.map((h) => {
+        if (!h) return null;
+        const clone = JSON.parse(JSON.stringify(h));
+        clone.uid = "c" + (uidCounter++);
+        return clone;
+      });
+      logEvent(g, "[Sandbox] Поле " + (fromSide === "player" ? "игрока" : "бота") + " скопировано " + (toSide === "player" ? "игроку" : "боту") + ".");
+    });
+    this.setState({ sbEditTarget: "" });
   }
   // Колода никогда не пустеет насовсем: пуста колода — сброс перемешивается в новую колоду.
   draw(game, side) {
@@ -2052,17 +2067,16 @@ class Component extends DCLogic {
     const sandboxActive = !!(g && g.sandbox);
     let sbVM = null;
     if (sandboxActive) {
-      const heroQ = norm(st.sbHeroQuery).trim();
-      const bonusQ = norm(st.sbBonusQuery).trim();
-      const heroResults = DATA.filter((d) => !d.collectionOnly && (!heroQ || norm(d.name).indexOf(heroQ) >= 0)).slice(0, 24).map((d) => ({
-        name: d.name,
+      const cardQ = norm(st.sbCardQuery).trim();
+      const cardResults = DATA.filter((d) => !d.collectionOnly && (!cardQ || norm(d.name).indexOf(cardQ) >= 0)).slice(0, 18).map((d) => ({
+        name: d.name, isBonus: false, canField: true,
         spawnField: () => this.sbSpawnHero(d, st.sbSide, "field"),
         spawnHand: () => this.sbSpawnHero(d, st.sbSide, "hand")
-      }));
-      const bonusResults = BONUS.filter((d) => !bonusQ || norm(d.name).indexOf(bonusQ) >= 0).map((d) => ({
-        name: d.name,
+      })).concat(BONUS.filter((d) => !cardQ || norm(d.name).indexOf(cardQ) >= 0).map((d) => ({
+        name: d.name, isBonus: true, canField: false,
+        spawnField: () => {},
         spawnHand: () => this.sbSpawnBonus(d, st.sbSide)
-      }));
+      })));
       const avatarOptions = AVATARS.map((a) => ({ id: a.id, name: a.name }));
       const fieldTargets = [];
       ["player", "bot"].forEach((side) => {
@@ -2083,12 +2097,15 @@ class Component extends DCLogic {
         sideBotBg: st.sbSide === "bot" ? "#6c2bd9" : "transparent",
         setSidePlayer: () => this.setState({ sbSide: "player" }),
         setSideBot: () => this.setState({ sbSide: "bot" }),
-        heroQuery: st.sbHeroQuery,
-        onHeroQuery: (e) => this.setState({ sbHeroQuery: e.target.value }),
-        heroResults: heroResults,
-        bonusQuery: st.sbBonusQuery,
-        onBonusQuery: (e) => this.setState({ sbBonusQuery: e.target.value }),
-        bonusResults: bonusResults,
+        cardQuery: st.sbCardQuery,
+        onCardQuery: (e) => this.setState({ sbCardQuery: e.target.value }),
+        cardResults: cardResults,
+        aiOn: st.sbAiOn,
+        aiLabel: st.sbAiOn ? "ВКЛ" : "ВЫКЛ",
+        aiBtnBg: st.sbAiOn ? "#14a893" : "#c21f2b",
+        toggleAi: () => this.setState({ sbAiOn: !st.sbAiOn }),
+        copyBotToPlayer: () => this.sbCopyBoard("bot", "player"),
+        copyPlayerToBot: () => this.sbCopyBoard("player", "bot"),
         avatarOptions: avatarOptions,
         setAvatarPlayer: (e) => this.sbSetAvatar("player", e.target.value),
         setAvatarBot: (e) => this.sbSetAvatar("bot", e.target.value),
@@ -2234,6 +2251,9 @@ class Component extends DCLogic {
         const cur = this.state.game;
         if (!cur || cur.winner || cur.turn !== "player" || cur.pendingBonus) return;
         this.blip(280, 0.08, "sine", 0.03);
+        // Sandbox с выключенным AI: ход просто передаётся боту без автоматических
+        // действий движка ИИ, чтобы бот не портил вручную собранное состояние поля.
+        if (cur.sandbox && !this.state.sbAiOn) { this.sbStartTurn("bot"); return; }
         this.runBotTurn();
       },
       navCollectionBg: isCollection ? "#14a893" : paper,

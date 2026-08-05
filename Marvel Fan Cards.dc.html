@@ -53,6 +53,7 @@
     <div style="display: flex; gap: 8px; padding-bottom: 22px; border: 3px solid {{ ink }}; border-radius: 999px; background: {{ paper }}; box-shadow: 4px 4px 0 {{ ink }}30; overflow: hidden; padding: 5px;">
       <button type="button" onClick="{{ goCollection }}" style="flex: 1 1 0; border: none; background: {{ navCollectionBg }}; color: {{ navCollectionColor }}; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(13px, 2.2vw, 17px); text-transform: uppercase; padding: 16px 12px; min-height: 52px; border-radius: 999px; transition: background-color .2s ease;" style-hover="filter: brightness(0.96);" style-active="transform: scale(0.98);">Коллекция</button>
       <button type="button" onClick="{{ goPlay }}" style="flex: 1 1 0; border: none; background: {{ navPlayBg }}; color: {{ navPlayColor }}; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(13px, 2.2vw, 17px); text-transform: uppercase; padding: 16px 12px; min-height: 52px; border-radius: 999px; transition: background-color .2s ease;" style-hover="filter: brightness(0.96);" style-active="transform: scale(0.98);">Играть</button>
+      <button type="button" onClick="{{ goSandbox }}" title="Developer Sandbox" style="flex: 0 0 auto; border: none; background: {{ navSandboxBg }}; color: {{ navSandboxColor }}; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(13px, 2.2vw, 17px); text-transform: uppercase; padding: 16px 14px; min-height: 52px; border-radius: 999px; transition: background-color .2s ease;" style-hover="filter: brightness(0.96);" style-active="transform: scale(0.98);">🛠</button>
     </div>
 
     <sc-if value="{{ isCollection }}" hint-placeholder-val="{{ true }}">
@@ -254,6 +255,156 @@
 
       <sc-if value="{{ isBattle }}" hint-placeholder-val="{{ false }}">
         <div style="position: fixed; inset: 0; z-index: 20; display: flex; flex-direction: column; overflow: hidden; background: {{ bg }}; background-image: radial-gradient({{ dotColor }} 1.6px, transparent 1.6px); background-size: 16px 16px; padding: max(6px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(6px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left)); animation: fadeIn .35s ease both;">
+
+          <sc-if value="{{ sandboxActive }}" hint-placeholder-val="{{ false }}">
+            <div style="position: fixed; top: max(8px, env(safe-area-inset-top)); right: max(8px, env(safe-area-inset-right)); z-index: 22; width: min(320px, 92vw); max-height: 90vh; display: flex; flex-direction: column; background: #1b1730; border: 3px solid #6c2bd9; border-radius: 14px; box-shadow: 0 10px 30px #00000066; overflow: hidden; font-family: 'Inter', sans-serif;">
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 12px; background: #6c2bd9; cursor: pointer;" onClick="{{ sb.toggleOpen }}">
+                <div style="font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 12px; text-transform: uppercase; color: #fff;">🛠 Sandbox</div>
+                <div onClick="{{ stop }}" style="display: flex; gap: 6px; align-items: center;">
+                  <button type="button" onClick="{{ sb.exit }}" style="border: none; background: #ffffff26; color: #fff; font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 6px 9px; border-radius: 999px; cursor: pointer;">Выйти</button>
+                  <span style="color: #fff; font-size: 12px; cursor: pointer;" onClick="{{ sb.toggleOpen }}">{{ sb.toggleGlyph }}</span>
+                </div>
+              </div>
+
+              <sc-if value="{{ sb.open }}" hint-placeholder-val="{{ true }}">
+              <div style="overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 14px; color: #e9e4ff;">
+
+                <div>
+                  <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #b9a8f2; margin-bottom: 6px;">Цель действий</div>
+                  <div style="display: flex; gap: 6px;">
+                    <button type="button" onClick="{{ sb.setSidePlayer }}" style="flex: 1; border: 2px solid #6c2bd9; background: {{ sb.sidePlayerBg }}; color: #fff; font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 7px; border-radius: 8px; cursor: pointer;">Игрок</button>
+                    <button type="button" onClick="{{ sb.setSideBot }}" style="flex: 1; border: 2px solid #6c2bd9; background: {{ sb.sideBotBg }}; color: #fff; font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 7px; border-radius: 8px; cursor: pointer;">Бот</button>
+                  </div>
+                </div>
+
+                <div>
+                  <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #b9a8f2; margin-bottom: 6px;">Энергия</div>
+                  <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 6px;">
+                    <span style="font-size: 10px; width: 46px; flex: 0 0 auto;">Игрок {{ sb.playerMana }}</span>
+                    <input type="number" value="{{ sb.energyPlayerDraft }}" onChange="{{ sb.onEnergyPlayerDraft }}" style="width: 52px; border-radius: 6px; border: 1px solid #6c2bd9; background: #241d40; color: #fff; padding: 4px 6px; font-size: 11px;" />
+                    <button type="button" onClick="{{ sb.applyEnergyPlayer }}" style="border: none; background: #6c2bd9; color: #fff; font-size: 10px; font-weight: 700; padding: 5px 8px; border-radius: 6px; cursor: pointer;">Задать</button>
+                  </div>
+                  <div style="display: flex; gap: 6px; align-items: center;">
+                    <span style="font-size: 10px; width: 46px; flex: 0 0 auto;">Бот {{ sb.botMana }}</span>
+                    <input type="number" value="{{ sb.energyBotDraft }}" onChange="{{ sb.onEnergyBotDraft }}" style="width: 52px; border-radius: 6px; border: 1px solid #6c2bd9; background: #241d40; color: #fff; padding: 4px 6px; font-size: 11px;" />
+                    <button type="button" onClick="{{ sb.applyEnergyBot }}" style="border: none; background: #6c2bd9; color: #fff; font-size: 10px; font-weight: 700; padding: 5px 8px; border-radius: 6px; cursor: pointer;">Задать</button>
+                  </div>
+                </div>
+
+                <div>
+                  <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #b9a8f2; margin-bottom: 6px;">Аватары</div>
+                  <div style="display: flex; flex-direction: column; gap: 6px;">
+                    <div style="display: flex; gap: 6px; align-items: center;">
+                      <select onChange="{{ sb.setAvatarPlayer }}" style="flex: 1; border-radius: 6px; border: 1px solid #6c2bd9; background: #241d40; color: #fff; padding: 5px; font-size: 11px;">
+                        <sc-for list="{{ sb.avatarOptions }}" as="a" hint-placeholder-count="3">
+                          <option value="{{ a.id }}">{{ a.name }}</option>
+                        </sc-for>
+                      </select>
+                      <span style="font-size: 9px; white-space: nowrap;">❤️ {{ sb.playerAvatarHp }}</span>
+                    </div>
+                    <div style="display: flex; gap: 4px;">
+                      <button type="button" onClick="{{ sb.avatarHpDownPlayer }}" style="flex: 1; border: 1px solid #6c2bd9; background: transparent; color: #fff; font-size: 10px; padding: 4px; border-radius: 6px; cursor: pointer;">-HP</button>
+                      <button type="button" onClick="{{ sb.avatarHpUpPlayer }}" style="flex: 1; border: 1px solid #6c2bd9; background: transparent; color: #fff; font-size: 10px; padding: 4px; border-radius: 6px; cursor: pointer;">+HP</button>
+                      <button type="button" onClick="{{ sb.avatarHealPlayer }}" style="flex: 1; border: 1px solid #6c2bd9; background: transparent; color: #fff; font-size: 10px; padding: 4px; border-radius: 6px; cursor: pointer;">Лечить</button>
+                    </div>
+                    <div style="display: flex; gap: 6px; align-items: center; margin-top: 4px;">
+                      <select onChange="{{ sb.setAvatarBot }}" style="flex: 1; border-radius: 6px; border: 1px solid #6c2bd9; background: #241d40; color: #fff; padding: 5px; font-size: 11px;">
+                        <sc-for list="{{ sb.avatarOptions }}" as="a" hint-placeholder-count="3">
+                          <option value="{{ a.id }}">{{ a.name }}</option>
+                        </sc-for>
+                      </select>
+                      <span style="font-size: 9px; white-space: nowrap;">❤️ {{ sb.botAvatarHp }}</span>
+                    </div>
+                    <div style="display: flex; gap: 4px;">
+                      <button type="button" onClick="{{ sb.avatarHpDownBot }}" style="flex: 1; border: 1px solid #6c2bd9; background: transparent; color: #fff; font-size: 10px; padding: 4px; border-radius: 6px; cursor: pointer;">-HP</button>
+                      <button type="button" onClick="{{ sb.avatarHpUpBot }}" style="flex: 1; border: 1px solid #6c2bd9; background: transparent; color: #fff; font-size: 10px; padding: 4px; border-radius: 6px; cursor: pointer;">+HP</button>
+                      <button type="button" onClick="{{ sb.avatarHealBot }}" style="flex: 1; border: 1px solid #6c2bd9; background: transparent; color: #fff; font-size: 10px; padding: 4px; border-radius: 6px; cursor: pointer;">Лечить</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #b9a8f2; margin-bottom: 6px;">Ход</div>
+                  <div style="display: flex; gap: 6px;">
+                    <button type="button" onClick="{{ sb.startPlayerTurn }}" style="flex: 1; border: 1px solid #6c2bd9; background: transparent; color: #fff; font-size: 10px; font-weight: 700; padding: 6px; border-radius: 6px; cursor: pointer;">Ход игрока</button>
+                    <button type="button" onClick="{{ sb.startBotTurn }}" style="flex: 1; border: 1px solid #6c2bd9; background: transparent; color: #fff; font-size: 10px; font-weight: 700; padding: 6px; border-radius: 6px; cursor: pointer;">Ход бота</button>
+                  </div>
+                </div>
+
+                <div>
+                  <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #b9a8f2; margin-bottom: 6px;">Найти карту ({{ sb.side }})</div>
+                  <input type="text" placeholder="Spider-Man…" value="{{ sb.cardQuery }}" onChange="{{ sb.onCardQuery }}" style="width: 100%; box-sizing: border-box; border-radius: 6px; border: 1px solid #6c2bd9; background: #241d40; color: #fff; padding: 6px 8px; font-size: 11px; margin-bottom: 6px;" />
+                  <div style="max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px;">
+                    <sc-for list="{{ sb.cardResults }}" as="c" hint-placeholder-count="6">
+                      <div style="display: flex; align-items: center; gap: 6px; background: #241d40; border-radius: 6px; padding: 5px 7px;">
+                        <span style="flex: 1; font-size: 10.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ c.name }}<sc-if value="{{ c.isBonus }}" hint-placeholder-val="{{ false }}"> <span style="color: #7fe9df;">(бонус)</span></sc-if></span>
+                        <sc-if value="{{ c.canField }}" hint-placeholder-val="{{ true }}">
+                          <button type="button" onClick="{{ c.spawnField }}" title="На поле" style="border: none; background: #6c2bd9; color: #fff; font-size: 9px; font-weight: 700; padding: 4px 6px; border-radius: 5px; cursor: pointer; white-space: nowrap;">Поле</button>
+                        </sc-if>
+                        <button type="button" onClick="{{ c.spawnHand }}" title="В руку" style="border: none; background: #4a3a80; color: #fff; font-size: 9px; font-weight: 700; padding: 4px 6px; border-radius: 5px; cursor: pointer; white-space: nowrap;">Рука</button>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+
+                <div>
+                  <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #b9a8f2; margin-bottom: 6px;">AI бота</div>
+                  <button type="button" onClick="{{ sb.toggleAi }}" style="width: 100%; border: none; background: {{ sb.aiBtnBg }}; color: #fff; font-size: 11px; font-weight: 800; text-transform: uppercase; padding: 8px; border-radius: 6px; cursor: pointer;">AI: {{ sb.aiLabel }}</button>
+                </div>
+
+                <div>
+                  <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #b9a8f2; margin-bottom: 6px;">Копировать поле</div>
+                  <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <button type="button" onClick="{{ sb.copyBotToPlayer }}" style="border: 1px solid #6c2bd9; background: transparent; color: #fff; font-size: 10px; font-weight: 700; padding: 6px; border-radius: 6px; cursor: pointer;">Поле бота → игроку</button>
+                    <button type="button" onClick="{{ sb.copyPlayerToBot }}" style="border: 1px solid #6c2bd9; background: transparent; color: #fff; font-size: 10px; font-weight: 700; padding: 6px; border-radius: 6px; cursor: pointer;">Поле игрока → боту</button>
+                  </div>
+                </div>
+
+                <div>
+                  <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #b9a8f2; margin-bottom: 6px;">Редактор героя на поле</div>
+                  <select onChange="{{ sb.onSelectEditTarget }}" style="width: 100%; box-sizing: border-box; border-radius: 6px; border: 1px solid #6c2bd9; background: #241d40; color: #fff; padding: 6px; font-size: 11px; margin-bottom: 6px;">
+                    <option value="">— выбрать героя —</option>
+                    <sc-for list="{{ sb.fieldTargets }}" as="t" hint-placeholder-count="2">
+                      <option value="{{ t.value }}">{{ t.label }}</option>
+                    </sc-for>
+                  </select>
+
+                  <sc-if value="{{ sb.hasEditHero }}" hint-placeholder-val="{{ false }}">
+                    <div style="display: flex; flex-direction: column; gap: 6px; background: #241d40; border-radius: 8px; padding: 8px;">
+                      <div style="font-size: 11px; font-weight: 700;">{{ sb.editHeroName }} — ❤️ {{ sb.editHeroHp }}</div>
+                      <div style="display: flex; gap: 4px;">
+                        <button type="button" onClick="{{ sb.hpDown }}" style="flex: 1; border: 1px solid #6c2bd9; background: transparent; color: #fff; font-size: 10px; padding: 4px; border-radius: 6px; cursor: pointer;">-HP</button>
+                        <button type="button" onClick="{{ sb.hpUp }}" style="flex: 1; border: 1px solid #6c2bd9; background: transparent; color: #fff; font-size: 10px; padding: 4px; border-radius: 6px; cursor: pointer;">+HP</button>
+                        <button type="button" onClick="{{ sb.heal }}" style="flex: 1; border: 1px solid #6c2bd9; background: transparent; color: #fff; font-size: 10px; padding: 4px; border-radius: 6px; cursor: pointer;">Лечить</button>
+                      </div>
+                      <div style="display: flex; gap: 4px;">
+                        <input type="number" placeholder="HP" value="{{ sb.hpDraft }}" onChange="{{ sb.onHpDraft }}" style="width: 60px; border-radius: 6px; border: 1px solid #6c2bd9; background: #1b1730; color: #fff; padding: 4px 6px; font-size: 11px;" />
+                        <button type="button" onClick="{{ sb.applyHpDraft }}" style="flex: 1; border: none; background: #6c2bd9; color: #fff; font-size: 10px; font-weight: 700; padding: 5px; border-radius: 6px; cursor: pointer;">Задать HP</button>
+                      </div>
+                      <sc-for list="{{ sb.editHeroStats }}" as="s" hint-placeholder-count="4">
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                          <span style="flex: 1; font-size: 9.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ s.label }}: {{ s.val }}</span>
+                          <button type="button" onClick="{{ s.down }}" style="border: 1px solid #6c2bd9; background: transparent; color: #fff; font-size: 10px; width: 22px; height: 22px; border-radius: 5px; cursor: pointer;">−</button>
+                          <button type="button" onClick="{{ s.up }}" style="border: 1px solid #6c2bd9; background: transparent; color: #fff; font-size: 10px; width: 22px; height: 22px; border-radius: 5px; cursor: pointer;">+</button>
+                        </div>
+                      </sc-for>
+                      <button type="button" onClick="{{ sb.destroy }}" style="border: none; background: #c21f2b; color: #fff; font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 7px; border-radius: 6px; cursor: pointer; margin-top: 4px;">Уничтожить</button>
+                    </div>
+                  </sc-if>
+                </div>
+
+                <div>
+                  <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #b9a8f2; margin-bottom: 6px;">Результат матча</div>
+                  <div style="display: flex; gap: 6px;">
+                    <button type="button" onClick="{{ sb.winPlayer }}" style="flex: 1; border: none; background: #14a893; color: #fff; font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 7px; border-radius: 6px; cursor: pointer;">Победа</button>
+                    <button type="button" onClick="{{ sb.winBot }}" style="flex: 1; border: none; background: #c21f2b; color: #fff; font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 7px; border-radius: 6px; cursor: pointer;">Поражение</button>
+                  </div>
+                </div>
+
+              </div>
+              </sc-if>
+            </div>
+          </sc-if>
 
           <div style="position: relative; display: flex; align-items: center; justify-content: center; padding-bottom: 12px; min-height: 38px; flex: 0 0 auto;">
             <button type="button" onClick="{{ backToCollection }}" style="position: absolute; left: 0; border: 2px solid {{ ink }}40; background: transparent; color: {{ ink }}80; cursor: pointer; touch-action: manipulation; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 9px; text-transform: uppercase; padding: 7px 10px; border-radius: 999px;" style-hover="color: {{ ink }}; border-color: {{ ink }}80;">Выйти</button>
@@ -713,6 +864,9 @@ class Component extends DCLogic {
     pickedAvatar: null, peekCard: null, logOpen: false,
     editingName: false, nameDraft: "", customName: readStoredName(),
     showNameOnboarding: !readNameOnboardingSeen(),
+    // --- Developer Sandbox (изолированное состояние, не влияет на обычный режим) ---
+    sbOpen: true, sbSide: "player", sbCardQuery: "", sbAiOn: true,
+    sbEditTarget: "", sbHpDraft: "", sbEnergyPlayerDraft: "10", sbEnergyBotDraft: "10",
     ...computeViewport()
   };
 
@@ -831,6 +985,152 @@ class Component extends DCLogic {
     logEvent(game, "Противник выбрал аватара: " + game.bot.avatar.name + " (" + game.bot.avatar.maxHealth + " HP).");
     logEvent(game, "Матч начался. У вас 1 ⚡. Ваш ход.");
     return game;
+  }
+
+  // --- Developer Sandbox ------------------------------------------------------
+  // Использует ровно тот же игровой движок (makeInstance/makeAvatar/killHero/recalcHp/
+  // startTurn и т.д.), никакой отдельной боевой логики здесь нет — только прямое
+  // изменение game state в обход обычных правил (мана/слоты/усталость), чтобы можно
+  // было воспроизвести любую ситуацию для теста. Помечается game.sandbox = true и
+  // никак не затрагивает обычный buildGame()/игровой цикл.
+  buildSandboxGame() {
+    const mkSide = () => ({ deck: [], hand: [], field: [null, null, null, null, null], discard: [], mana: 10, manaCap: 10, heroesPlayedThisTurn: 0, avatar: makeAvatar(AVATARS[0].id) });
+    const game = {
+      player: mkSide(), bot: mkSide(),
+      turn: "player", selectedUid: null, pendingBonus: null, winner: null,
+      phase: "idle", atkFx: null, castFx: null, avatarFx: null,
+      log: "", logHistory: [], sandbox: true
+    };
+    logEvent(game, "🛠 Developer Sandbox активирован. Поле и аватары пусты — заполняйте вручную.");
+    return game;
+  }
+  sbUpdateGame(mutator) {
+    const g = this.state.game;
+    if (!g || !g.sandbox) return;
+    mutator(g);
+    this.setState({ game: Object.assign({}, g) });
+  }
+  sbFindHero(g, target) {
+    if (!target) return null;
+    const i = target.indexOf("|");
+    if (i < 0) return null;
+    const side = target.slice(0, i), uid = target.slice(i + 1);
+    const hero = findHero(g, side, uid);
+    return hero ? { side: side, hero: hero } : null;
+  }
+  sbSpawnHero(data, side, dest) {
+    this.sbUpdateGame((g) => {
+      const p = g[side];
+      const inst = makeInstance(data);
+      if (dest === "field") {
+        const slot = p.field.findIndex((h) => h === null);
+        if (slot < 0) { this.showToast("Поле (" + (side === "player" ? "игрок" : "бот") + ") заполнено — освободите слот."); return; }
+        inst.sick = false; inst.usedAttack = false;
+        p.field[slot] = inst;
+        logEvent(g, "[Sandbox] " + inst.name + " заспавнен на поле (" + (side === "player" ? "игрок" : "бот") + ").");
+      } else {
+        p.hand.push(inst);
+        logEvent(g, "[Sandbox] " + inst.name + " добавлен в руку (" + (side === "player" ? "игрок" : "бот") + ").");
+      }
+    });
+  }
+  sbSpawnBonus(data, side) {
+    this.sbUpdateGame((g) => {
+      const inst = makeInstance(data);
+      g[side].hand.push(inst);
+      logEvent(g, "[Sandbox] Бонус-карта «" + inst.name + "» добавлена в руку (" + (side === "player" ? "игрок" : "бот") + ").");
+    });
+  }
+  sbSetAvatar(side, avatarId) {
+    this.sbUpdateGame((g) => {
+      const av = makeAvatar(avatarId);
+      g[side].avatar = av;
+      logEvent(g, "[Sandbox] Аватар " + (side === "player" ? "игрока" : "бота") + " установлен: " + av.name + ".");
+    });
+  }
+  sbSetEnergy(side, value) {
+    const v = Math.max(0, Math.min(99, parseInt(value, 10) || 0));
+    this.sbUpdateGame((g) => {
+      g[side].mana = v; g[side].manaCap = v;
+      logEvent(g, "[Sandbox] Энергия " + (side === "player" ? "игрока" : "бота") + " установлена: " + v + ".");
+    });
+  }
+  sbAdjustHeroHp(delta) {
+    this.sbUpdateGame((g) => {
+      const t = this.sbFindHero(g, this.state.sbEditTarget);
+      if (!t) return;
+      t.hero.hp = Math.max(0, Math.min(t.hero.maxHp, t.hero.hp + delta));
+    });
+  }
+  sbSetHeroHp(value) {
+    const v = parseInt(value, 10);
+    if (isNaN(v)) return;
+    this.sbUpdateGame((g) => {
+      const t = this.sbFindHero(g, this.state.sbEditTarget);
+      if (!t) return;
+      t.hero.hp = Math.max(0, Math.min(t.hero.maxHp, v));
+    });
+  }
+  sbHealHero() {
+    this.sbUpdateGame((g) => {
+      const t = this.sbFindHero(g, this.state.sbEditTarget);
+      if (!t) return;
+      t.hero.hp = t.hero.maxHp;
+      logEvent(g, "[Sandbox] " + t.hero.name + " полностью излечен.");
+    });
+  }
+  sbDestroyHero() {
+    const target = this.state.sbEditTarget;
+    this.sbUpdateGame((g) => {
+      const t = this.sbFindHero(g, target);
+      if (!t) return;
+      const nm = t.hero.name;
+      killHero(g, t.side, t.hero.uid, "Уничтожен через Sandbox.");
+      logEvent(g, "[Sandbox] " + nm + " уничтожен вручную.");
+    });
+    this.setState({ sbEditTarget: "" });
+  }
+  sbAdjustHeroStat(statKey, delta) {
+    this.sbUpdateGame((g) => {
+      const t = this.sbFindHero(g, this.state.sbEditTarget);
+      if (!t || !t.hero.stats) return;
+      t.hero.stats[statKey] = Math.max(1, t.hero.stats[statKey] + delta);
+      recalcHp(t.hero);
+    });
+  }
+  sbAdjustAvatarHp(side, delta) {
+    this.sbUpdateGame((g) => {
+      const av = g[side].avatar;
+      av.health = Math.max(0, Math.min(av.maxHealth, av.health + delta));
+    });
+  }
+  sbHealAvatar(side) {
+    this.sbUpdateGame((g) => {
+      g[side].avatar.health = g[side].avatar.maxHealth;
+      logEvent(g, "[Sandbox] Аватар " + (side === "player" ? "игрока" : "бота") + " полностью излечен.");
+    });
+  }
+  sbStartTurn(side) {
+    this.sbUpdateGame((g) => { this.startTurn(g, side); });
+  }
+  sbSetWinner(winner) {
+    this.sbUpdateGame((g) => {
+      g.winner = winner;
+      logEvent(g, "[Sandbox] Результат матча установлен вручную: " + winner + ".");
+    });
+  }
+  sbCopyBoard(fromSide, toSide) {
+    this.sbUpdateGame((g) => {
+      const from = g[fromSide], to = g[toSide];
+      to.field = from.field.map((h) => {
+        if (!h) return null;
+        const clone = JSON.parse(JSON.stringify(h));
+        clone.uid = "c" + (uidCounter++);
+        return clone;
+      });
+      logEvent(g, "[Sandbox] Поле " + (fromSide === "player" ? "игрока" : "бота") + " скопировано " + (toSide === "player" ? "игроку" : "боту") + ".");
+    });
+    this.setState({ sbEditTarget: "" });
   }
   // Колода никогда не пустеет насовсем: пуста колода — сброс перемешивается в новую колоду.
   draw(game, side) {
@@ -1550,13 +1850,8 @@ class Component extends DCLogic {
     const fieldVM = (side) => {
       if (!g) return [];
       const live = g[side].field.filter((h) => !!h);
-      const n = live.length;
-      return live.map((h, idx) => {
-        const mid = (n - 1) / 2;
-        const off = idx - mid;
-        const arcY = Math.round(Math.abs(off) * Math.abs(off) * 3.2) * (side === "bot" ? 1 : -1);
-        const arcRot = Math.round(off * 3.2 * 10) / 10;
-        const arcTransform = "translateY(" + arcY + "px) rotate(" + arcRot + "deg)";
+      return live.map((h) => {
+        const arcTransform = "none";
         const isPending = !!g.pendingBonus;
         const readyToAttack = h.alive && !h.sick && !h.usedAttack && !h.dying;
         const targetableForPlayer = side === "bot" && g.turn === "player" && !!g.selectedUid && !h.sick && !isPending && !h.dying;
@@ -1768,7 +2063,98 @@ class Component extends DCLogic {
       this.setState({ showNameOnboarding: false });
     };
 
+    // --- Developer Sandbox: чистый view-model поверх game state, никакой игровой логики ---
+    const sandboxActive = !!(g && g.sandbox);
+    let sbVM = null;
+    if (sandboxActive) {
+      const cardQ = norm(st.sbCardQuery).trim();
+      const cardResults = DATA.filter((d) => !d.collectionOnly && (!cardQ || norm(d.name).indexOf(cardQ) >= 0)).slice(0, 18).map((d) => ({
+        name: d.name, isBonus: false, canField: true,
+        spawnField: () => this.sbSpawnHero(d, st.sbSide, "field"),
+        spawnHand: () => this.sbSpawnHero(d, st.sbSide, "hand")
+      })).concat(BONUS.filter((d) => !cardQ || norm(d.name).indexOf(cardQ) >= 0).map((d) => ({
+        name: d.name, isBonus: true, canField: false,
+        spawnField: () => {},
+        spawnHand: () => this.sbSpawnBonus(d, st.sbSide)
+      })));
+      const avatarOptions = AVATARS.map((a) => ({ id: a.id, name: a.name }));
+      const fieldTargets = [];
+      ["player", "bot"].forEach((side) => {
+        g[side].field.forEach((h) => {
+          if (!h) return;
+          fieldTargets.push({ value: side + "|" + h.uid, label: (side === "player" ? "Игрок" : "Бот") + ": " + h.name + " (" + h.hp + "/" + h.maxHp + " HP)" });
+        });
+      });
+      const editT = this.sbFindHero(g, st.sbEditTarget);
+      const editHero = editT ? editT.hero : null;
+      sbVM = {
+        open: st.sbOpen,
+        toggleGlyph: st.sbOpen ? "▲" : "▼",
+        toggleOpen: () => this.setState({ sbOpen: !st.sbOpen }),
+        exit: () => { exitFullscreenSafe(); this.stopBgm(1500); this.setState({ screen: "collection", game: null, sbEditTarget: "" }); },
+        side: st.sbSide,
+        sidePlayerBg: st.sbSide === "player" ? "#6c2bd9" : "transparent",
+        sideBotBg: st.sbSide === "bot" ? "#6c2bd9" : "transparent",
+        setSidePlayer: () => this.setState({ sbSide: "player" }),
+        setSideBot: () => this.setState({ sbSide: "bot" }),
+        cardQuery: st.sbCardQuery,
+        onCardQuery: (e) => this.setState({ sbCardQuery: e.target.value }),
+        cardResults: cardResults,
+        aiOn: st.sbAiOn,
+        aiLabel: st.sbAiOn ? "ВКЛ" : "ВЫКЛ",
+        aiBtnBg: st.sbAiOn ? "#14a893" : "#c21f2b",
+        toggleAi: () => this.setState({ sbAiOn: !st.sbAiOn }),
+        copyBotToPlayer: () => this.sbCopyBoard("bot", "player"),
+        copyPlayerToBot: () => this.sbCopyBoard("player", "bot"),
+        avatarOptions: avatarOptions,
+        setAvatarPlayer: (e) => this.sbSetAvatar("player", e.target.value),
+        setAvatarBot: (e) => this.sbSetAvatar("bot", e.target.value),
+        energyPlayerDraft: st.sbEnergyPlayerDraft,
+        onEnergyPlayerDraft: (e) => this.setState({ sbEnergyPlayerDraft: e.target.value }),
+        applyEnergyPlayer: () => this.sbSetEnergy("player", st.sbEnergyPlayerDraft),
+        energyBotDraft: st.sbEnergyBotDraft,
+        onEnergyBotDraft: (e) => this.setState({ sbEnergyBotDraft: e.target.value }),
+        applyEnergyBot: () => this.sbSetEnergy("bot", st.sbEnergyBotDraft),
+        playerMana: g.player.mana + "/" + g.player.manaCap,
+        botMana: g.bot.mana + "/" + g.bot.manaCap,
+        startPlayerTurn: () => this.sbStartTurn("player"),
+        startBotTurn: () => this.sbStartTurn("bot"),
+        winPlayer: () => this.sbSetWinner("player"),
+        winBot: () => this.sbSetWinner("bot"),
+        playerAvatarHp: g.player.avatar.health + "/" + g.player.avatar.maxHealth,
+        botAvatarHp: g.bot.avatar.health + "/" + g.bot.avatar.maxHealth,
+        avatarHpUpPlayer: () => this.sbAdjustAvatarHp("player", 1),
+        avatarHpDownPlayer: () => this.sbAdjustAvatarHp("player", -1),
+        avatarHealPlayer: () => this.sbHealAvatar("player"),
+        avatarHpUpBot: () => this.sbAdjustAvatarHp("bot", 1),
+        avatarHpDownBot: () => this.sbAdjustAvatarHp("bot", -1),
+        avatarHealBot: () => this.sbHealAvatar("bot"),
+        fieldTargets: fieldTargets,
+        hasFieldTargets: fieldTargets.length > 0,
+        editTargetValue: st.sbEditTarget,
+        onSelectEditTarget: (e) => this.setState({ sbEditTarget: e.target.value, sbHpDraft: "" }),
+        hasEditHero: !!editHero,
+        editHeroName: editHero ? editHero.name : "",
+        editHeroHp: editHero ? editHero.hp + " / " + editHero.maxHp : "",
+        editHeroStats: editHero && editHero.stats ? [
+          { key: "s", label: LABELS[0], val: editHero.stats.s, up: () => this.sbAdjustHeroStat("s", 1), down: () => this.sbAdjustHeroStat("s", -1) },
+          { key: "a", label: LABELS[1], val: editHero.stats.a, up: () => this.sbAdjustHeroStat("a", 1), down: () => this.sbAdjustHeroStat("a", -1) },
+          { key: "i", label: LABELS[2], val: editHero.stats.i, up: () => this.sbAdjustHeroStat("i", 1), down: () => this.sbAdjustHeroStat("i", -1) },
+          { key: "k", label: LABELS[3], val: editHero.stats.k, up: () => this.sbAdjustHeroStat("k", 1), down: () => this.sbAdjustHeroStat("k", -1) }
+        ] : [],
+        hpUp: () => this.sbAdjustHeroHp(1),
+        hpDown: () => this.sbAdjustHeroHp(-1),
+        heal: () => this.sbHealHero(),
+        destroy: () => this.sbDestroyHero(),
+        hpDraft: st.sbHpDraft,
+        onHpDraft: (e) => this.setState({ sbHpDraft: e.target.value }),
+        applyHpDraft: () => this.sbSetHeroHp(st.sbHpDraft)
+      };
+    }
+
     return {
+      sandboxActive: sandboxActive,
+      sb: sbVM,
       playerName: currentName,
       editingName: st.editingName,
       showNameDisplay: !st.editingName,
@@ -1865,6 +2251,9 @@ class Component extends DCLogic {
         const cur = this.state.game;
         if (!cur || cur.winner || cur.turn !== "player" || cur.pendingBonus) return;
         this.blip(280, 0.08, "sine", 0.03);
+        // Sandbox с выключенным AI: ход просто передаётся боту без автоматических
+        // действий движка ИИ, чтобы бот не портил вручную собранное состояние поля.
+        if (cur.sandbox && !this.state.sbAiOn) { this.sbStartTurn("bot"); return; }
         this.runBotTurn();
       },
       navCollectionBg: isCollection ? "#14a893" : paper,
@@ -1873,6 +2262,14 @@ class Component extends DCLogic {
       navPlayColor: isPlay ? "#fff" : ink,
       goCollection: () => { this.blip(280, 0.08, "sine", 0.03); exitFullscreenSafe(); this.stopBgm(1500); this.setState({ screen: "collection" }); },
       goPlay: () => { this.blip(280, 0.08, "sine", 0.03); if (mobileLayout) requestFullscreenSafe(); this.startBgm(1400); this.setState({ screen: "play" }); },
+      navSandboxBg: g && g.sandbox ? "#6c2bd9" : paper,
+      navSandboxColor: g && g.sandbox ? "#fff" : ink,
+      goSandbox: () => {
+        this.blip(280, 0.08, "sine", 0.03);
+        if (mobileLayout) requestFullscreenSafe();
+        this.startBgm(1400);
+        this.setState({ screen: "play", game: this.buildSandboxGame(), sel: null, fieldSel: null, discardView: null, peekCard: null, pickedAvatar: null, sbEditTarget: "" });
+      },
       backToCollection: () => { exitFullscreenSafe(); this.stopBgm(1500); this.setState({ screen: "collection", game: null }); },
       bgmRef: this.bgmRef,
       toggleTheme: () => { this.blip(300, 0.1, "sine", 0.04); this.buzz(10); this.setState((s) => ({ dark: !s.dark })); },
