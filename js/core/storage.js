@@ -19,3 +19,13 @@ function readNameOnboardingSeen() {
 function writeNameOnboardingSeen() {
   try { localStorage.setItem("mfc_nameOnboardingSeen", "1"); } catch (e) {}
 }
+// Sandbox: именованные снимки game state (JSON), чтобы воспроизвести сложную ситуацию одним кликом.
+function readSandboxScenarios() {
+  try {
+    const v = JSON.parse(localStorage.getItem("mfc_sandboxScenarios") || "{}");
+    return v && typeof v === "object" ? v : {};
+  } catch (e) { return {}; }
+}
+function writeSandboxScenarios(obj) {
+  try { localStorage.setItem("mfc_sandboxScenarios", JSON.stringify(obj)); } catch (e) {}
+}

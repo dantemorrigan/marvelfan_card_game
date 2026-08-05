@@ -24,5 +24,8 @@ function weightedDrawIndex(deck, manaCap) {
 }
 function logEvent(game, text) {
   game.log = text;
-  game.logHistory = (game.logHistory || []).concat([text]).slice(-10);
+  // 300, а не 10: обычный режим показывает только последнюю запись (log), но Sandbox
+  // читает весь logHistory для журнала событий (Event Log) — триггеры, боевые кличи,
+  // пассивки, урон/лечение. Само по себе увеличение хранимой истории ничего в игре не меняет.
+  game.logHistory = (game.logHistory || []).concat([text]).slice(-300);
 }

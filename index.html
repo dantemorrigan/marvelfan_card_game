@@ -388,8 +388,59 @@
                           <button type="button" onClick="{{ s.up }}" style="border: 1px solid #6c2bd9; background: transparent; color: #fff; font-size: 10px; width: 22px; height: 22px; border-radius: 5px; cursor: pointer;">+</button>
                         </div>
                       </sc-for>
+
+                      <div style="height: 1px; background: #6c2bd944; margin: 2px 0;"></div>
+                      <div style="font-size: 9px; font-weight: 800; text-transform: uppercase; color: #b9a8f2;">Ключевые слова</div>
+                      <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+                        <sc-for list="{{ sb.editKeywords }}" as="k" hint-placeholder-count="8">
+                          <button type="button" onClick="{{ k.toggle }}" title="{{ k.name }}" style="border: 1px solid #6c2bd9; background: {{ k.bg }}; color: #fff; font-size: 10px; font-weight: 700; padding: 4px 7px; border-radius: 999px; cursor: pointer; white-space: nowrap;">{{ k.icon }} {{ k.name }}</button>
+                        </sc-for>
+                      </div>
+
+                      <sc-if value="{{ sb.hasFlags }}" hint-placeholder-val="{{ false }}">
+                        <div style="font-size: 9.5px; font-weight: 600; color: #ffd27a; line-height: 1.4;">⏱ {{ sb.editFlagsText }}</div>
+                      </sc-if>
+                      <sc-if value="{{ sb.hasAbilityInfo }}" hint-placeholder-val="{{ false }}">
+                        <div style="font-size: 9.5px; font-weight: 600; color: #7fe9df; line-height: 1.4;">✦ {{ sb.editAbilityName }} ({{ sb.editAbilityType }}) — {{ sb.editAbilityText }}</div>
+                      </sc-if>
+
                       <button type="button" onClick="{{ sb.destroy }}" style="border: none; background: #c21f2b; color: #fff; font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 7px; border-radius: 6px; cursor: pointer; margin-top: 4px;">Уничтожить</button>
                     </div>
+                  </sc-if>
+                </div>
+
+                <div>
+                  <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #b9a8f2; margin-bottom: 6px;">Сценарии</div>
+                  <div style="display: flex; gap: 6px; margin-bottom: 6px;">
+                    <input type="text" placeholder="Имя сценария..." value="{{ sb.scenarioName }}" onChange="{{ sb.onScenarioName }}" style="flex: 1; box-sizing: border-box; border-radius: 6px; border: 1px solid #6c2bd9; background: #241d40; color: #fff; padding: 6px 8px; font-size: 11px;" />
+                    <button type="button" onClick="{{ sb.saveScenario }}" style="border: none; background: #6c2bd9; color: #fff; font-size: 10px; font-weight: 700; padding: 5px 10px; border-radius: 6px; cursor: pointer; white-space: nowrap;">Сохранить</button>
+                  </div>
+                  <sc-if value="{{ sb.hasScenarios }}" hint-placeholder-val="{{ false }}">
+                    <div style="max-height: 130px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px;">
+                      <sc-for list="{{ sb.scenarioList }}" as="sc" hint-placeholder-count="3">
+                        <div style="display: flex; align-items: center; gap: 6px; background: #241d40; border-radius: 6px; padding: 5px 7px;">
+                          <span style="flex: 1; font-size: 10.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ sc.name }}</span>
+                          <button type="button" onClick="{{ sc.load }}" title="Загрузить" style="border: none; background: #6c2bd9; color: #fff; font-size: 9px; font-weight: 700; padding: 4px 6px; border-radius: 5px; cursor: pointer; white-space: nowrap;">Загрузить</button>
+                          <button type="button" onClick="{{ sc.del }}" title="Удалить" style="border: none; background: #c21f2b; color: #fff; font-size: 9px; font-weight: 700; padding: 4px 6px; border-radius: 5px; cursor: pointer; white-space: nowrap;">✕</button>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+                </div>
+
+                <div>
+                  <div onClick="{{ sb.toggleLog }}" style="display: flex; align-items: center; justify-content: space-between; cursor: pointer; margin-bottom: 6px;">
+                    <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #b9a8f2;">Журнал событий</div>
+                    <span style="font-size: 10px; color: #b9a8f2;">{{ sb.logToggleGlyph }}</span>
+                  </div>
+                  <sc-if value="{{ sb.logOpen }}" hint-placeholder-val="{{ false }}">
+                    <sc-if value="{{ sb.hasEventLog }}" hint-placeholder-val="{{ false }}">
+                      <div style="max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 3px; background: #241d40; border-radius: 6px; padding: 6px;">
+                        <sc-for list="{{ sb.eventLog }}" as="ev" hint-placeholder-count="10">
+                          <div style="font-size: 9.5px; line-height: 1.4; color: #e9e4ffcc; border-bottom: 1px solid #ffffff11; padding-bottom: 3px;">{{ ev.text }}</div>
+                        </sc-for>
+                      </div>
+                    </sc-if>
                   </sc-if>
                 </div>
 
@@ -867,6 +918,7 @@ class Component extends DCLogic {
     // --- Developer Sandbox (изолированное состояние, не влияет на обычный режим) ---
     sbOpen: true, sbSide: "player", sbCardQuery: "", sbAiOn: true,
     sbEditTarget: "", sbHpDraft: "", sbEnergyPlayerDraft: "10", sbEnergyBotDraft: "10",
+    sbScenarioName: "", sbScenarioBump: 0, sbLogOpen: false,
     ...computeViewport()
   };
 
@@ -1131,6 +1183,44 @@ class Component extends DCLogic {
       logEvent(g, "[Sandbox] Поле " + (fromSide === "player" ? "игрока" : "бота") + " скопировано " + (toSide === "player" ? "игроку" : "боту") + ".");
     });
     this.setState({ sbEditTarget: "" });
+  }
+  sbToggleKeyword(kwId) {
+    this.sbUpdateGame((g) => {
+      const t = this.sbFindHero(g, this.state.sbEditTarget);
+      if (!t) return;
+      t.hero.keywords = t.hero.keywords || [];
+      const idx = t.hero.keywords.indexOf(kwId);
+      if (idx >= 0) t.hero.keywords.splice(idx, 1);
+      else t.hero.keywords.push(kwId);
+      logEvent(g, "[Sandbox] " + t.hero.name + ": ключевое слово «" + (KEYWORDS[kwId] ? KEYWORDS[kwId].name : kwId) + "» " + (idx >= 0 ? "убрано" : "выдано") + ".");
+    });
+  }
+  sbSaveScenario(name) {
+    const trimmed = (name || "").trim();
+    const g = this.state.game;
+    if (!trimmed || !g || !g.sandbox) { this.showToast("Введите имя сценария."); return; }
+    const scenarios = readSandboxScenarios();
+    scenarios[trimmed] = JSON.stringify(g);
+    writeSandboxScenarios(scenarios);
+    this.showToast("Сценарий «" + trimmed + "» сохранён.");
+    this.setState({ sbScenarioName: "", sbScenarioBump: (this.state.sbScenarioBump || 0) + 1 });
+  }
+  sbLoadScenario(name) {
+    const scenarios = readSandboxScenarios();
+    const raw = scenarios[name];
+    if (!raw) return;
+    try {
+      const g = JSON.parse(raw);
+      g.sandbox = true;
+      this.setState({ game: g, sbEditTarget: "" });
+      this.showToast("Сценарий «" + name + "» загружен.");
+    } catch (e) { this.showToast("Не удалось загрузить сценарий."); }
+  }
+  sbDeleteScenario(name) {
+    const scenarios = readSandboxScenarios();
+    delete scenarios[name];
+    writeSandboxScenarios(scenarios);
+    this.setState({ sbScenarioBump: (this.state.sbScenarioBump || 0) + 1 });
   }
   // Колода никогда не пустеет насовсем: пуста колода — сброс перемешивается в новую колоду.
   draw(game, side) {
@@ -2087,6 +2177,32 @@ class Component extends DCLogic {
       });
       const editT = this.sbFindHero(g, st.sbEditTarget);
       const editHero = editT ? editT.hero : null;
+      const editAbilityKey = editHero ? HERO_ABILITY_TABLE[editHero.name] : null;
+      const editAbility = editAbilityKey ? HERO_ABILITIES[editAbilityKey] : null;
+      const editFlags = [];
+      if (editHero) {
+        if (editHero.sick) editFlags.push("Усталость призыва");
+        if (editHero.usedAttack) editFlags.push("Уже атаковал");
+        if (editHero.buffed) editFlags.push("Бафф");
+        if (editHero.debuffed) editFlags.push("Дебафф");
+        if (editHero.frozen) editFlags.push("Заморожен");
+        if (editHero.usedActive) editFlags.push("Способность использована");
+      }
+      const editKeywords = editHero ? Object.keys(KEYWORDS).map((id) => {
+        const active = editHero.keywords && editHero.keywords.indexOf(id) >= 0;
+        return {
+          id: id, icon: KEYWORDS[id].icon, name: KEYWORDS[id].name, active: active,
+          bg: active ? "#6c2bd9" : "transparent",
+          toggle: () => this.sbToggleKeyword(id)
+        };
+      }) : [];
+      const scenarios = readSandboxScenarios();
+      const scenarioNames = Object.keys(scenarios).sort().map((name) => ({
+        name: name,
+        load: () => this.sbLoadScenario(name),
+        del: () => this.sbDeleteScenario(name)
+      }));
+      const eventLog = (g.logHistory || []).slice().reverse().map((text, i) => ({ i: i, text: text }));
       sbVM = {
         open: st.sbOpen,
         toggleGlyph: st.sbOpen ? "▲" : "▼",
@@ -2148,7 +2264,27 @@ class Component extends DCLogic {
         destroy: () => this.sbDestroyHero(),
         hpDraft: st.sbHpDraft,
         onHpDraft: (e) => this.setState({ sbHpDraft: e.target.value }),
-        applyHpDraft: () => this.sbSetHeroHp(st.sbHpDraft)
+        applyHpDraft: () => this.sbSetHeroHp(st.sbHpDraft),
+        // --- Effect Inspector: способность, статусы и ключевые слова выбранной карты ---
+        hasAbilityInfo: !!editAbility,
+        editAbilityName: editAbility ? editAbility.name : "",
+        editAbilityType: editAbility ? editAbility.type : "",
+        editAbilityText: editAbility ? editAbility.text : "",
+        hasFlags: editFlags.length > 0,
+        editFlagsText: editFlags.join(" · "),
+        editKeywords: editKeywords,
+        // --- Save / Load Scenario ---
+        scenarioName: st.sbScenarioName,
+        onScenarioName: (e) => this.setState({ sbScenarioName: e.target.value }),
+        saveScenario: () => this.sbSaveScenario(st.sbScenarioName),
+        scenarioList: scenarioNames,
+        hasScenarios: scenarioNames.length > 0,
+        // --- Event Log ---
+        logOpen: st.sbLogOpen,
+        logToggleGlyph: st.sbLogOpen ? "▲" : "▼",
+        toggleLog: () => this.setState({ sbLogOpen: !st.sbLogOpen }),
+        eventLog: eventLog,
+        hasEventLog: eventLog.length > 0
       };
     }
 
