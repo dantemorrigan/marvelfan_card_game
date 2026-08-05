@@ -1550,13 +1550,8 @@ class Component extends DCLogic {
     const fieldVM = (side) => {
       if (!g) return [];
       const live = g[side].field.filter((h) => !!h);
-      const n = live.length;
-      return live.map((h, idx) => {
-        const mid = (n - 1) / 2;
-        const off = idx - mid;
-        const arcY = Math.round(Math.abs(off) * Math.abs(off) * 3.2) * (side === "bot" ? 1 : -1);
-        const arcRot = Math.round(off * 3.2 * 10) / 10;
-        const arcTransform = "translateY(" + arcY + "px) rotate(" + arcRot + "deg)";
+      return live.map((h) => {
+        const arcTransform = "none";
         const isPending = !!g.pendingBonus;
         const readyToAttack = h.alive && !h.sick && !h.usedAttack && !h.dying;
         const targetableForPlayer = side === "bot" && g.turn === "player" && !!g.selectedUid && !h.sick && !isPending && !h.dying;
