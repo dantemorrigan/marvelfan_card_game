@@ -12,10 +12,20 @@ class MFCLifecycleController {
     };
     window.addEventListener("keydown", this.onKey);
 
-    this.onViewport = () => this.setState(computeViewport());
+    this.onViewport = () => {
+      if (this._viewportRaf) return;
+      this._viewportRaf = requestAnimationFrame(() => {
+        this._viewportRaf = null;
+        const next = computeViewport();
+        this.setState((s) => {
+          for (const k in next) if (s[k] !== next[k]) return next;
+          return null;
+        });
+      });
+    };
     this.onOrientation = () => {
       clearTimeout(this._orientTimer);
-      this._orientTimer = setTimeout(() => this.setState(computeViewport()), 120);
+      this._orientTimer = setTimeout(this.onViewport, 120);
     };
     window.addEventListener("resize", this.onViewport, { passive: true });
     window.addEventListener("orientationchange", this.onOrientation, { passive: true });
@@ -29,6 +39,7 @@ class MFCLifecycleController {
     clearTimeout(this._toastTimer);
     clearTimeout(this._handPressTimer);
     this.clearGameTimers();
+    if (this._viewportRaf) cancelAnimationFrame(this._viewportRaf);
     if (this._bgmFade) cancelAnimationFrame(this._bgmFade);
     if (this.ac && this.ac.close) {
       try { this.ac.close(); } catch (e) {}
