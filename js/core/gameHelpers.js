@@ -1,8 +1,8 @@
 /*
 core/gameHelpers.js
 
-Мелкие утилиты общего назначения: взвешенный выбор карты при доборе
-(weightedDrawIndex) и запись события в журнал боя (logEvent).
+Мелкие утилиты общего назначения: взвешенный выбор карты при доборе,
+клонирование игрового состояния и запись события в журнал боя.
 */
 // Колода тасуется полностью случайно (shuffleArr) при сборке — порядок карт
 // в ней ничего не значит. "Прогрессия" по стоимости делается на самом доборе:
@@ -22,6 +22,14 @@ function weightedDrawIndex(deck, manaCap) {
   }
   return deck.length - 1;
 }
+
+function cloneGame(value) {
+  if (typeof structuredClone === "function") {
+    try { return structuredClone(value); } catch (e) {}
+  }
+  return JSON.parse(JSON.stringify(value));
+}
+
 function logEvent(game, text) {
   game.log = text;
   // 300, а не 10: обычный режим показывает только последнюю запись (log), но Sandbox
